@@ -62,22 +62,22 @@ export async function handle() {
   });
 }
 
-// export async function handleSingle(runnable: Runnable) {
-//   const { document } = await workspace.getCurrentState();
-//   if (document.languageId !== 'rust') {
-//     return;
-//   }
+export async function handleSingle(runnable: Runnable) {
+  const { document } = await workspace.getCurrentState();
+  if (!runnable || document.languageId !== 'rust') {
+    return;
+  }
 
-//   const cmd = `${runnable.bin} ${runnable.args.join(' ')}`;
-//   const opt: TerminalOptions = {
-//     name: runnable.label,
-//     cwd: runnable.cwd,
-//     env: runnable.env
-//   };
-//   workspace.createTerminal(opt).then((t: Terminal) => {
-//     t.sendText(cmd);
-//   });
-// }
+  const cmd = `${runnable.bin} ${runnable.args.join(' ')}`;
+  const opt: TerminalOptions = {
+    name: runnable.label,
+    cwd: runnable.cwd,
+    env: runnable.env
+  };
+  workspace.createTerminal(opt).then((t: Terminal) => {
+    t.sendText(cmd);
+  });
+}
 
 // /**
 //  * Interactively asks the user whether we should run `cargo check` in order to
