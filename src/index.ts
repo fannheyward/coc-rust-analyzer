@@ -22,7 +22,7 @@ export async function activate(context: ExtensionContext): Promise<void> {
   // registerCommand('rust-analyzer.matchingBrace', cmds.matchingBrace.handle);
   // registerCommand('rust-analyzer.joinLines', cmds.joinLines.handle);
   // registerCommand('rust-analyzer.parentModule', cmds.parentModule.handle);
-  // registerCommand('rust-analyzer.run', cmds.runnables.handle);
+  registerCommand('rust-analyzer.run', cmds.runnables.handle);
   // Unlike the above this does not send requests to the language server
   // registerCommand('rust-analyzer.runSingle', cmds.runnables.handleSingle);
   registerCommand('rust-analyzer.collectGarbage', () => Server.client.sendRequest<null>('rust-analyzer/collectGarbage', null));

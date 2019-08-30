@@ -157,6 +157,11 @@
         "command": "rust-analyzer.reload",
         "title": "Restart server",
         "category": "Rust Analyzer"
+      },
+      {
+        "command": "rust-analyzer.run",
+        "title": "Run",
+        "category": "Rust Analyzer"
       }
     ]
   }
