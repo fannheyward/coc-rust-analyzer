@@ -154,6 +154,11 @@
         "category": "Rust Analyzer"
       },
       {
+        "command": "rust-analyzer.matchingBrace",
+        "title": "Find matching brace",
+        "category": "Rust Analyzer"
+      },
+      {
         "command": "rust-analyzer.reload",
         "title": "Restart server",
         "category": "Rust Analyzer"
