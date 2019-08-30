@@ -1,9 +1,9 @@
 import { homedir } from 'os';
-import { LanguageClientOptions, ServerOptions, Executable, LanguageClient, workspace } from 'coc.nvim';
+import { Uri, LanguageClientOptions, ServerOptions, Executable, LanguageClient, workspace } from 'coc.nvim';
 import { GenericNotificationHandler } from 'vscode-languageserver-protocol';
 
 import { Config } from './config';
-import { Highlighter } from './highlighting';
+// import { Highlighter } from './highlighting';
 
 function expandPathResolving(path: string) {
   if (path.startsWith('~/')) {
@@ -13,16 +13,14 @@ function expandPathResolving(path: string) {
 }
 
 export class Server {
-  public static highlighter = new Highlighter();
+  // public static highlighter = new Highlighter();
   public static config = new Config();
   public static client: LanguageClient;
 
   public static start(notificationHandlers: Iterable<[string, GenericNotificationHandler]>) {
-    // '.' Is the fallback if no folder is open
-    // TODO?: Workspace folders support Uri's (eg: file://test.txt). It might be a good idea to test if the uri points to a file.
     let folder: string = '.';
-    if (workspace.workspaceFolders !== undefined) {
-      folder = workspace.workspaceFolders[0].uri.toString();
+    if (workspace.workspaceFolder.uri.length > 0) {
+      folder = Uri.parse(workspace.workspaceFolder.uri).fsPath;
     }
 
     const run: Executable = {

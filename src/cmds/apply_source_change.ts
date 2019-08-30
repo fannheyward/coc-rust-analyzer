@@ -1,6 +1,5 @@
-import { workspace, LanguageClient } from 'coc.nvim';
-import { TextDocumentPositionParams, WorkspaceEdit } from 'vscode-languageserver-protocol';
-import { Server } from '../server';
+import { Uri, workspace } from 'coc.nvim';
+import { CreateFile, RenameFile, TextDocumentPositionParams, WorkspaceEdit } from 'vscode-languageserver-protocol';
 
 export interface SourceChange {
   label: string;
@@ -9,36 +8,38 @@ export interface SourceChange {
 }
 
 export async function handle(change: SourceChange) {
-  const wsEdit = Server.client.protocol2CodeConverter.asWorkspaceEdit(change.workspaceEdit);
-  let created;
-  let moved;
+  if (!change) {
+    return;
+  }
+
+  const wsEdit = change.workspaceEdit;
+
+  let created: string | undefined;
+  let moved: string | undefined;
   if (change.workspaceEdit.documentChanges) {
     for (const docChange of change.workspaceEdit.documentChanges) {
-      if (lc.CreateFile.is(docChange)) {
+      if (CreateFile.is(docChange)) {
         created = docChange.uri;
-      } else if (lc.RenameFile.is(docChange)) {
+      } else if (RenameFile.is(docChange)) {
         moved = docChange.newUri;
       }
     }
   }
+
   const toOpen = created || moved;
   const toReveal = change.cursorPosition;
-  await vscode.workspace.applyEdit(wsEdit);
+  await workspace.applyEdit(wsEdit);
   if (toOpen) {
-    const toOpenUri = vscode.Uri.parse(toOpen);
-    const doc = await vscode.workspace.openTextDocument(toOpenUri);
-    await vscode.window.showTextDocument(doc);
+    const toOpenUri = Uri.parse(toOpen);
+    await workspace.readFile(toOpenUri.fsPath);
   } else if (toReveal) {
-    const uri = Server.client.protocol2CodeConverter.asUri(toReveal.textDocument.uri);
-    const position = Server.client.protocol2CodeConverter.asPosition(toReveal.position);
-    const editor = vscode.window.activeTextEditor;
-    if (!editor || editor.document.uri.toString() !== uri.toString()) {
+    const uri = toReveal.textDocument.uri;
+    const position = toReveal.position;
+    const document = await workspace.document;
+    if (document.uri.toString() != uri.toString()) {
       return;
     }
-    if (!editor.selection.isEmpty) {
-      return;
-    }
-    editor.selection = new vscode.Selection(position, position);
-    editor.revealRange(new vscode.Range(position, position), vscode.TextEditorRevealType.Default);
+
+    workspace.nvim.command(`call setpos('.', [${document.bufnr}, ${position.line + 1}, ${position.character + 1}, 0])`);
   }
 }

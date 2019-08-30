@@ -1,5 +1,7 @@
-import { commands, CompleteResult, Disposable, ExtensionContext, sources, workspace } from 'coc.nvim';
+import { commands, Disposable, ExtensionContext, workspace } from 'coc.nvim';
+import { GenericNotificationHandler } from 'vscode-languageserver-protocol';
 import * as cmds from './cmds';
+import * as notifications from './notifications';
 import { Server } from './server';
 
 export async function activate(context: ExtensionContext): Promise<void> {
@@ -12,8 +14,11 @@ export async function activate(context: ExtensionContext): Promise<void> {
     disposeOnDeactivation(commands.registerCommand(name, f));
   }
 
+  // Notifications are events triggered by the language server
+  const allNotifications: Iterable<[string, GenericNotificationHandler]> = [['rust-analyzer/publishDecorations', notifications.publishDecorations.handle]];
+
   // Commands are requests from vscode to the language server
-  registerCommand('rust-analyzer.analyzerStatus', cmds.analyzerStatus.makeCommand(context));
+  // registerCommand('rust-analyzer.analyzerStatus', cmds.analyzerStatus.makeCommand(context));
   // registerCommand('rust-analyzer.matchingBrace', cmds.matchingBrace.handle);
   // registerCommand('rust-analyzer.joinLines', cmds.joinLines.handle);
   // registerCommand('rust-analyzer.parentModule', cmds.parentModule.handle);
@@ -22,7 +27,7 @@ export async function activate(context: ExtensionContext): Promise<void> {
   // registerCommand('rust-analyzer.runSingle', cmds.runnables.handleSingle);
   registerCommand('rust-analyzer.collectGarbage', () => Server.client.sendRequest<null>('rust-analyzer/collectGarbage', null));
   // TODO
-  // registerCommand('rust-analyzer.applySourceChange', cmds.applySourceChange.handle);
+  registerCommand('rust-analyzer.applySourceChange', cmds.applySourceChange.handle);
   // TODO
   // registerCommand('rust-analyzer.showReferences', (uri: string, position: Position, locations: Location[]) => {
   //   commands.executeCommand(
@@ -33,33 +38,37 @@ export async function activate(context: ExtensionContext): Promise<void> {
   //   );
   // });
 
-  context.subscriptions.push(
-    commands.registerCommand('coc-rust-analyzer.Command', async () => {
-      workspace.showMessage(`coc-rust-analyzer Commands works!`);
-    }),
+  // Executing `cargo watch` provides us with inline diagnostics on save
+  // let provider: CargoWatchProvider | undefined;
+  // registerCommand('rust-analyzer.startCargoWatch', () => {
+  //   if (provider) {
+  //     provider.start();
+  //   } else {
+  //     startCargoWatch(context).then(p => {
+  //       provider = p;
+  //     });
+  //   }
+  // });
+  // registerCommand('rust-analyzer.stopCargoWatch', () => {
+  //   if (provider) {
+  //     provider.stop();
+  //   }
+  // });
 
-    sources.createSource({
-      name: 'coc-rust-analyzer completion source', // unique id
-      shortcut: '[CS]', // [CS] is custom source
-      priority: 1,
-      triggerPatterns: [], // RegExp pattern
-      doComplete: async () => {
-        const items = await getItems();
-        return items;
-      }
-    })
-  );
+  registerCommand('rust-analyzer.reload', async () => {
+    if (Server.client != null) {
+      workspace.showMessage(`Reloading rust-analyzer...`);
+      await Server.client.stop();
+      Server.start(allNotifications);
+    }
+  });
+
+  Server.start(allNotifications);
 }
 
-async function getItems(): Promise<CompleteResult> {
-  return {
-    items: [
-      {
-        word: 'TestCompletionItem 1'
-      },
-      {
-        word: 'TestCompletionItem 2'
-      }
-    ]
-  };
+export function deactivate(): Thenable<void> {
+  if (!Server.client) {
+    return Promise.resolve();
+  }
+  return Server.client.stop();
 }

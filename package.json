@@ -1,6 +1,6 @@
 {
   "name": "coc-rust-analyzer",
-  "version": "0.0.0-development",
+  "version": "0.0.2",
   "description": "rust-analyzer extension for coc.nvim",
   "author": "Heyward Fann <fannheyward@gmail.com>",
   "license": "MIT",
@@ -11,6 +11,9 @@
   "engines": {
     "coc": "^0.0.70"
   },
+  "activationEvents": [
+    "onLanguage:rust"
+  ],
   "scripts": {
     "clean": "rimraf lib",
     "watch": "webpack --watch",
@@ -32,17 +35,117 @@
       "type": "object",
       "title": "coc-rust-analyzer configuration",
       "properties": {
-        "coc-rust-analyzer.enabled": {
+        "rust-analyzer.highlightingOn": {
+          "type": "boolean",
+          "default": false,
+          "description": "Highlight Rust code (overrides built-in syntax highlighting)"
+        },
+        "rust-analyzer.rainbowHighlightingOn": {
+          "type": "boolean",
+          "default": false,
+          "description": "When highlighting Rust code, use a unique color per identifier"
+        },
+        "rust-analyzer.featureFlags": {
+          "type": "object",
+          "default": {},
+          "description": "Fine grained feature flags to disable annoying features"
+        },
+        "rust-analyzer.enableEnhancedTyping": {
           "type": "boolean",
           "default": true,
-          "description": "Enable coc-rust-analyzer extension"
+          "description": "Enables enhanced typing. NOTE: If using a VIM extension, you should set this to false"
+        },
+        "rust-analyzer.raLspServerPath": {
+          "type": [
+            "string"
+          ],
+          "default": "ra_lsp_server",
+          "description": "Path to ra_lsp_server executable"
+        },
+        "rust-analyzer.enableCargoWatchOnStartup": {
+          "type": "string",
+          "default": "ask",
+          "enum": [
+            "ask",
+            "enabled",
+            "disabled"
+          ],
+          "enumDescriptions": [
+            "Asks each time whether to run `cargo watch`",
+            "`cargo watch` is always started",
+            "Don't start `cargo watch`"
+          ],
+          "description": "Whether to run `cargo watch` on startup"
+        },
+        "rust-analyzer.excludeGlobs": {
+          "type": "array",
+          "default": [],
+          "description": "Paths to exclude from analysis"
+        },
+        "rust-analyzer.cargo-watch.arguments": {
+          "type": "string",
+          "description": "`cargo-watch` arguments. (e.g: `--features=\"shumway,pdf\"` will run as `cargo watch -x \"check --features=\"shumway,pdf\"\"` )",
+          "default": ""
+        },
+        "rust-analyzer.cargo-watch.command": {
+          "type": "string",
+          "description": "`cargo-watch` command. (e.g: `clippy` will run as `cargo watch -x clippy` )",
+          "default": "check"
+        },
+        "rust-analyzer.trace.server": {
+          "type": "string",
+          "scope": "window",
+          "enum": [
+            "off",
+            "messages",
+            "verbose"
+          ],
+          "enumDescriptions": [
+            "No traces",
+            "Error only",
+            "Full log"
+          ],
+          "default": "off",
+          "description": "Trace requests to the ra_lsp_server"
+        },
+        "rust-analyzer.trace.cargo-watch": {
+          "type": "string",
+          "scope": "window",
+          "enum": [
+            "off",
+            "error",
+            "verbose"
+          ],
+          "default": "off",
+          "description": "Trace output of cargo-watch"
+        },
+        "rust-analyzer.lruCapacity": {
+          "type": "number",
+          "default": null,
+          "description": "Number of syntax trees rust-analyzer keeps in memory"
+        },
+        "rust-analyzer.displayInlayHints": {
+          "type": "boolean",
+          "default": true,
+          "description": "Display additional type information in the editor"
         }
       }
     },
     "commands": [
       {
-        "command": "coc-rust-analyzer.Command",
-        "title": "coc-rust-analyzer command title"
+        "command": "rust-analyzer.applySourceChange",
+        "title": "Apply source change",
+        "category": "Rust Analyzer"
+      },
+      {
+        "command": "rust-analyzer.collectGarbage",
+        "title": "Run garbage collection",
+        "category": "Rust Analyzer"
+      },
+      {
+        "command": "rust-analyzer.reload",
+        "title": "Restart server",
+        "category": "Rust Analyzer"
       }
     ]
   }

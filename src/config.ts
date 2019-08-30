@@ -1,5 +1,4 @@
 import { workspace } from 'coc.nvim';
-import { Server } from './server';
 
 const RA_LSP_DEBUG = process.env.__RA_LSP_SERVER_DEBUG;
 
@@ -51,9 +50,9 @@ export class Config {
       this.showWorkspaceLoadedNotification = config.get('showWorkspaceLoadedNotification') as boolean;
     }
 
-    if (!this.highlightingOn && Server) {
-      Server.highlighter.removeHighlights();
-    }
+    // if (!this.highlightingOn && Server) {
+    //   // Server.highlighter.removeHighlights();
+    // }
 
     if (config.has('enableEnhancedTyping')) {
       this.enableEnhancedTyping = config.get('enableEnhancedTyping') as boolean;
