@@ -18,6 +18,7 @@ rust-analyzer extension for coc.nvim
 1. `rust-analyzer.collectGarbage`
 1. `rust-analyzer.joinLines`
 1. `rust-analyzer.matchingBrace`
+1. `rust-analyzer.parentModule`
 1. `rust-analyzer.reload`
 1. `rust-analyzer.run`
 1. `rust-analyzer.runSingle`

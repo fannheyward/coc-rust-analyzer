@@ -164,6 +164,11 @@
         "category": "Rust Analyzer"
       },
       {
+        "command": "rust-analyzer.parentModule",
+        "title": "Locate parent module",
+        "category": "Rust Analyzer"
+      },
+      {
         "command": "rust-analyzer.reload",
         "title": "Restart server",
         "category": "Rust Analyzer"
