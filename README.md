@@ -8,10 +8,12 @@ rust-analyzer extension for coc.nvim
 
 ## Notes
 
-1. This extension is ported from rust-analyzer-vscode, some features is missing now
+1. WIP, not all configs is works
 1. Remove `ra_lsp_server` config from `coc-settings.json`
 
 ## Commands
+
+> works!
 
 1. `rust-analyzer.analyzerStatus`
 1. `rust-analyzer.applySourceChange`

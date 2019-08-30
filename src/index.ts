@@ -30,23 +30,36 @@ export async function activate(context: ExtensionContext): Promise<void> {
     // TODO
     return commands.executeCommand('editor.action.showReferences', Uri.parse(uri), position, locations);
   });
+  //   const syntaxTreeContentProvider = new SyntaxTreeContentProvider();
 
-  // Executing `cargo watch` provides us with inline diagnostics on save
-  // let provider: CargoWatchProvider | undefined;
-  // registerCommand('rust-analyzer.startCargoWatch', () => {
-  //   if (provider) {
-  //     provider.start();
-  //   } else {
-  //     startCargoWatch(context).then(p => {
-  //       provider = p;
-  //     });
-  //   }
-  // });
-  // registerCommand('rust-analyzer.stopCargoWatch', () => {
-  //   if (provider) {
-  //     provider.stop();
-  //   }
-  // });
+  //   // The events below are plain old javascript events, triggered and handled by vscode
+  //   vscode.window.onDidChangeActiveTextEditor(events.changeActiveTextEditor.makeHandler(syntaxTreeContentProvider));
+
+  //   disposeOnDeactivation(vscode.workspace.registerTextDocumentContentProvider('rust-analyzer', syntaxTreeContentProvider));
+
+  //   registerCommand('rust-analyzer.syntaxTree', commands.syntaxTree.createHandle(syntaxTreeContentProvider));
+
+  //   vscode.workspace.onDidChangeTextDocument(events.changeTextDocument.createHandler(syntaxTreeContentProvider), null, context.subscriptions);
+
+  //   // Executing `cargo watch` provides us with inline diagnostics on save
+  //   let provider: CargoWatchProvider | undefined;
+  //   interactivelyStartCargoWatch(context).then(p => {
+  //     provider = p;
+  //   });
+  //   registerCommand('rust-analyzer.startCargoWatch', () => {
+  //     if (provider) {
+  //       provider.start();
+  //     } else {
+  //       startCargoWatch(context).then(p => {
+  //         provider = p;
+  //       });
+  //     }
+  //   });
+  //   registerCommand('rust-analyzer.stopCargoWatch', () => {
+  //     if (provider) {
+  //       provider.stop();
+  //     }
+  //   });
 
   registerCommand('rust-analyzer.reload', async () => {
     if (Server.client != null) {

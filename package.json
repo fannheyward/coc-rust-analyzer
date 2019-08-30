@@ -1,6 +1,6 @@
 {
   "name": "coc-rust-analyzer",
-  "version": "0.0.2-3",
+  "version": "0.0.2-4",
   "description": "rust-analyzer extension for coc.nvim",
   "author": "Heyward Fann <fannheyward@gmail.com>",
   "license": "MIT",
@@ -55,11 +55,6 @@
           "type": "object",
           "default": {},
           "description": "Fine grained feature flags to disable annoying features"
-        },
-        "rust-analyzer.enableEnhancedTyping": {
-          "type": "boolean",
-          "default": true,
-          "description": "Enables enhanced typing. NOTE: If using a VIM extension, you should set this to false"
         },
         "rust-analyzer.raLspServerPath": {
           "type": [
