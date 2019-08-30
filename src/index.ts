@@ -1,5 +1,5 @@
-import { commands, Disposable, ExtensionContext, workspace } from 'coc.nvim';
-import { GenericNotificationHandler } from 'vscode-languageserver-protocol';
+import { commands, Disposable, ExtensionContext, Uri, workspace } from 'coc.nvim';
+import { GenericNotificationHandler, Location, Position } from 'vscode-languageserver-protocol';
 import * as cmds from './cmds';
 import * as notifications from './notifications';
 import { Server } from './server';
@@ -26,15 +26,10 @@ export async function activate(context: ExtensionContext): Promise<void> {
   registerCommand('rust-analyzer.runSingle', cmds.runnables.handleSingle);
   registerCommand('rust-analyzer.collectGarbage', () => Server.client.sendRequest<null>('rust-analyzer/collectGarbage', null));
   registerCommand('rust-analyzer.applySourceChange', cmds.applySourceChange.handle);
-  // TODO
-  // registerCommand('rust-analyzer.showReferences', (uri: string, position: Position, locations: Location[]) => {
-  //   commands.executeCommand(
-  //     'editor.action.showReferences',
-  //     Uri.parse(uri),
-  //     Server.client.protocol2CodeConverter.asPosition(position),
-  //     locations.map(Server.client.protocol2CodeConverter.asLocation)
-  //   );
-  // });
+  registerCommand('rust-analyzer.showReferences', (uri: string, position: Position, locations: Location[]) => {
+    // TODO
+    return commands.executeCommand('editor.action.showReferences', Uri.parse(uri), position, locations);
+  });
 
   // Executing `cargo watch` provides us with inline diagnostics on save
   // let provider: CargoWatchProvider | undefined;
