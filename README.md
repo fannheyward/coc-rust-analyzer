@@ -13,6 +13,7 @@ rust-analyzer extension for coc.nvim
 
 ## Commands
 
+1. `rust-analyzer.analyzerStatus`
 1. `rust-analyzer.applySourceChange`
 1. `rust-analyzer.collectGarbage`
 1. `rust-analyzer.reload`

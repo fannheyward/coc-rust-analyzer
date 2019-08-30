@@ -1,6 +1,6 @@
 {
   "name": "coc-rust-analyzer",
-  "version": "0.0.2",
+  "version": "0.0.2-1",
   "description": "rust-analyzer extension for coc.nvim",
   "author": "Heyward Fann <fannheyward@gmail.com>",
   "license": "MIT",
@@ -12,7 +12,8 @@
     "coc": "^0.0.70"
   },
   "activationEvents": [
-    "onLanguage:rust"
+    "onLanguage:rust",
+    "workspaceContains:**/Cargo.toml"
   ],
   "scripts": {
     "clean": "rimraf lib",
@@ -29,6 +30,11 @@
     "vscode-languageserver-protocol": "3.15.0-next.8",
     "webpack": "^4.39.2",
     "webpack-cli": "^3.3.6"
+  },
+  "prettier": {
+    "singleQuote": true,
+    "printWidth": 180,
+    "semi": true
   },
   "contributes": {
     "configuration": {
@@ -132,6 +138,11 @@
       }
     },
     "commands": [
+      {
+        "command": "rust-analyzer.analyzerStatus",
+        "title": "Status",
+        "category": "Rust Analyzer"
+      },
       {
         "command": "rust-analyzer.applySourceChange",
         "title": "Apply source change",
