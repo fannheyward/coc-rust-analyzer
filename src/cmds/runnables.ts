@@ -63,20 +63,20 @@ export async function handle() {
 }
 
 // export async function handleSingle(runnable: Runnable) {
-//   const editor = vscode.window.activeTextEditor;
-//   if (editor == null || editor.document.languageId !== 'rust') {
+//   const { document } = await workspace.getCurrentState();
+//   if (document.languageId !== 'rust') {
 //     return;
 //   }
 
-//   const task = createTask(runnable);
-//   task.group = vscode.TaskGroup.Build;
-//   task.presentationOptions = {
-//     reveal: vscode.TaskRevealKind.Always,
-//     panel: vscode.TaskPanelKind.Dedicated,
-//     clear: true
+//   const cmd = `${runnable.bin} ${runnable.args.join(' ')}`;
+//   const opt: TerminalOptions = {
+//     name: runnable.label,
+//     cwd: runnable.cwd,
+//     env: runnable.env
 //   };
-
-//   return vscode.tasks.executeTask(task);
+//   workspace.createTerminal(opt).then((t: Terminal) => {
+//     t.sendText(cmd);
+//   });
 // }
 
 // /**
