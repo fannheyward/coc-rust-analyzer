@@ -40,6 +40,6 @@ export async function handle(change: SourceChange) {
       return;
     }
 
-    workspace.nvim.command(`call setpos('.', [${document.bufnr}, ${position.line + 1}, ${position.character + 1}, 0])`);
+    workspace.jumpTo(uri, position);
   }
 }
