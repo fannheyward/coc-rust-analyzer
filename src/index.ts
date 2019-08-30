@@ -20,7 +20,7 @@ export async function activate(context: ExtensionContext): Promise<void> {
   // Commands are requests from vscode to the language server
   registerCommand('rust-analyzer.analyzerStatus', cmds.analyzerStatus.handler);
   registerCommand('rust-analyzer.matchingBrace', cmds.matchingBrace.handle);
-  // registerCommand('rust-analyzer.joinLines', cmds.joinLines.handle);
+  registerCommand('rust-analyzer.joinLines', cmds.joinLines.handle);
   // registerCommand('rust-analyzer.parentModule', cmds.parentModule.handle);
   registerCommand('rust-analyzer.run', cmds.runnables.handle);
   // registerCommand('rust-analyzer.runSingle', cmds.runnables.handleSingle);

@@ -154,6 +154,11 @@
         "category": "Rust Analyzer"
       },
       {
+        "command": "rust-analyzer.joinLines",
+        "title": "Join lines",
+        "category": "Rust Analyzer"
+      },
+      {
         "command": "rust-analyzer.matchingBrace",
         "title": "Find matching brace",
         "category": "Rust Analyzer"
