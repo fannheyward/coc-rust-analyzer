@@ -6,6 +6,6 @@ import * as matchingBrace from './matching_brace';
 // import * as onEnter from './on_enter';
 import * as parentModule from './parent_module';
 import * as runnables from './runnables';
-// import * as syntaxTree from './syntaxTree';
+import * as syntaxTree from './syntaxTree';
 
-export { analyzerStatus, applySourceChange, joinLines, matchingBrace, parentModule, runnables };
+export { analyzerStatus, applySourceChange, joinLines, matchingBrace, parentModule, runnables, syntaxTree };

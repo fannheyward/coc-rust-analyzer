@@ -22,6 +22,7 @@ export async function activate(context: ExtensionContext): Promise<void> {
   registerCommand('rust-analyzer.runSingle', cmds.runnables.handleSingle);
   registerCommand('rust-analyzer.collectGarbage', () => Server.client.sendRequest<null>('rust-analyzer/collectGarbage', null));
   registerCommand('rust-analyzer.applySourceChange', cmds.applySourceChange.handle);
+  registerCommand('rust-analyzer.syntaxTree', cmds.syntaxTree.handler);
   registerCommand('rust-analyzer.showReferences', (uri: string, position: Position, locations: Location[]) => {
     // TODO
     return commands.executeCommand('editor.action.showReferences', Uri.parse(uri), position, locations);
@@ -36,8 +37,6 @@ export async function activate(context: ExtensionContext): Promise<void> {
   //   vscode.window.onDidChangeActiveTextEditor(events.changeActiveTextEditor.makeHandler(syntaxTreeContentProvider));
 
   //   disposeOnDeactivation(vscode.workspace.registerTextDocumentContentProvider('rust-analyzer', syntaxTreeContentProvider));
-
-  //   registerCommand('rust-analyzer.syntaxTree', commands.syntaxTree.createHandle(syntaxTreeContentProvider));
 
   //   vscode.workspace.onDidChangeTextDocument(events.changeTextDocument.createHandler(syntaxTreeContentProvider), null, context.subscriptions);
 

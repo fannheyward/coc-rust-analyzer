@@ -24,6 +24,7 @@ rust-analyzer extension for coc.nvim
 1. `rust-analyzer.reload`
 1. `rust-analyzer.run`
 1. `rust-analyzer.runSingle`
+1. `rust-analyzer.syntaxTree`
 
 ## License
 

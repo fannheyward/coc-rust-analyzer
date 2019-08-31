@@ -17,7 +17,6 @@ export async function handle() {
   if (!range) {
     return;
   }
-  console.log(range);
   const param: JoinLinesParams = {
     textDocument: { uri: doc.uri },
     range
