@@ -1,8 +1,8 @@
+import { Executable, LanguageClient, LanguageClientOptions, ServerOptions, Uri, workspace } from 'coc.nvim';
 import { homedir } from 'os';
-import { Uri, LanguageClientOptions, ServerOptions, Executable, LanguageClient, workspace } from 'coc.nvim';
 import { GenericNotificationHandler } from 'vscode-languageserver-protocol';
-
 import { Config } from './config';
+
 // import { Highlighter } from './highlighting';
 
 function expandPathResolving(path: string) {
@@ -35,7 +35,7 @@ export class Server {
     const clientOptions: LanguageClientOptions = {
       documentSelector: [{ scheme: 'file', language: 'rust' }],
       initializationOptions: {
-        publishDecorations: true,
+        publishDecorations: false,
         showWorkspaceLoaded: Server.config.showWorkspaceLoadedNotification,
         lruCapacity: Server.config.lruCapacity,
         excludeGlobs: Server.config.excludeGlobs,

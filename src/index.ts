@@ -1,7 +1,6 @@
 import { commands, Disposable, ExtensionContext, Uri, workspace } from 'coc.nvim';
 import { GenericNotificationHandler, Location, Position } from 'vscode-languageserver-protocol';
 import * as cmds from './cmds';
-import * as notifications from './notifications';
 import { Server } from './server';
 
 export async function activate(context: ExtensionContext): Promise<void> {
@@ -13,9 +12,6 @@ export async function activate(context: ExtensionContext): Promise<void> {
   function registerCommand(name: string, f: any) {
     disposeOnDeactivation(commands.registerCommand(name, f));
   }
-
-  // Notifications are events triggered by the language server
-  const allNotifications: Iterable<[string, GenericNotificationHandler]> = [['rust-analyzer/publishDecorations', notifications.publishDecorations.handle]];
 
   // Commands are requests from vscode to the language server
   registerCommand('rust-analyzer.analyzerStatus', cmds.analyzerStatus.handler);
@@ -30,6 +26,10 @@ export async function activate(context: ExtensionContext): Promise<void> {
     // TODO
     return commands.executeCommand('editor.action.showReferences', Uri.parse(uri), position, locations);
   });
+
+  // Notifications are events triggered by the language server
+  const allNotifications: Iterable<[string, GenericNotificationHandler]> = [];
+  // const allNotifications: Iterable<[string, GenericNotificationHandler]> = [['rust-analyzer/publishDecorations', notifications.publishDecorations.handle]];
   //   const syntaxTreeContentProvider = new SyntaxTreeContentProvider();
 
   //   // The events below are plain old javascript events, triggered and handled by vscode
@@ -70,6 +70,25 @@ export async function activate(context: ExtensionContext): Promise<void> {
   });
 
   Server.start(allNotifications);
+
+  //   if (Server.config.displayInlayHints) {
+  //     const hintsUpdater = new HintsUpdater();
+  //     hintsUpdater.refreshHintsForVisibleEditors().then(() => {
+  //       // vscode may ignore top level hintsUpdater.refreshHintsForVisibleEditors()
+  //       // so update the hints once when the focus changes to guarantee their presence
+  //       let editorChangeDisposable: vscode.Disposable | null = null;
+  //       editorChangeDisposable = vscode.window.onDidChangeActiveTextEditor(_ => {
+  //         if (editorChangeDisposable !== null) {
+  //           editorChangeDisposable.dispose();
+  //         }
+  //         return hintsUpdater.refreshHintsForVisibleEditors();
+  //       });
+
+  //       disposeOnDeactivation(vscode.window.onDidChangeVisibleTextEditors(_ => hintsUpdater.refreshHintsForVisibleEditors()));
+  //       disposeOnDeactivation(vscode.workspace.onDidChangeTextDocument(e => hintsUpdater.refreshHintsForVisibleEditors(e)));
+  //       disposeOnDeactivation(vscode.workspace.onDidChangeConfiguration(_ => hintsUpdater.toggleHintsDisplay(Server.config.displayInlayHints)));
+  //     });
+  //   }
 }
 
 export function deactivate(): Thenable<void> {
