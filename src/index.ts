@@ -28,6 +28,10 @@ export async function activate(context: ExtensionContext): Promise<void> {
     return commands.executeCommand('editor.action.showReferences', Uri.parse(uri), position, locations);
   });
 
+  // if (Server.config.enableEnhancedTyping) {
+  //   cmds.onEnter.handle();
+  // }
+
   // Notifications are events triggered by the language server
   const allNotifications: Iterable<[string, GenericNotificationHandler]> = [];
   // const allNotifications: Iterable<[string, GenericNotificationHandler]> = [['rust-analyzer/publishDecorations', notifications.publishDecorations.handle]];
