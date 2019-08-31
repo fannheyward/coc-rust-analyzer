@@ -8,6 +8,10 @@
   "keywords": [
     "coc.nvim"
   ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/fannheyward/coc-rust-analyzer.git"
+  },
   "engines": {
     "coc": "^0.0.70"
   },
