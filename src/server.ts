@@ -1,6 +1,7 @@
 import { Executable, LanguageClient, LanguageClientOptions, ServerOptions, Uri, workspace } from 'coc.nvim';
 import { homedir } from 'os';
 import { GenericNotificationHandler } from 'vscode-languageserver-protocol';
+import which from 'which';
 import { Config } from './config';
 
 // import { Highlighter } from './highlighting';
@@ -17,16 +18,33 @@ export class Server {
   public static config = new Config();
   public static client: LanguageClient;
 
-  public static start(notificationHandlers: Iterable<[string, GenericNotificationHandler]>) {
+  public static prepare(): Executable | undefined {
+    const bin = expandPathResolving(this.config.raLspServerPath);
+    if (bin === 'ra_lsp_server') {
+      if (!which.sync(bin, { nothrow: true })) {
+        return;
+      }
+    }
+
     let folder: string = '.';
     if (workspace.workspaceFolder.uri.length > 0) {
       folder = Uri.parse(workspace.workspaceFolder.uri).fsPath;
     }
 
     const run: Executable = {
-      command: expandPathResolving(this.config.raLspServerPath),
+      command: bin,
       options: { cwd: folder }
     };
+
+    return run;
+  }
+
+  public static start(notificationHandlers: Iterable<[string, GenericNotificationHandler]>) {
+    const run = this.prepare();
+    if (!run) {
+      return;
+    }
+
     const serverOptions: ServerOptions = {
       run,
       debug: run

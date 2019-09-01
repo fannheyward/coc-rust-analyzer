@@ -4,7 +4,15 @@ import * as cmds from './cmds';
 import { Server } from './server';
 
 export async function activate(context: ExtensionContext): Promise<void> {
-  workspace.showMessage(`coc-rust-analyzer is works!`);
+  const run = Server.prepare();
+  if (!run) {
+    workspace.showMessage(`ra_lsp_server is not found, you need to build rust-analyzer from source`, 'error');
+    const ret = await workspace.showQuickpick(['Yes', 'No'], 'Get ra_lsp_server?');
+    if (ret === 0) {
+      commands.executeCommand('vscode.open', 'https://github.com/rust-analyzer/rust-analyzer').catch(_e => {});
+    }
+    return;
+  }
   function disposeOnDeactivation(disposable: Disposable) {
     context.subscriptions.push(disposable);
   }
@@ -73,6 +81,9 @@ export async function activate(context: ExtensionContext): Promise<void> {
   });
 
   Server.start(allNotifications);
+  Server.client.onReady().then(() => {
+    workspace.showMessage(`coc-rust-analyzer is works!`);
+  });
 
   //   if (Server.config.displayInlayHints) {
   //     const hintsUpdater = new HintsUpdater();
