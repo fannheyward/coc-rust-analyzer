@@ -70,7 +70,7 @@ function mapSpanToLocation(span: RustDiagnosticSpan): Location {
   const range = Range.create(span.line_start - 1, span.column_start - 1, span.line_end - 1, span.column_end - 1);
 
   // TODO: fsPath ok?
-  return Location.create(fileUri.fsPath, range);
+  return Location.create(fileUri.toString(), range);
 }
 
 /**

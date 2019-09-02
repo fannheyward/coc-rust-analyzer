@@ -113,8 +113,7 @@ export async function startCargoWatch(context: ExtensionContext): Promise<CargoW
       return;
     }
 
-    const terminal = await workspace.createTerminal({ name: 'install-cargo-watch' });
-    await terminal.sendText(`cargo install cargo-watch`);
+    await workspace.runTerminalCommand(`cargo install cargo-watch`, '.', true);
 
     const output = await execPromise('cargo watch --version').catch(e => e);
     if (output.stderr !== '') {
@@ -123,7 +122,7 @@ export async function startCargoWatch(context: ExtensionContext): Promise<CargoW
     }
   }
 
-  const provider = await registerCargoWatchProvider(context.subscriptions);
+  const provider = registerCargoWatchProvider(context.subscriptions);
   if (provider) {
     provider.start();
   }

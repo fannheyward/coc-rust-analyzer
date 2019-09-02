@@ -5,8 +5,8 @@ export function areDiagnosticsEqual(left: Diagnostic, right: Diagnostic): boolea
   return (
     left.source === right.source &&
     left.severity === right.severity &&
-    left.range.start === right.range.start &&
-    left.range.end === right.range.end &&
+    left.range.start.line === right.range.start.line &&
+    left.range.end.line === right.range.end.line &&
     left.message === right.message
   );
 }

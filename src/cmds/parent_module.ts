@@ -18,7 +18,6 @@ export async function handle() {
     const uri = response[0].uri;
     const range = response[0].range;
 
-    console.error(range.start.line, range.start.character, range.end.line, range.end.character);
     workspace.jumpTo(uri, range.start);
   }
 }

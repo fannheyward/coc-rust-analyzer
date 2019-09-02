@@ -1,17 +1,15 @@
 import * as child_process from 'child_process';
+import { commands, DiagnosticCollection, Disposable, languages, OutputChannel, workspace } from 'coc.nvim';
 import * as fs from 'fs';
 import * as path from 'path';
-
-import { commands, languages, OutputChannel, DiagnosticCollection, Disposable, workspace } from 'coc.nvim';
 import { Diagnostic } from 'vscode-languageserver-protocol';
 import { Server } from '../server';
-import { terminate } from '../utils/processes';
-import { LineBuffer } from './line_buffer';
-// import { StatusDisplay } from './watch_status';
-
 import { mapRustDiagnosticToVsCode, RustDiagnostic } from '../utils/diagnostics/rust';
 import SuggestedFixCollection from '../utils/diagnostics/SuggestedFixCollection';
 import { areDiagnosticsEqual } from '../utils/diagnostics/vscode';
+import { terminate } from '../utils/processes';
+import { LineBuffer } from './line_buffer';
+import { StatusDisplay } from './watch_status';
 
 export function registerCargoWatchProvider(subscriptions: Disposable[]): CargoWatchProvider | undefined {
   let cargoExists = false;
@@ -37,7 +35,7 @@ export function registerCargoWatchProvider(subscriptions: Disposable[]): CargoWa
 
 export class CargoWatchProvider implements Disposable {
   private readonly diagnosticCollection: DiagnosticCollection;
-  // private readonly statusDisplay: StatusDisplay;
+  private readonly statusDisplay: StatusDisplay;
   private readonly outputChannel: OutputChannel;
 
   private suggestedFixCollection: SuggestedFixCollection;
@@ -47,7 +45,7 @@ export class CargoWatchProvider implements Disposable {
 
   constructor() {
     this.diagnosticCollection = languages.createDiagnosticCollection('rustc');
-    // this.statusDisplay = new StatusDisplay(Server.config.cargoWatchOptions.command);
+    this.statusDisplay = new StatusDisplay(Server.config.cargoWatchOptions.command);
     this.outputChannel = workspace.createOutputChannel('Cargo Watch Trace');
 
     // Track `rustc`'s suggested fixes so we can convert them to code actions
@@ -125,7 +123,7 @@ export class CargoWatchProvider implements Disposable {
     this.diagnosticCollection.clear();
     this.diagnosticCollection.dispose();
     this.outputChannel.dispose();
-    // this.statusDisplay.dispose();
+    this.statusDisplay.dispose();
     this.codeActionDispose.dispose();
   }
 
@@ -145,11 +143,13 @@ export class CargoWatchProvider implements Disposable {
     if (line.startsWith('[Running')) {
       this.diagnosticCollection.clear();
       this.suggestedFixCollection.clear();
-      // this.statusDisplay.show();
+      this.statusDisplay.show();
+      return;
     }
 
-    if (line.startsWith('[Finished running')) {
-      // this.statusDisplay.hide();
+    if (line.startsWith('[Finished')) {
+      this.statusDisplay.hide();
+      return;
     }
 
     interface CargoArtifact {
@@ -179,7 +179,7 @@ export class CargoWatchProvider implements Disposable {
 
       // The format of the package_id is "{name} {version} ({source_id})",
       // https://github.com/rust-lang/cargo/blob/37ad03f86e895bb80b474c1c088322634f4725f5/src/cargo/core/package_id.rs#L53
-      // this.statusDisplay.packageName = msg.package_id.split(' ')[0];
+      this.statusDisplay.packageName = msg.package_id.split(' ')[0];
     } else if (data.reason === 'compiler-message') {
       const msg = data.message as RustDiagnostic;
 
