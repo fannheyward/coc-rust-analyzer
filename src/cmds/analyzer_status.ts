@@ -1,4 +1,4 @@
-import { workspace } from 'coc.nvim';
+import { OutputChannel, workspace } from 'coc.nvim';
 import { Server } from '../server';
 
 export async function handler() {

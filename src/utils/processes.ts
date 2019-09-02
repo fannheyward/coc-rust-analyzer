@@ -16,36 +16,32 @@ const isLinux = process.platform === 'linux';
 // https://github.com/rust-analyzer/rust-analyzer/pull/1079#issuecomment-478908109
 
 export function terminate(process: ChildProcess, cwd?: string): boolean {
-    if (isWindows) {
-        try {
-            // This we run in Atom execFileSync is available.
-            // Ignore stderr since this is otherwise piped to parent.stderr
-            // which might be already closed.
-            const options: any = {
-                stdio: ['pipe', 'pipe', 'ignore']
-            };
-            if (cwd) {
-                options.cwd = cwd;
-            }
-            cp.execFileSync(
-                'taskkill',
-                ['/T', '/F', '/PID', process.pid.toString()],
-                options
-            );
-            return true;
-        } catch (err) {
-            return false;
-        }
-    } else if (isLinux || isMacintosh) {
-        try {
-            const cmd = join(__dirname, 'terminateProcess.sh');
-            const result = cp.spawnSync(cmd, [process.pid.toString()]);
-            return result.error ? false : true;
-        } catch (err) {
-            return false;
-        }
-    } else {
-        process.kill('SIGKILL');
-        return true;
+  if (isWindows) {
+    try {
+      // This we run in Atom execFileSync is available.
+      // Ignore stderr since this is otherwise piped to parent.stderr
+      // which might be already closed.
+      const options: any = {
+        stdio: ['pipe', 'pipe', 'ignore']
+      };
+      if (cwd) {
+        options.cwd = cwd;
+      }
+      cp.execFileSync('taskkill', ['/T', '/F', '/PID', process.pid.toString()], options);
+      return true;
+    } catch (err) {
+      return false;
     }
+  } else if (isLinux || isMacintosh) {
+    try {
+      const cmd = join(__dirname, 'terminateProcess.sh');
+      const result = cp.spawnSync(cmd, [process.pid.toString()]);
+      return result.error ? false : true;
+    } catch (err) {
+      return false;
+    }
+  } else {
+    process.kill('SIGKILL');
+    return true;
+  }
 }

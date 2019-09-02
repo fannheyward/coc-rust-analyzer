@@ -1,8 +1,10 @@
-import { Terminal, TerminalOptions, workspace } from 'coc.nvim';
+import { ExtensionContext, Terminal, TerminalOptions, workspace } from 'coc.nvim';
 import { Position, Range, TextDocumentIdentifier } from 'vscode-languageserver-protocol';
 import { Server } from '../server';
+import * as child_process from 'child_process';
+import { promisify } from 'util';
 
-// import { CargoWatchProvider, registerCargoWatchProvider } from './cargo_watch';
+import { CargoWatchProvider, registerCargoWatchProvider } from './cargo_watch';
 
 interface RunnablesParams {
   textDocument: TextDocumentIdentifier;
@@ -79,67 +81,70 @@ export async function handleSingle(runnable: Runnable) {
   });
 }
 
-// /**
-//  * Interactively asks the user whether we should run `cargo check` in order to
-//  * provide inline diagnostics; the user is met with a series of dialog boxes
-//  * that, when accepted, allow us to `cargo install cargo-watch` and then run it.
-//  */
-// export async function interactivelyStartCargoWatch(context: vscode.ExtensionContext): Promise<CargoWatchProvider | undefined> {
-//   if (Server.config.cargoWatchOptions.enableOnStartup === 'disabled') {
-//     return;
-//   }
+/**
+ * Interactively asks the user whether we should run `cargo check` in order to
+ * provide inline diagnostics; the user is met with a series of dialog boxes
+ * that, when accepted, allow us to `cargo install cargo-watch` and then run it.
+ */
+export async function interactivelyStartCargoWatch(context: ExtensionContext): Promise<CargoWatchProvider | undefined> {
+  if (Server.config.cargoWatchOptions.enableOnStartup === 'disabled') {
+    return;
+  }
 
-//   if (Server.config.cargoWatchOptions.enableOnStartup === 'ask') {
-//     const watch = await vscode.window.showInformationMessage('Start watching changes with cargo? (Executes `cargo watch`, provides inline diagnostics)', 'yes', 'no');
-//     if (watch !== 'yes') {
-//       return;
-//     }
-//   }
+  if (Server.config.cargoWatchOptions.enableOnStartup === 'ask') {
+    const watch = await workspace.showQuickpick(['Yes', 'No'], 'Start watching changes with cargo? (Executes `cargo watch`, provides inline diagnostics');
+    if (watch !== 0) {
+      return;
+    }
+  }
 
-//   return startCargoWatch(context);
-// }
+  return startCargoWatch(context);
+}
 
-// export async function startCargoWatch(context: vscode.ExtensionContext): Promise<CargoWatchProvider | undefined> {
-//   const execPromise = util.promisify(child_process.exec);
+export async function startCargoWatch(context: ExtensionContext): Promise<CargoWatchProvider | undefined> {
+  const execPromise = promisify(child_process.exec);
 
-//   const { stderr } = await execPromise('cargo watch --version').catch(e => e);
+  const { stderr } = await execPromise('cargo watch --version').catch(e => e);
 
-//   if (stderr.includes('no such subcommand: `watch`')) {
-//     const msg = 'The `cargo-watch` subcommand is not installed. Install? (takes ~1-2 minutes)';
-//     const install = await vscode.window.showInformationMessage(msg, 'yes', 'no');
-//     if (install !== 'yes') {
-//       return;
-//     }
+  console.error(stderr);
+  // TODO
+  // if (stderr.includes('no such subcommand: `watch`')) {
+  //   const msg = 'The `cargo-watch` subcommand is not installed. Install? (takes ~1-2 minutes)';
+  //   const install = await workspace.showPrompt(msg);
+  //   if (!install) {
+  //     return;
+  //   }
 
-//     const label = 'install-cargo-watch';
-//     const taskFinished = new Promise((resolve, reject) => {
-//       const disposable = vscode.tasks.onDidEndTask(({ execution }) => {
-//         if (execution.task.name === label) {
-//           disposable.dispose();
-//           resolve();
-//         }
-//       });
-//     });
+  //   const label = 'install-cargo-watch';
+  //   const taskFinished = new Promise((resolve, reject) => {
+  //     const disposable = vscode.tasks.onDidEndTask(({ execution }) => {
+  //       if (execution.task.name === label) {
+  //         disposable.dispose();
+  //         resolve();
+  //       }
+  //     });
+  //   });
 
-//     vscode.tasks.executeTask(
-//       createTask({
-//         label,
-//         bin: 'cargo',
-//         args: ['install', 'cargo-watch'],
-//         env: {}
-//       })
-//     );
-//     await taskFinished;
-//     const output = await execPromise('cargo watch --version').catch(e => e);
-//     if (output.stderr !== '') {
-//       vscode.window.showErrorMessage(`Couldn't install \`cargo-\`watch: ${output.stderr}`);
-//       return;
-//     }
-//   }
+  //   vscode.tasks.executeTask(
+  //     createTask({
+  //       label,
+  //       bin: 'cargo',
+  //       args: ['install', 'cargo-watch'],
+  //       env: {}
+  //     })
+  //   );
+  //   await taskFinished;
+  //   const output = await execPromise('cargo watch --version').catch(e => e);
+  //   if (output.stderr !== '') {
+  //     vscode.window.showErrorMessage(`Couldn't install \`cargo-\`watch: ${output.stderr}`);
+  //     return;
+  //   }
+  // }
 
-//   const provider = await registerCargoWatchProvider(context.subscriptions);
-//   if (provider) {
-//     provider.start();
-//   }
-//   return provider;
-// }
+  const provider = await registerCargoWatchProvider(context.subscriptions);
+  if (provider) {
+    provider.start();
+  }
+
+  return provider;
+}

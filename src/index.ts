@@ -2,6 +2,8 @@ import { commands, Disposable, ExtensionContext, Uri, workspace } from 'coc.nvim
 import { GenericNotificationHandler, Location, Position } from 'vscode-languageserver-protocol';
 import * as cmds from './cmds';
 import { Server } from './server';
+import { CargoWatchProvider } from './cmds/cargo_watch';
+import { interactivelyStartCargoWatch, startCargoWatch } from './cmds/runnables';
 
 export async function activate(context: ExtensionContext): Promise<void> {
   const run = Server.prepare();
@@ -52,25 +54,25 @@ export async function activate(context: ExtensionContext): Promise<void> {
 
   //   vscode.workspace.onDidChangeTextDocument(events.changeTextDocument.createHandler(syntaxTreeContentProvider), null, context.subscriptions);
 
-  //   // Executing `cargo watch` provides us with inline diagnostics on save
-  //   let provider: CargoWatchProvider | undefined;
-  //   interactivelyStartCargoWatch(context).then(p => {
-  //     provider = p;
-  //   });
-  //   registerCommand('rust-analyzer.startCargoWatch', () => {
-  //     if (provider) {
-  //       provider.start();
-  //     } else {
-  //       startCargoWatch(context).then(p => {
-  //         provider = p;
-  //       });
-  //     }
-  //   });
-  //   registerCommand('rust-analyzer.stopCargoWatch', () => {
-  //     if (provider) {
-  //       provider.stop();
-  //     }
-  //   });
+  // Executing `cargo watch` provides us with inline diagnostics on save
+  let provider: CargoWatchProvider | undefined;
+  interactivelyStartCargoWatch(context).then(p => {
+    provider = p;
+  });
+  registerCommand('rust-analyzer.startCargoWatch', () => {
+    if (provider) {
+      provider.start();
+    } else {
+      startCargoWatch(context).then(p => {
+        provider = p;
+      });
+    }
+  });
+  registerCommand('rust-analyzer.stopCargoWatch', () => {
+    if (provider) {
+      provider.stop();
+    }
+  });
 
   registerCommand('rust-analyzer.reload', async () => {
     if (Server.client != null) {
