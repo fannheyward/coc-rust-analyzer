@@ -92,8 +92,8 @@ export async function interactivelyStartCargoWatch(context: ExtensionContext): P
   }
 
   if (Server.config.cargoWatchOptions.enableOnStartup === 'ask') {
-    const watch = await workspace.showQuickpick(['Yes', 'No'], 'Start watching changes with cargo? (Executes `cargo watch`, provides inline diagnostics');
-    if (watch !== 0) {
+    const watch = await workspace.showPrompt('Start watching changes with cargo? (Executes `cargo watch`, provides inline diagnostics');
+    if (!watch) {
       return;
     }
   }
@@ -106,40 +106,22 @@ export async function startCargoWatch(context: ExtensionContext): Promise<CargoW
 
   const { stderr } = await execPromise('cargo watch --version').catch(e => e);
 
-  console.error(stderr);
-  // TODO
-  // if (stderr.includes('no such subcommand: `watch`')) {
-  //   const msg = 'The `cargo-watch` subcommand is not installed. Install? (takes ~1-2 minutes)';
-  //   const install = await workspace.showPrompt(msg);
-  //   if (!install) {
-  //     return;
-  //   }
+  if (stderr.includes('no such subcommand: `watch`')) {
+    const msg = 'The `cargo-watch` subcommand is not installed. Install? (takes ~1-2 minutes)';
+    const install = await workspace.showPrompt(msg);
+    if (!install) {
+      return;
+    }
 
-  //   const label = 'install-cargo-watch';
-  //   const taskFinished = new Promise((resolve, reject) => {
-  //     const disposable = vscode.tasks.onDidEndTask(({ execution }) => {
-  //       if (execution.task.name === label) {
-  //         disposable.dispose();
-  //         resolve();
-  //       }
-  //     });
-  //   });
+    const terminal = await workspace.createTerminal({ name: 'install-cargo-watch' });
+    await terminal.sendText(`cargo install cargo-watch`);
 
-  //   vscode.tasks.executeTask(
-  //     createTask({
-  //       label,
-  //       bin: 'cargo',
-  //       args: ['install', 'cargo-watch'],
-  //       env: {}
-  //     })
-  //   );
-  //   await taskFinished;
-  //   const output = await execPromise('cargo watch --version').catch(e => e);
-  //   if (output.stderr !== '') {
-  //     vscode.window.showErrorMessage(`Couldn't install \`cargo-\`watch: ${output.stderr}`);
-  //     return;
-  //   }
-  // }
+    const output = await execPromise('cargo watch --version').catch(e => e);
+    if (output.stderr !== '') {
+      workspace.showMessage(`Couldn't install \`cargo-\`watch: ${output.stderr}`, 'error');
+      return;
+    }
+  }
 
   const provider = await registerCargoWatchProvider(context.subscriptions);
   if (provider) {
