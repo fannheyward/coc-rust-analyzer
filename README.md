@@ -6,6 +6,8 @@ rust-analyzer extension for coc.nvim
 
 `:CocInstall coc-rust-analyzer`
 
+> remove `ra_lsp_server` config from `coc-settings.json` if you set
+
 ## Quick Start
 
 You need `ra_lsp_server` installed. You can build it from source:
@@ -16,11 +18,6 @@ git clone https://github.com/rust-analyzer/rust-analyzer && cd rust-analyzer
 rustup component add rust-src
 cargo install-ra --server
 ```
-
-## Notes
-
-1. This extension is WIP, not all `rust-analyzer.*` configs are works
-1. Remove `ra_lsp_server` config from `coc-settings.json` if you set
 
 ## Configurations
 
@@ -37,8 +34,6 @@ cargo install-ra --server
 1. `rust-analyzer.trace.cargo-watch`: Trace output of cargo-watch, default: `off`
 
 ## Commands
-
-> works
 
 1. `rust-analyzer.analyzerStatus`: Show rust-analyzer status
 1. `rust-analyzer.applySourceChange`: Apply source change
