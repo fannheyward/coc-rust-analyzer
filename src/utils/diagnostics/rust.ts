@@ -1,6 +1,6 @@
 import { Uri, workspace } from 'coc.nvim';
 import * as path from 'path';
-import { Diagnostic, DiagnosticRelatedInformation, DiagnosticSeverity, Location, Range } from 'vscode-languageserver-protocol';
+import { Diagnostic, DiagnosticRelatedInformation, DiagnosticSeverity, DiagnosticTag, Location, Range } from 'vscode-languageserver-protocol';
 import SuggestedFix from './SuggestedFix';
 
 export enum SuggestionApplicability {
@@ -208,8 +208,7 @@ export function mapRustDiagnosticToVsCode(rd: RustDiagnostic): MappedRustDiagnos
   }
 
   if (isUnusedOrUnnecessary(rd)) {
-    // TODO: tags
-    // vd.tags = [vscode.DiagnosticTag.Unnecessary];
+    vd.tags = [DiagnosticTag.Unnecessary];
   }
 
   return {

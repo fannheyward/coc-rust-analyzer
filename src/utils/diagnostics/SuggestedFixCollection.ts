@@ -62,6 +62,7 @@ export default class SuggestedFixCollection implements CodeActionProvider {
     const documentUriString = document.uri.toString();
     const suggestedFixes = this.suggestedFixes.get(documentUriString);
 
+    // TODO: filter location.range.intersection
     return (suggestedFixes || []).map(fix => fix.toCodeAction());
   }
 }
