@@ -1,4 +1,5 @@
-import { CodeAction, CodeActionKind, Diagnostic, Location, WorkspaceEdit } from 'vscode-languageserver-protocol';
+import { CodeAction } from 'coc.nvim';
+import { CodeActionKind, Diagnostic, Location, TextEdit, WorkspaceEdit } from 'vscode-languageserver-protocol';
 import { SuggestionApplicability } from './rust';
 
 /**
@@ -44,15 +45,21 @@ export default class SuggestedFix {
    * Converts this suggested fix to a VS Code Quick Fix code action
    */
   public toCodeAction(): CodeAction {
-    // FIXME: edit
     const edit: WorkspaceEdit = {
       changes: {}
     };
-    // edit.replace(this.location.uri, this.location.range, this.replacement);
-    const codeAction = CodeAction.create(this.title, edit, CodeActionKind.QuickFix);
+    const change: TextEdit = {
+      range: this.location.range,
+      newText: this.replacement
+    };
+    edit.changes![this.location.uri] = [change];
 
-    // TODO
-    // codeAction.isPreferred = this.applicability === SuggestionApplicability.MachineApplicable;
+    const codeAction: CodeAction = {
+      title: this.title,
+      edit: edit,
+      kind: CodeActionKind.QuickFix,
+      isPrefered: this.applicability === SuggestionApplicability.MachineApplicable
+    };
 
     codeAction.diagnostics = [...this.diagnostics];
     return codeAction;

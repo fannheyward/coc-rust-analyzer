@@ -1,5 +1,5 @@
 import * as child_process from 'child_process';
-import { commands, DiagnosticCollection, Disposable, languages, OutputChannel, workspace } from 'coc.nvim';
+import { DiagnosticCollection, Disposable, languages, OutputChannel, workspace } from 'coc.nvim';
 import * as fs from 'fs';
 import * as path from 'path';
 import { Diagnostic } from 'vscode-languageserver-protocol';
@@ -206,8 +206,6 @@ export class CargoWatchProvider implements Disposable {
         for (const suggestedFix of suggestedFixes) {
           this.suggestedFixCollection.addSuggestedFixForDiagnostic(suggestedFix, diagnostic);
         }
-
-        commands.executeCommand('codeAction', fileUri, diagnostic.range);
       }
     }
   }

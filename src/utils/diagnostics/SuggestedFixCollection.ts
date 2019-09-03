@@ -1,6 +1,6 @@
-import SuggestedFix from './SuggestedFix';
 import { CodeAction, CodeActionProvider } from 'coc.nvim';
-import { Range, TextDocument, Diagnostic, CodeActionKind } from 'vscode-languageserver-protocol';
+import { CodeActionKind, Diagnostic, TextDocument } from 'vscode-languageserver-protocol';
+import SuggestedFix from './SuggestedFix';
 
 /**
  * Collection of suggested fixes across multiple documents
@@ -58,12 +58,10 @@ export default class SuggestedFixCollection implements CodeActionProvider {
    * Filters suggested fixes by their document and range and converts them to
    * code actions
    */
-  public provideCodeActions(document: TextDocument, _range: Range): CodeAction[] {
+  public provideCodeActions(document: TextDocument): CodeAction[] {
     const documentUriString = document.uri.toString();
-
     const suggestedFixes = this.suggestedFixes.get(documentUriString);
-    // TODO
-    return [];
-    // return (suggestedFixes || []).filter(({ location }) => location.range.intersection(range)).map(suggestedEdit => suggestedEdit.toCodeAction());
+
+    return (suggestedFixes || []).map(fix => fix.toCodeAction());
   }
 }
