@@ -21,8 +21,6 @@ cargo install-ra --server
 
 ## Configurations
 
-> works
-
 1. `rust-analyzer.raLspServerPath`: Path to ra_lsp_server executable, default: `ra_lsp_server`
 1. `rust-analyzer.featureFlags`: Fine grained feature flags to disable annoying features, default: `{}`
 1. `rust-analyzer.excludeGlobs`: Paths to exclude from analysis, default: `[]`

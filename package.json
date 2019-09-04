@@ -48,16 +48,6 @@
       "type": "object",
       "title": "coc-rust-analyzer configuration",
       "properties": {
-        "rust-analyzer.highlightingOn": {
-          "type": "boolean",
-          "default": false,
-          "description": "Highlight Rust code (overrides built-in syntax highlighting)"
-        },
-        "rust-analyzer.rainbowHighlightingOn": {
-          "type": "boolean",
-          "default": false,
-          "description": "When highlighting Rust code, use a unique color per identifier"
-        },
         "rust-analyzer.featureFlags": {
           "type": "object",
           "default": {},
@@ -131,11 +121,6 @@
           "type": "number",
           "default": null,
           "description": "Number of syntax trees rust-analyzer keeps in memory"
-        },
-        "rust-analyzer.displayInlayHints": {
-          "type": "boolean",
-          "default": true,
-          "description": "Display additional type information in the editor"
         }
       }
     },
