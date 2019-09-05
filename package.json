@@ -48,6 +48,11 @@
       "type": "object",
       "title": "coc-rust-analyzer configuration",
       "properties": {
+        "rust-analyzer.showWorkspaceLoadedNotification": {
+          "type": "boolean",
+          "default": true,
+          "description": "Show notification after workspace loaded"
+        },
         "rust-analyzer.featureFlags": {
           "type": "object",
           "default": {},
