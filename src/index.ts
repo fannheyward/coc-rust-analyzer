@@ -79,9 +79,6 @@ export async function activate(context: ExtensionContext): Promise<void> {
   // const allNotifications: Iterable<[string, GenericNotificationHandler]> = [['rust-analyzer/publishDecorations', notifications.publishDecorations.handle]];
   const allNotifications: Iterable<[string, GenericNotificationHandler]> = [];
   Server.start(allNotifications);
-  Server.client.onReady().then(() => {
-    workspace.showMessage(`coc-rust-analyzer is works!`);
-  });
 
   //   if (Server.config.displayInlayHints) {
   //     const hintsUpdater = new HintsUpdater();
