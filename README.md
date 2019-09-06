@@ -22,7 +22,7 @@ cargo install-ra --server
 ## Configurations
 
 1. `rust-analyzer.raLspServerPath`: Path to ra_lsp_server executable, default: `ra_lsp_server`
-1. `rust-analyzer.featureFlags`: Fine grained feature flags to disable annoying features, default: `{}`
+1. `rust-analyzer.featureFlags`: Fine grained feature flags to disable annoying features, default: `{}`, available [flags](https://github.com/rust-analyzer/rust-analyzer/blob/master/crates/ra_ide_api/src/feature_flags.rs#L52)
 1. `rust-analyzer.excludeGlobs`: Paths to exclude from analysis, default: `[]`
 1. `rust-analyzer.lruCapacity`: Number of syntax trees rust-analyzer keeps in memory, default: `null`
 1. `rust-analyzer.enableCargoWatchOnStartup`: Whether to run `cargo watch` on startup, default: `ask`
