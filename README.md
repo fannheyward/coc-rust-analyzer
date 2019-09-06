@@ -26,6 +26,7 @@ cargo install-ra --server
 1. `rust-analyzer.excludeGlobs`: Paths to exclude from analysis, default: `[]`
 1. `rust-analyzer.lruCapacity`: Number of syntax trees rust-analyzer keeps in memory, default: `null`
 1. `rust-analyzer.enableCargoWatchOnStartup`: Whether to run `cargo watch` on startup, default: `ask`
+1. `rust-analyzer.useClientWatching`: use client provided file watching instead of notify watching, default: `false`
 1. `rust-analyzer.cargo-watch.arguments`: `cargo-watch` arguments, default: `""`
 1. `rust-analyzer.cargo-watch.command`: `cargo-watch` arguments, default: `check`
 1. `rust-analyzer.trace.server`: Trace requests to the ra_lsp_server, default: `off`

@@ -56,6 +56,7 @@ export class Server {
         publishDecorations: false,
         lruCapacity: Server.config.lruCapacity,
         excludeGlobs: Server.config.excludeGlobs,
+        useClientWatching: Server.config.useClientWatching,
         featureFlags: Server.config.featureFlags
       },
       outputChannel
