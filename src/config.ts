@@ -17,7 +17,6 @@ export class Config {
   public rainbowHighlightingOn = false;
   public enableEnhancedTyping = true;
   public raLspServerPath = RA_LSP_DEBUG || 'ra_lsp_server';
-  public showWorkspaceLoadedNotification = true;
   public lruCapacity: null | number = null;
   public displayInlayHints = true;
   public excludeGlobs = [];
@@ -44,10 +43,6 @@ export class Config {
 
     if (config.has('rainbowHighlightingOn')) {
       this.rainbowHighlightingOn = config.get('rainbowHighlightingOn') as boolean;
-    }
-
-    if (config.has('showWorkspaceLoadedNotification')) {
-      this.showWorkspaceLoadedNotification = config.get('showWorkspaceLoadedNotification') as boolean;
     }
 
     // if (!this.highlightingOn && Server) {
