@@ -1,5 +1,5 @@
 // import { Decoration } from '../highlighting';
-import { Server } from '../server';
+// import { Server } from '../server';
 
 export interface PublishDecorationsParams {
   uri: string;
