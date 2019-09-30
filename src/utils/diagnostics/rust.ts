@@ -100,6 +100,17 @@ function isUnusedOrUnnecessary(rd: RustDiagnostic): boolean {
 }
 
 /**
+ * Determines if diagnostic is related to deprecated code
+ */
+function isDeprecated(rd: RustDiagnostic): boolean {
+  if (!rd.code) {
+    return false;
+  }
+
+  return ['deprecated'].includes(rd.code.code);
+}
+
+/**
  * Converts a Rust child diagnostic to a VsCode related information
  *
  * This can have three outcomes:
@@ -176,6 +187,7 @@ export function mapRustDiagnosticToVsCode(rd: RustDiagnostic): MappedRustDiagnos
   vd.source = source;
   vd.code = code;
   vd.relatedInformation = [];
+  vd.tags = [];
 
   for (const secondarySpan of secondarySpans) {
     const related = mapSecondarySpanToRelated(secondarySpan);
@@ -208,7 +220,11 @@ export function mapRustDiagnosticToVsCode(rd: RustDiagnostic): MappedRustDiagnos
   }
 
   if (isUnusedOrUnnecessary(rd)) {
-    vd.tags = [DiagnosticTag.Unnecessary];
+    vd.tags.push(DiagnosticTag.Unnecessary);
+  }
+
+  if (isDeprecated(rd)) {
+    vd.tags.push(DiagnosticTag.Deprecated);
   }
 
   return {
