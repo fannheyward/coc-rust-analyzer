@@ -49,6 +49,22 @@
       "title": "coc-rust-analyzer configuration",
       "properties": {
         "rust-analyzer.featureFlags": {
+          "properties": {
+            "lsp.diagnostics": {
+              "type": "boolean",
+              "default": true,
+              "description": "Enable/disable diagnostics"
+            },
+            "crates/ra_ide_api/src/completion/presentation.rs": {
+              "type": "boolean",
+              "default": true
+            },
+            "notifications.workspace-loaded": {
+              "type": "boolean",
+              "default": true,
+              "description": "Show notifications on workspace loaded"
+            }
+          },
           "type": "object",
           "default": {},
           "description": "Fine grained feature flags to disable annoying features"
