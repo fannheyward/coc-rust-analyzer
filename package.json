@@ -1,6 +1,6 @@
 {
   "name": "coc-rust-analyzer",
-  "version": "0.0.11",
+  "version": "0.0.12",
   "description": "rust-analyzer extension for coc.nvim",
   "author": "Heyward Fann <fannheyward@gmail.com>",
   "license": "MIT",
