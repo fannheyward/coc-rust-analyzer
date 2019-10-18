@@ -111,6 +111,11 @@
           "description": "`cargo-watch` command. (e.g: `clippy` will run as `cargo watch -x clippy` )",
           "default": "check"
         },
+        "rust-analyzer.cargo-watch.ignore": {
+          "type": "array",
+          "description": "A list of patterns for cargo-watch to ignore (will be passed as `--ignore`)",
+          "default": []
+        },
         "rust-analyzer.trace.server": {
           "type": "string",
           "scope": "window",

@@ -29,6 +29,7 @@ cargo install-ra --server
 1. `rust-analyzer.useClientWatching`: use client provided file watching instead of notify watching, default: `false`
 1. `rust-analyzer.cargo-watch.arguments`: `cargo-watch` arguments, default: `""`
 1. `rust-analyzer.cargo-watch.command`: `cargo-watch` arguments, default: `check`
+1. `rust-analyzer.cargo-watch.ignore`: list of patterns for cargo-watch to ignore (will be passed as `--ignore`)
 1. `rust-analyzer.trace.server`: Trace requests to the ra_lsp_server, default: `off`
 1. `rust-analyzer.trace.cargo-watch`: Trace output of cargo-watch, default: `off`
 

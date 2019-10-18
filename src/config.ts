@@ -10,6 +10,7 @@ export interface CargoWatchOptions {
   arguments: string;
   command: string;
   trace: CargoWatchTraceOptions;
+  ignore: string[];
 }
 
 export class Config {
@@ -26,7 +27,8 @@ export class Config {
     enableOnStartup: 'ask',
     trace: 'off',
     arguments: '',
-    command: ''
+    command: '',
+    ignore: []
   };
 
   private prevEnhancedTyping: null | boolean = null;
@@ -82,6 +84,10 @@ export class Config {
 
     if (config.has('cargo-watch.command')) {
       this.cargoWatchOptions.command = config.get<string>('cargo-watch.command', '');
+    }
+
+    if (config.has('cargo-watch.ignore')) {
+      this.cargoWatchOptions.ignore = config.get<string[]>('cargo-watch.ignore', []);
     }
 
     if (config.has('lruCapacity')) {
