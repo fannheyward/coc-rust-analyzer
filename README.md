@@ -18,7 +18,7 @@ You need `ra_lsp_server` installed. You can build it from source:
 git clone https://github.com/rust-analyzer/rust-analyzer && cd rust-analyzer
 
 rustup component add rust-src
-cargo install-ra --server
+cargo xtask install --server
 ```
 
 ## Configurations
