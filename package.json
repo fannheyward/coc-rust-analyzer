@@ -1,7 +1,7 @@
 {
   "name": "coc-rust-analyzer",
   "version": "0.0.12",
-  "description": "rust-analyzer extension for coc.nvim",
+  "description": "rust-analyzer for Vim/Neovim, works as an extension with coc.nvim",
   "author": "Heyward Fann <fannheyward@gmail.com>",
   "license": "MIT",
   "main": "lib/index.js",

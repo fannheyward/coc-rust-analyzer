@@ -1,6 +1,6 @@
 # coc-rust-analyzer
 
-rust-analyzer extension for coc.nvim
+[rust-analyzer](https://github.com/rust-analyzer/rust-analyzer) for Vim/Neovim, works as an extension with coc.nvim.
 
 <img width="567" alt="10" src="https://user-images.githubusercontent.com/345274/67060118-34808a00-f18e-11e9-9d76-22fff11b5802.png">
 
