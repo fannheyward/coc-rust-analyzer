@@ -23,6 +23,9 @@ cargo xtask install --server
 
 ## Configurations
 
+This extension is configured using a jsonc file. You can open this configuration file using
+the command `:CocConfig`, and it is typically located at `$HOME/.config/nvim/coc-settings.json`.
+
 1. `rust-analyzer.raLspServerPath`: Path to ra_lsp_server executable, default: `ra_lsp_server`
 1. `rust-analyzer.featureFlags`: Fine grained feature flags to disable annoying features, default: `{}`, available [flags](https://github.com/rust-analyzer/rust-analyzer/blob/master/crates/ra_ide_api/src/feature_flags.rs#L52)
 1. `rust-analyzer.excludeGlobs`: Paths to exclude from analysis, default: `[]`
@@ -34,6 +37,8 @@ cargo xtask install --server
 1. `rust-analyzer.cargo-watch.ignore`: list of patterns for cargo-watch to ignore (will be passed as `--ignore`)
 1. `rust-analyzer.trace.server`: Trace requests to the ra_lsp_server, default: `off`
 1. `rust-analyzer.trace.cargo-watch`: Trace output of cargo-watch, default: `off`
+
+Settings not specific to `rust-analyzer` can be found at `:help coc-configuration`.
 
 ## Commands
 
