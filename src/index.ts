@@ -11,7 +11,7 @@ export async function activate(context: ExtensionContext): Promise<void> {
     workspace.showMessage(`ra_lsp_server is not found, you need to build rust-analyzer from source`, 'error');
     const ret = await workspace.showQuickpick(['Yes', 'No'], 'Get ra_lsp_server?');
     if (ret === 0) {
-      commands.executeCommand('vscode.open', 'https://github.com/rust-analyzer/rust-analyzer').catch(_e => {});
+      commands.executeCommand('vscode.open', 'https://github.com/rust-analyzer/rust-analyzer').catch(() => {});
     }
     return;
   }
@@ -22,6 +22,11 @@ export async function activate(context: ExtensionContext): Promise<void> {
   function registerCommand(name: string, f: any) {
     disposeOnDeactivation(commands.registerCommand(name, f));
   }
+
+  // Notifications are events triggered by the language server
+  // const allNotifications: Iterable<[string, GenericNotificationHandler]> = [['rust-analyzer/publishDecorations', notifications.publishDecorations.handle]];
+  const allNotifications: Iterable<[string, GenericNotificationHandler]> = [];
+  Server.start(allNotifications);
 
   // Commands are requests from vscode to the language server
   registerCommand('rust-analyzer.analyzerStatus', cmds.analyzerStatus.handler);
@@ -74,11 +79,6 @@ export async function activate(context: ExtensionContext): Promise<void> {
   // vscode.window.onDidChangeActiveTextEditor(events.changeActiveTextEditor.makeHandler(syntaxTreeContentProvider));
   // disposeOnDeactivation(vscode.workspace.registerTextDocumentContentProvider('rust-analyzer', syntaxTreeContentProvider));
   // vscode.workspace.onDidChangeTextDocument(events.changeTextDocument.createHandler(syntaxTreeContentProvider), null, context.subscriptions);
-
-  // Notifications are events triggered by the language server
-  // const allNotifications: Iterable<[string, GenericNotificationHandler]> = [['rust-analyzer/publishDecorations', notifications.publishDecorations.handle]];
-  const allNotifications: Iterable<[string, GenericNotificationHandler]> = [];
-  Server.start(allNotifications);
 
   //   if (Server.config.displayInlayHints) {
   //     const hintsUpdater = new HintsUpdater();

@@ -1,4 +1,4 @@
-import * as child_process from 'child_process';
+import { ChildProcess, spawn } from 'child_process';
 import { DiagnosticCollection, Disposable, languages, OutputChannel, workspace } from 'coc.nvim';
 import * as fs from 'fs';
 import * as path from 'path';
@@ -11,28 +11,6 @@ import { terminate } from '../utils/processes';
 import { LineBuffer } from './line_buffer';
 import { StatusDisplay } from './watch_status';
 
-export function registerCargoWatchProvider(subscriptions: Disposable[]): CargoWatchProvider | undefined {
-  let cargoExists = false;
-  const cargoTomlFile = path.join(workspace.rootPath!, 'Cargo.toml');
-  // Check if the working directory is valid cargo root path
-  try {
-    if (fs.existsSync(cargoTomlFile)) {
-      cargoExists = true;
-    }
-  } catch (err) {
-    cargoExists = false;
-  }
-
-  if (!cargoExists) {
-    workspace.showMessage(`Couldn\'t find \'Cargo.toml' in ${cargoTomlFile}`);
-    return;
-  }
-
-  const provider = new CargoWatchProvider();
-  subscriptions.push(provider);
-  return provider;
-}
-
 export class CargoWatchProvider implements Disposable {
   private readonly diagnosticCollection: DiagnosticCollection;
   private readonly statusDisplay: StatusDisplay;
@@ -41,7 +19,7 @@ export class CargoWatchProvider implements Disposable {
   private suggestedFixCollection: SuggestedFixCollection;
   private codeActionDispose: Disposable;
 
-  private cargoProcess?: child_process.ChildProcess;
+  private cargoProcess?: ChildProcess;
 
   constructor() {
     this.diagnosticCollection = languages.createDiagnosticCollection('rustc');
@@ -77,7 +55,7 @@ export class CargoWatchProvider implements Disposable {
     const ignoreFlags = Server.config.cargoWatchOptions.ignore.reduce((flags, pattern) => [...flags, '--ignore', pattern], [] as string[]);
 
     // Start the cargo watch with json message
-    this.cargoProcess = child_process.spawn('cargo', ['watch', '-x', args, ...ignoreFlags], {
+    this.cargoProcess = spawn('cargo', ['watch', '-x', args, ...ignoreFlags], {
       stdio: ['ignore', 'pipe', 'pipe'],
       cwd: workspace.rootPath,
       windowsVerbatimArguments: true
@@ -211,4 +189,26 @@ export class CargoWatchProvider implements Disposable {
       }
     }
   }
+}
+
+export function registerCargoWatchProvider(subscriptions: Disposable[]): CargoWatchProvider | undefined {
+  let cargoExists = false;
+  const cargoTomlFile = path.join(workspace.rootPath!, 'Cargo.toml');
+  // Check if the working directory is valid cargo root path
+  try {
+    if (fs.existsSync(cargoTomlFile)) {
+      cargoExists = true;
+    }
+  } catch (err) {
+    cargoExists = false;
+  }
+
+  if (!cargoExists) {
+    workspace.showMessage(`Couldn\'t find \'Cargo.toml' in ${cargoTomlFile}`);
+    return;
+  }
+
+  const provider = new CargoWatchProvider();
+  subscriptions.push(provider);
+  return provider;
 }

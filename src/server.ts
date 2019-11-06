@@ -26,7 +26,7 @@ export class Server {
       }
     }
 
-    let folder: string = '.';
+    let folder = '.';
     if (workspace.workspaceFolder.uri.length > 0) {
       folder = Uri.parse(workspace.workspaceFolder.uri).fsPath;
     }

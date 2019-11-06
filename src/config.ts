@@ -34,7 +34,7 @@ export class Config {
   private prevEnhancedTyping: null | boolean = null;
 
   constructor() {
-    workspace.onDidChangeConfiguration(_ => this.userConfigChanged());
+    workspace.onDidChangeConfiguration(() => this.userConfigChanged());
     this.userConfigChanged();
   }
 

@@ -1,5 +1,5 @@
 export class LineBuffer {
-  private outBuffer: string = '';
+  private outBuffer = '';
 
   public processOutput(chunk: string, cb: (line: string) => void) {
     this.outBuffer += chunk;

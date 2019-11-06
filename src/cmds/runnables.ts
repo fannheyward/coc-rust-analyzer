@@ -1,7 +1,7 @@
 import { ExtensionContext, Terminal, TerminalOptions, workspace } from 'coc.nvim';
 import { Position, Range, TextDocumentIdentifier } from 'vscode-languageserver-protocol';
 import { Server } from '../server';
-import * as child_process from 'child_process';
+import { exec } from 'child_process';
 import { promisify } from 'util';
 
 import { CargoWatchProvider, registerCargoWatchProvider } from './cargo_watch';
@@ -81,28 +81,8 @@ export async function handleSingle(runnable: Runnable) {
   });
 }
 
-/**
- * Interactively asks the user whether we should run `cargo check` in order to
- * provide inline diagnostics; the user is met with a series of dialog boxes
- * that, when accepted, allow us to `cargo install cargo-watch` and then run it.
- */
-export async function interactivelyStartCargoWatch(context: ExtensionContext): Promise<CargoWatchProvider | undefined> {
-  if (Server.config.cargoWatchOptions.enableOnStartup === 'disabled') {
-    return;
-  }
-
-  if (Server.config.cargoWatchOptions.enableOnStartup === 'ask') {
-    const watch = await workspace.showPrompt('Start watching changes with cargo? (Executes `cargo watch`, provides inline diagnostics');
-    if (!watch) {
-      return;
-    }
-  }
-
-  return startCargoWatch(context);
-}
-
 export async function startCargoWatch(context: ExtensionContext): Promise<CargoWatchProvider | undefined> {
-  const execPromise = promisify(child_process.exec);
+  const execPromise = promisify(exec);
 
   const { stderr } = await execPromise('cargo watch --version').catch(e => e);
 
@@ -128,4 +108,24 @@ export async function startCargoWatch(context: ExtensionContext): Promise<CargoW
   }
 
   return provider;
+}
+
+/**
+ * Interactively asks the user whether we should run `cargo check` in order to
+ * provide inline diagnostics; the user is met with a series of dialog boxes
+ * that, when accepted, allow us to `cargo install cargo-watch` and then run it.
+ */
+export async function interactivelyStartCargoWatch(context: ExtensionContext): Promise<CargoWatchProvider | undefined> {
+  if (Server.config.cargoWatchOptions.enableOnStartup === 'disabled') {
+    return;
+  }
+
+  if (Server.config.cargoWatchOptions.enableOnStartup === 'ask') {
+    const watch = await workspace.showPrompt('Start watching changes with cargo? (Executes `cargo watch`, provides inline diagnostics');
+    if (!watch) {
+      return;
+    }
+  }
+
+  return startCargoWatch(context);
 }

@@ -6,7 +6,7 @@ export interface PublishDecorationsParams {
   // decorations: Decoration[];
 }
 
-export function handle(params: PublishDecorationsParams) {
+export function handle() {
   // const targetEditor = vscode.window.visibleTextEditors.find(
   //     editor => editor.document.uri.toString() === params.uri
   // );

@@ -18,7 +18,7 @@ export async function handle() {
   }
 
   let lastChar: string | null;
-  let lastTS: number = 0;
+  let lastTS = 0;
   events.on('InsertCharPre', (char: string) => {
     lastChar = char;
     lastTS = Date.now();
