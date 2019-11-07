@@ -36,7 +36,6 @@
     "shx": "^0.3.2",
     "ts-loader": "^6.0.4",
     "typescript": "^3.6.2",
-    "vscode-languageserver-protocol": "3.15.0-next.10",
     "which": "^2.0.1"
   },
   "prettier": {
