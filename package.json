@@ -55,9 +55,15 @@
               "default": true,
               "description": "Enable/disable diagnostics"
             },
-            "crates/ra_ide_api/src/completion/presentation.rs": {
+            "completion.insertion.add-call-parenthesis": {
               "type": "boolean",
-              "default": true
+              "default": true,
+              "description": "Automatically insert `()` and `<>` when completing functions and types."
+            },
+            "completion.enable-postfix": {
+              "type": "boolean",
+              "default": true,
+              "description": "Enable completions like `.if`, `.match`, etc."
             },
             "notifications.workspace-loaded": {
               "type": "boolean",
