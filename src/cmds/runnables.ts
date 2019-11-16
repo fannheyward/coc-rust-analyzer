@@ -84,7 +84,7 @@ export async function handleSingle(runnable: Runnable) {
 export async function startCargoWatch(context: ExtensionContext): Promise<CargoWatchProvider | undefined> {
   const execPromise = promisify(exec);
 
-  const { stderr } = await execPromise('cargo watch --version').catch(e => e);
+  const { stderr, code = 0 } = await execPromise('cargo watch --version').catch(e => e);
 
   if (stderr.includes('no such subcommand: `watch`')) {
     const msg = 'The `cargo-watch` subcommand is not installed. Install? (takes ~1-2 minutes)';
@@ -100,6 +100,9 @@ export async function startCargoWatch(context: ExtensionContext): Promise<CargoW
       workspace.showMessage(`Couldn't install \`cargo-\`watch: ${output.stderr}`, 'error');
       return;
     }
+  } else if (code !== 0) {
+    workspace.showMessage(`\`cargo-watch\` failed with ${code}: ${stderr}`);
+    return;
   }
 
   const provider = registerCargoWatchProvider(context.subscriptions);
