@@ -7,5 +7,6 @@ import * as onEnter from './on_enter';
 import * as parentModule from './parent_module';
 import * as runnables from './runnables';
 import * as syntaxTree from './syntaxTree';
+import * as expandMacro from './expand_macro';
 
-export { analyzerStatus, applySourceChange, joinLines, matchingBrace, onEnter, parentModule, runnables, syntaxTree };
+export { analyzerStatus, applySourceChange, joinLines, matchingBrace, onEnter, parentModule, runnables, syntaxTree, expandMacro };

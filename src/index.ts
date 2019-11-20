@@ -38,6 +38,7 @@ export async function activate(context: ExtensionContext): Promise<void> {
   registerCommand('rust-analyzer.collectGarbage', () => Server.client.sendRequest<null>('rust-analyzer/collectGarbage', null));
   registerCommand('rust-analyzer.applySourceChange', cmds.applySourceChange.handle);
   registerCommand('rust-analyzer.syntaxTree', cmds.syntaxTree.handler);
+  registerCommand('rust-analyzer.expandMacro', cmds.expandMacro.handler);
   registerCommand('rust-analyzer.showReferences', (uri: string, position: Position, locations: Location[]) => {
     // TODO
     return commands.executeCommand('editor.action.showReferences', Uri.parse(uri), position, locations);

@@ -45,6 +45,7 @@ Settings not specific to `rust-analyzer` can be found at `:help coc-configuratio
 1. `rust-analyzer.analyzerStatus`: Show rust-analyzer status
 1. `rust-analyzer.applySourceChange`: Apply source change
 1. `rust-analyzer.collectGarbage`: Run garbage collection
+1. `rust-analyzer.expandMacro`: Expand macro recursively
 1. `rust-analyzer.joinLines`: Join lines
 1. `rust-analyzer.matchingBrace`: Find matching brace
 1. `rust-analyzer.parentModule`: Locate parent module
