@@ -51,7 +51,7 @@ export class Server {
     };
     const outputChannel = workspace.createOutputChannel('Rust Analyzer Language Server Trace');
     const clientOptions: LanguageClientOptions = {
-      documentSelector: [{ scheme: 'file', language: 'rust' }],
+      documentSelector: [{ language: 'rust' }, { pattern: 'Cargo.toml' }],
       initializationOptions: {
         publishDecorations: false,
         lruCapacity: Server.config.lruCapacity,
