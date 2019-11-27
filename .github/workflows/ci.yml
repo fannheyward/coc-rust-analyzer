@@ -27,11 +27,12 @@ jobs:
         uses: actions/setup-node@v1
         with:
           node-version: ${{ matrix.node-version }}
-      - name: GitHub Action for Yarn
-        uses: Borales/actions-yarn@v2.1.0
-        with:
-          cmd: install
-      - name: GitHub Action for Yarn
-        uses: Borales/actions-yarn@v2.1.0
-        with:
-          cmd: lint
+      - name: Install yarn
+        run: |
+          curl --compressed -o- -L https://yarnpkg.com/install.sh | bash
+      - name: yarn build
+        run: |
+          yarn
+      - name: yarn lint
+        run: |
+          yarn lint
