@@ -1,4 +1,4 @@
-import { commands, Disposable, ExtensionContext, Uri, workspace } from 'coc.nvim';
+import { commands, ExtensionContext, services, Uri, workspace } from 'coc.nvim';
 import { GenericNotificationHandler, Location, Position } from 'vscode-languageserver-protocol';
 import * as cmds from './cmds';
 import { CargoWatchProvider } from './cmds/cargo_watch';
@@ -15,18 +15,18 @@ export async function activate(context: ExtensionContext): Promise<void> {
     }
     return;
   }
-  function disposeOnDeactivation(disposable: Disposable) {
-    context.subscriptions.push(disposable);
-  }
 
   function registerCommand(name: string, f: any) {
-    disposeOnDeactivation(commands.registerCommand(name, f));
+    context.subscriptions.push(commands.registerCommand(name, f));
   }
 
   // Notifications are events triggered by the language server
   // const allNotifications: Iterable<[string, GenericNotificationHandler]> = [['rust-analyzer/publishDecorations', notifications.publishDecorations.handle]];
   const allNotifications: Iterable<[string, GenericNotificationHandler]> = [];
   Server.start(allNotifications);
+  if (Server.client) {
+    context.subscriptions.push(services.registLanguageClient(Server.client));
+  }
 
   // Commands are requests from vscode to the language server
   registerCommand('rust-analyzer.analyzerStatus', cmds.analyzerStatus.handler);
