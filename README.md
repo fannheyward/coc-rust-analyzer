@@ -27,7 +27,7 @@ This extension is configured using a jsonc file. You can open this configuration
 the command `:CocConfig`, and it is typically located at `$HOME/.config/nvim/coc-settings.json`.
 
 1. `rust-analyzer.raLspServerPath`: Path to ra_lsp_server executable, default: `ra_lsp_server`
-1. `rust-analyzer.featureFlags`: Fine grained feature flags to disable annoying features, default: `{}`, available [flags](https://github.com/rust-analyzer/rust-analyzer/blob/master/crates/ra_ide_api/src/feature_flags.rs#L52)
+1. `rust-analyzer.featureFlags`: Fine grained feature flags to disable annoying features, default: `{}`, available [flags](https://github.com/rust-analyzer/rust-analyzer/blob/master/crates/ra_ide/src/feature_flags.rs#L55)
 1. `rust-analyzer.excludeGlobs`: Paths to exclude from analysis, default: `[]`
 1. `rust-analyzer.lruCapacity`: Number of syntax trees rust-analyzer keeps in memory, default: `null`
 1. `rust-analyzer.enableCargoWatchOnStartup`: Whether to run `cargo watch` on startup, default: `ask`
