@@ -157,6 +157,21 @@
           "type": "number",
           "default": null,
           "description": "Number of syntax trees rust-analyzer keeps in memory"
+        },
+        "rust-analyzer.cargoFeatures.noDefaultFeatures": {
+          "type": "boolean",
+          "default": false,
+          "description": "Do not activate the `default` feature"
+        },
+        "rust-analyzer.cargoFeatures.allFeatures": {
+          "type": "boolean",
+          "default": true,
+          "description": "Activate all available features"
+        },
+        "rust-analyzer.cargoFeatures.features": {
+          "type": "array",
+          "default": [],
+          "description": "List of features to activate"
         }
       }
     },

@@ -1,4 +1,4 @@
-import { workspace } from 'coc.nvim';
+import { workspace, commands } from 'coc.nvim';
 
 const RA_LSP_DEBUG = process.env.__RA_LSP_SERVER_DEBUG;
 
@@ -11,6 +11,12 @@ export interface CargoWatchOptions {
   command: string;
   trace: CargoWatchTraceOptions;
   ignore: string[];
+}
+
+export interface CargoFeatures {
+  noDefaultFeatures: boolean;
+  allFeatures: boolean;
+  features: string[];
 }
 
 export class Config {
@@ -30,8 +36,14 @@ export class Config {
     command: '',
     ignore: []
   };
+  public cargoFeatures: CargoFeatures = {
+    noDefaultFeatures: false,
+    allFeatures: true,
+    features: []
+  };
 
   private prevEnhancedTyping: null | boolean = null;
+  private prevCargoFeatures: null | CargoFeatures = null;
 
   constructor() {
     workspace.onDidChangeConfiguration(() => this.userConfigChanged());
@@ -40,6 +52,8 @@ export class Config {
 
   public userConfigChanged() {
     const config = workspace.getConfiguration('rust-analyzer');
+    let requireReloadMessage = '';
+
     if (config.has('highlightingOn')) {
       this.highlightingOn = config.get('highlightingOn') as boolean;
     }
@@ -63,6 +77,7 @@ export class Config {
     }
 
     if (this.prevEnhancedTyping !== this.enableEnhancedTyping) {
+      requireReloadMessage = 'Changing enhanced typing setting requires a reload';
       this.prevEnhancedTyping = this.enableEnhancedTyping;
     }
 
@@ -105,6 +120,35 @@ export class Config {
     }
     if (config.has('featureFlags')) {
       this.featureFlags = config.get('featureFlags') || {};
+    }
+    if (config.has('cargoFeatures.noDefaultFeatures')) {
+      this.cargoFeatures.noDefaultFeatures = config.get('cargoFeatures.noDefaultFeatures', false);
+    }
+    if (config.has('cargoFeatures.allFeatures')) {
+      this.cargoFeatures.allFeatures = config.get('cargoFeatures.allFeatures', true);
+    }
+    if (config.has('cargoFeatures.features')) {
+      this.cargoFeatures.features = config.get('cargoFeatures.features', []);
+    }
+
+    if (
+      this.prevCargoFeatures !== null &&
+      (this.cargoFeatures.allFeatures !== this.prevCargoFeatures.allFeatures ||
+        this.cargoFeatures.noDefaultFeatures !== this.prevCargoFeatures.noDefaultFeatures ||
+        this.cargoFeatures.features.length !== this.prevCargoFeatures.features.length ||
+        this.cargoFeatures.features.some((v, i) => v !== this.prevCargoFeatures!.features[i]))
+    ) {
+      requireReloadMessage = 'Changing cargo features requires a reload';
+    }
+
+    this.prevCargoFeatures = { ...this.cargoFeatures };
+
+    if (requireReloadMessage) {
+      workspace.showPrompt(`${requireReloadMessage}. Reload Now?`).then(prompt => {
+        if (prompt) {
+          commands.executeCommand(`workbench.action.reloadWindow`);
+        }
+      });
     }
   }
 }

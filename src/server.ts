@@ -57,6 +57,7 @@ export class Server {
         lruCapacity: this.config.lruCapacity,
         excludeGlobs: this.config.excludeGlobs,
         useClientWatching: this.config.useClientWatching,
+        cargoFeatures: this.config.cargoFeatures,
         featureFlags: this.config.featureFlags
       },
       outputChannel
