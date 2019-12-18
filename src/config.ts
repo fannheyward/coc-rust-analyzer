@@ -11,6 +11,7 @@ export interface CargoWatchOptions {
   command: string;
   trace: CargoWatchTraceOptions;
   ignore: string[];
+  allTargets: boolean;
 }
 
 export interface CargoFeatures {
@@ -34,7 +35,8 @@ export class Config {
     trace: 'off',
     arguments: '',
     command: '',
-    ignore: []
+    ignore: [],
+    allTargets: true
   };
   public cargoFeatures: CargoFeatures = {
     noDefaultFeatures: false,
@@ -103,6 +105,10 @@ export class Config {
 
     if (config.has('cargo-watch.ignore')) {
       this.cargoWatchOptions.ignore = config.get<string[]>('cargo-watch.ignore', []);
+    }
+
+    if (config.has('cargo-watch.allTargets')) {
+      this.cargoWatchOptions.allTargets = config.get<boolean>('cargo-watch.allTargets', true);
     }
 
     if (config.has('lruCapacity')) {

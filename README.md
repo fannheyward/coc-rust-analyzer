@@ -35,6 +35,7 @@ the command `:CocConfig`, and it is typically located at `$HOME/.config/nvim/coc
 - `rust-analyzer.cargo-watch.arguments`: `cargo-watch` arguments, default: `""`
 - `rust-analyzer.cargo-watch.command`: `cargo-watch` arguments, default: `check`
 - `rust-analyzer.cargo-watch.ignore`: list of patterns for cargo-watch to ignore (will be passed as `--ignore`)
+- `rust-analyzer.cargo-watch.allTargets`: Check all targets and tests (will be passed as `--all-targets`)
 - `rust-analyzer.cargoFeatures.noDefaultFeatures`: do not activate the `default` feature
 - `rust-analyzer.cargoFeatures.allFeatures`: activate all available features
 - `rust-analyzer.cargoFeatures.features`: list of features to activate

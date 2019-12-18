@@ -42,7 +42,11 @@ export class CargoWatchProvider implements Disposable {
       return;
     }
 
-    let args = Server.config.cargoWatchOptions.command + ' --all-targets --message-format json';
+    let args = Server.config.cargoWatchOptions.command + ' --message-format json';
+    Server.config.cargoWatchOptions.command + ' --message-format json';
+    if (Server.config.cargoWatchOptions.allTargets) {
+      args += ' --all-targets';
+    }
     if (Server.config.cargoWatchOptions.command.length > 0) {
       // Excape the double quote string:
       args += ' ' + Server.config.cargoWatchOptions.arguments;
