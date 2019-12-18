@@ -31,7 +31,7 @@ the command `:CocConfig`, and it is typically located at `$HOME/.config/nvim/coc
 - `rust-analyzer.excludeGlobs`: Paths to exclude from analysis, default: `[]`
 - `rust-analyzer.lruCapacity`: Number of syntax trees rust-analyzer keeps in memory, default: `null`
 - `rust-analyzer.enableCargoWatchOnStartup`: Whether to run `cargo watch` on startup, default: `ask`
-- `rust-analyzer.useClientWatching`: use client provided file watching instead of notify watching, default: `false`
+- `rust-analyzer.useClientWatching`: use client provided file watching instead of notify watching, default: `true`
 - `rust-analyzer.cargo-watch.arguments`: `cargo-watch` arguments, default: `""`
 - `rust-analyzer.cargo-watch.command`: `cargo-watch` arguments, default: `check`
 - `rust-analyzer.cargo-watch.ignore`: list of patterns for cargo-watch to ignore (will be passed as `--ignore`)

@@ -28,7 +28,7 @@ export class Config {
   public lruCapacity: null | number = null;
   public displayInlayHints = true;
   public excludeGlobs = [];
-  public useClientWatching = false;
+  public useClientWatching = true;
   public featureFlags = {};
   public cargoWatchOptions: CargoWatchOptions = {
     enableOnStartup: 'ask',
@@ -119,13 +119,13 @@ export class Config {
       this.displayInlayHints = config.get('displayInlayHints') as boolean;
     }
     if (config.has('excludeGlobs')) {
-      this.excludeGlobs = config.get('excludeGlobs') || [];
+      this.excludeGlobs = config.get('excludeGlobs', []);
     }
     if (config.has('useClientWatching')) {
-      this.useClientWatching = config.get('useClientWatching') || false;
+      this.useClientWatching = config.get('useClientWatching', true);
     }
     if (config.has('featureFlags')) {
-      this.featureFlags = config.get('featureFlags') || {};
+      this.featureFlags = config.get('featureFlags', {});
     }
     if (config.has('cargoFeatures.noDefaultFeatures')) {
       this.cargoFeatures.noDefaultFeatures = config.get('cargoFeatures.noDefaultFeatures', false);
