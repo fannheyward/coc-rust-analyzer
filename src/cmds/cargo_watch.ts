@@ -64,8 +64,13 @@ export class CargoWatchProvider implements Disposable {
       windowsVerbatimArguments: true
     });
 
+    if (!this.cargoProcess) {
+      workspace.showMessage(`Cargo Watch failed to start`)
+      return
+    }
+
     const stdoutData = new LineBuffer();
-    this.cargoProcess.stdout!.on('data', (s: string) => {
+    this.cargoProcess.stdout?.on('data', (s: string) => {
       stdoutData.processOutput(s, line => {
         this.logInfo(line);
         try {
@@ -77,7 +82,7 @@ export class CargoWatchProvider implements Disposable {
     });
 
     const stderrData = new LineBuffer();
-    this.cargoProcess.stderr!.on('data', (s: string) => {
+    this.cargoProcess.stderr?.on('data', (s: string) => {
       stderrData.processOutput(s, line => {
         this.logError('Error on cargo-watch : {\n' + line + '}\n');
       });
