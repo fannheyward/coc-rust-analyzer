@@ -23,7 +23,7 @@
     "clean": "rimraf lib",
     "watch": "webpack --watch",
     "lint": "eslint src --ext ts",
-    "build": "webpack && shx cp src/utils/terminateProcess.sh lib/terminateProcess.sh",
+    "build": "webpack",
     "prepare": "npm-run-all clean build"
   },
   "devDependencies": {
@@ -86,21 +86,6 @@
           "default": "ra_lsp_server",
           "description": "Path to ra_lsp_server executable"
         },
-        "rust-analyzer.enableCargoWatchOnStartup": {
-          "type": "string",
-          "default": "ask",
-          "enum": [
-            "ask",
-            "enabled",
-            "disabled"
-          ],
-          "enumDescriptions": [
-            "Asks each time whether to run `cargo watch`",
-            "`cargo watch` is always started",
-            "Don't start `cargo watch`"
-          ],
-          "description": "Whether to run `cargo watch` on startup"
-        },
         "rust-analyzer.excludeGlobs": {
           "type": "array",
           "default": [],
@@ -111,20 +96,20 @@
           "default": true,
           "description": "client provided file watching instead of notify watching."
         },
+        "rust-analyzer.cargo-watch.enable": {
+          "type": "boolean",
+          "default": true,
+          "description": "Run `cargo check` for diagnostics on save"
+        },
         "rust-analyzer.cargo-watch.arguments": {
-          "type": "string",
+          "type": "array",
           "description": "`cargo-watch` arguments. (e.g: `--features=\"shumway,pdf\"` will run as `cargo watch -x \"check --features=\"shumway,pdf\"\"` )",
-          "default": ""
+          "default": []
         },
         "rust-analyzer.cargo-watch.command": {
           "type": "string",
           "description": "`cargo-watch` command. (e.g: `clippy` will run as `cargo watch -x clippy` )",
           "default": "check"
-        },
-        "rust-analyzer.cargo-watch.ignore": {
-          "type": "array",
-          "description": "A list of patterns for cargo-watch to ignore (will be passed as `--ignore`)",
-          "default": []
         },
         "rust-analyzer.cargo-watch.allTargets": {
           "type": "boolean",
@@ -146,17 +131,6 @@
           ],
           "default": "off",
           "description": "Trace requests to the ra_lsp_server"
-        },
-        "rust-analyzer.trace.cargo-watch": {
-          "type": "string",
-          "scope": "window",
-          "enum": [
-            "off",
-            "error",
-            "verbose"
-          ],
-          "default": "off",
-          "description": "Trace output of cargo-watch"
         },
         "rust-analyzer.lruCapacity": {
           "type": "number",
@@ -224,16 +198,6 @@
       {
         "command": "rust-analyzer.runSingle",
         "title": "Run Single",
-        "category": "Rust Analyzer"
-      },
-      {
-        "command": "rust-analyzer.startCargoWatch",
-        "title": "Start Cargo Watch",
-        "category": "Rust Analyzer"
-      },
-      {
-        "command": "rust-analyzer.stopCargoWatch",
-        "title": "Stop Cargo Watch",
         "category": "Rust Analyzer"
       },
       {

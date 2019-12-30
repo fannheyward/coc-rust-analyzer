@@ -1,10 +1,6 @@
-import { ExtensionContext, Terminal, TerminalOptions, workspace } from 'coc.nvim';
+import { Terminal, TerminalOptions, workspace } from 'coc.nvim';
 import { Position, Range, TextDocumentIdentifier } from 'vscode-languageserver-protocol';
 import { Server } from '../server';
-import { exec } from 'child_process';
-import { promisify } from 'util';
-
-import { CargoWatchProvider, registerCargoWatchProvider } from './cargo_watch';
 
 interface RunnablesParams {
   textDocument: TextDocumentIdentifier;
@@ -79,56 +75,4 @@ export async function handleSingle(runnable: Runnable) {
   workspace.createTerminal(opt).then((t: Terminal) => {
     t.sendText(cmd);
   });
-}
-
-export async function startCargoWatch(context: ExtensionContext): Promise<CargoWatchProvider | undefined> {
-  const execPromise = promisify(exec);
-
-  const { stderr, code = 0 } = await execPromise('cargo watch --version').catch(e => e);
-
-  if (stderr.includes('no such subcommand: `watch`')) {
-    const msg = 'The `cargo-watch` subcommand is not installed. Install? (takes ~1-2 minutes)';
-    const install = await workspace.showPrompt(msg);
-    if (!install) {
-      return;
-    }
-
-    await workspace.runTerminalCommand(`cargo install cargo-watch`, '.', true);
-
-    const output = await execPromise('cargo watch --version').catch(e => e);
-    if (output.stderr !== '') {
-      workspace.showMessage(`Couldn't install \`cargo-\`watch: ${output.stderr}`, 'error');
-      return;
-    }
-  } else if (code !== 0) {
-    workspace.showMessage(`\`cargo-watch\` failed with ${code}: ${stderr}`);
-    return;
-  }
-
-  const provider = registerCargoWatchProvider(context.subscriptions);
-  if (provider) {
-    provider.start();
-  }
-
-  return provider;
-}
-
-/**
- * Interactively asks the user whether we should run `cargo check` in order to
- * provide inline diagnostics; the user is met with a series of dialog boxes
- * that, when accepted, allow us to `cargo install cargo-watch` and then run it.
- */
-export async function interactivelyStartCargoWatch(context: ExtensionContext): Promise<CargoWatchProvider | undefined> {
-  if (Server.config.cargoWatchOptions.enableOnStartup === 'disabled') {
-    return;
-  }
-
-  if (Server.config.cargoWatchOptions.enableOnStartup === 'ask') {
-    const watch = await workspace.showPrompt('Start watching changes with cargo? (Executes `cargo watch`, provides inline diagnostics');
-    if (!watch) {
-      return;
-    }
-  }
-
-  return startCargoWatch(context);
 }

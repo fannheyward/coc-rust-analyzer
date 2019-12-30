@@ -2,15 +2,10 @@ import { workspace, commands } from 'coc.nvim';
 
 const RA_LSP_DEBUG = process.env.__RA_LSP_SERVER_DEBUG;
 
-export type CargoWatchStartupOptions = 'ask' | 'enabled' | 'disabled';
-export type CargoWatchTraceOptions = 'off' | 'error' | 'verbose';
-
 export interface CargoWatchOptions {
-  enableOnStartup: CargoWatchStartupOptions;
-  arguments: string;
+  enable: boolean;
+  arguments: string[];
   command: string;
-  trace: CargoWatchTraceOptions;
-  ignore: string[];
   allTargets: boolean;
 }
 
@@ -31,11 +26,9 @@ export class Config {
   public useClientWatching = true;
   public featureFlags = {};
   public cargoWatchOptions: CargoWatchOptions = {
-    enableOnStartup: 'ask',
-    trace: 'off',
-    arguments: '',
+    enable: true,
+    arguments: [],
     command: '',
-    ignore: [],
     allTargets: true
   };
   public cargoFeatures: CargoFeatures = {
@@ -87,24 +80,16 @@ export class Config {
       this.raLspServerPath = RA_LSP_DEBUG || (config.get('raLspServerPath') as string);
     }
 
-    if (config.has('enableCargoWatchOnStartup')) {
-      this.cargoWatchOptions.enableOnStartup = config.get<CargoWatchStartupOptions>('enableCargoWatchOnStartup', 'ask');
-    }
-
-    if (config.has('trace.cargo-watch')) {
-      this.cargoWatchOptions.trace = config.get<CargoWatchTraceOptions>('trace.cargo-watch', 'off');
+    if (config.has('cargo-watch.enable')) {
+      this.cargoWatchOptions.enable = config.get<boolean>('cargo-watch.enable', true);
     }
 
     if (config.has('cargo-watch.arguments')) {
-      this.cargoWatchOptions.arguments = config.get<string>('cargo-watch.arguments', '');
+      this.cargoWatchOptions.arguments = config.get<string[]>('cargo-watch.arguments', []);
     }
 
     if (config.has('cargo-watch.command')) {
       this.cargoWatchOptions.command = config.get<string>('cargo-watch.command', '');
-    }
-
-    if (config.has('cargo-watch.ignore')) {
-      this.cargoWatchOptions.ignore = config.get<string[]>('cargo-watch.ignore', []);
     }
 
     if (config.has('cargo-watch.allTargets')) {

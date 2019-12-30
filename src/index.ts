@@ -1,9 +1,8 @@
 import { commands, ExtensionContext, services, Uri, workspace } from 'coc.nvim';
 import { GenericNotificationHandler, Location, Position } from 'vscode-languageserver-protocol';
 import * as cmds from './cmds';
-import { CargoWatchProvider } from './cmds/cargo_watch';
-import { interactivelyStartCargoWatch, startCargoWatch } from './cmds/runnables';
 import { Server } from './server';
+import { StatusDisplay } from './cmds/watch_status';
 
 export async function activate(context: ExtensionContext): Promise<void> {
   const run = Server.prepare();
@@ -20,9 +19,12 @@ export async function activate(context: ExtensionContext): Promise<void> {
     context.subscriptions.push(commands.registerCommand(name, f));
   }
 
+  const watchStatus = new StatusDisplay(Server.config.cargoWatchOptions.command);
+  context.subscriptions.push(watchStatus);
+
   // Notifications are events triggered by the language server
   // const allNotifications: Iterable<[string, GenericNotificationHandler]> = [['rust-analyzer/publishDecorations', notifications.publishDecorations.handle]];
-  const allNotifications: Iterable<[string, GenericNotificationHandler]> = [];
+  const allNotifications: Iterable<[string, GenericNotificationHandler]> = [['$/progress', params => watchStatus.handleProgressNotification(params)]];
   Server.start(allNotifications);
   if (Server.client) {
     context.subscriptions.push(services.registLanguageClient(Server.client));
@@ -42,26 +44,6 @@ export async function activate(context: ExtensionContext): Promise<void> {
   registerCommand('rust-analyzer.showReferences', (uri: string, position: Position, locations: Location[]) => {
     // TODO
     return commands.executeCommand('editor.action.showReferences', Uri.parse(uri), position, locations);
-  });
-
-  // Executing `cargo watch` provides us with inline diagnostics on save
-  let provider: CargoWatchProvider | undefined;
-  interactivelyStartCargoWatch(context).then(p => {
-    provider = p;
-  });
-  registerCommand('rust-analyzer.startCargoWatch', () => {
-    if (provider) {
-      provider.start();
-    } else {
-      startCargoWatch(context).then(p => {
-        provider = p;
-      });
-    }
-  });
-  registerCommand('rust-analyzer.stopCargoWatch', () => {
-    if (provider) {
-      provider.stop();
-    }
   });
 
   registerCommand('rust-analyzer.reload', async () => {

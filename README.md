@@ -30,17 +30,15 @@ the command `:CocConfig`, and it is typically located at `$HOME/.config/nvim/coc
 - `rust-analyzer.featureFlags`: Fine grained feature flags to disable annoying features, default: `{}`, available [flags](https://github.com/rust-analyzer/rust-analyzer/blob/master/crates/ra_ide/src/feature_flags.rs#L55)
 - `rust-analyzer.excludeGlobs`: Paths to exclude from analysis, default: `[]`
 - `rust-analyzer.lruCapacity`: Number of syntax trees rust-analyzer keeps in memory, default: `null`
-- `rust-analyzer.enableCargoWatchOnStartup`: Whether to run `cargo watch` on startup, default: `ask`
 - `rust-analyzer.useClientWatching`: use client provided file watching instead of notify watching, default: `true`
-- `rust-analyzer.cargo-watch.arguments`: `cargo-watch` arguments, default: `""`
+- `rust-analyzer.cargo-watch.enable`: Run `cargo check` for diagnostics on save, default: `true`
+- `rust-analyzer.cargo-watch.arguments`: `cargo-watch` arguments, default: `[]`
 - `rust-analyzer.cargo-watch.command`: `cargo-watch` arguments, default: `check`
-- `rust-analyzer.cargo-watch.ignore`: list of patterns for cargo-watch to ignore (will be passed as `--ignore`)
 - `rust-analyzer.cargo-watch.allTargets`: Check all targets and tests (will be passed as `--all-targets`)
 - `rust-analyzer.cargoFeatures.noDefaultFeatures`: do not activate the `default` feature
 - `rust-analyzer.cargoFeatures.allFeatures`: activate all available features
 - `rust-analyzer.cargoFeatures.features`: list of features to activate
 - `rust-analyzer.trace.server`: Trace requests to the ra_lsp_server, default: `off`
-- `rust-analyzer.trace.cargo-watch`: Trace output of cargo-watch, default: `off`
 
 Settings not specific to `rust-analyzer` can be found at `:help coc-configuration`.
 
@@ -56,8 +54,6 @@ Settings not specific to `rust-analyzer` can be found at `:help coc-configuratio
 - `rust-analyzer.reload`: Restart rust-analyzer server
 - `rust-analyzer.run`: List available runnables of current file
 - `rust-analyzer.runSingle`: Run runnable at position
-- `rust-analyzer.startCargoWatch`: Start cargo-watch
-- `rust-analyzer.stopCargoWatch`: Stop cargo-watch
 - `rust-analyzer.syntaxTree`: Show syntax tree
 
 ## License
