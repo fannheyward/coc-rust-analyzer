@@ -1,4 +1,5 @@
-import { ExtensionContext, LanguageClient, commands } from 'coc.nvim';
+import { commands, ExtensionContext, LanguageClient } from 'coc.nvim';
+import { Config } from './config';
 import { Server } from './server';
 
 export type Cmd = (...args: any[]) => any;
@@ -12,6 +13,10 @@ export class Ctx {
 
   get client(): LanguageClient {
     return Server.client;
+  }
+
+  get config(): Config {
+    return Server.config;
   }
 
   registerCommand(name: string, factory: (ctx: Ctx) => Cmd) {

@@ -20,8 +20,7 @@ interface WorkDoneProgress {
 }
 
 export class StatusDisplay implements Disposable {
-  public packageName?: string;
-
+  private packageName?: string;
   private statusBarItem: StatusBarItem;
   private command: string;
 
@@ -31,7 +30,7 @@ export class StatusDisplay implements Disposable {
     this.statusBarItem.hide();
   }
 
-  public show() {
+  private show() {
     this.packageName = undefined;
 
     if (this.packageName) {
@@ -43,7 +42,7 @@ export class StatusDisplay implements Disposable {
     this.statusBarItem.show();
   }
 
-  public hide() {
+  private hide() {
     this.statusBarItem.hide();
   }
 

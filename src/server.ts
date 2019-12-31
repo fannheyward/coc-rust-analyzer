@@ -4,8 +4,6 @@ import { GenericNotificationHandler } from 'vscode-languageserver-protocol';
 import which from 'which';
 import { Config } from './config';
 
-// import { Highlighter } from './highlighting';
-
 function expandPathResolving(path: string) {
   if (path.startsWith('~/')) {
     return path.replace('~', homedir());
@@ -14,7 +12,6 @@ function expandPathResolving(path: string) {
 }
 
 export class Server {
-  // public static highlighter = new Highlighter();
   public static config = new Config();
   public static client: LanguageClient;
 

@@ -1,6 +1,6 @@
 import { workspace } from 'coc.nvim';
 import { Position, TextDocumentIdentifier } from 'vscode-languageserver-protocol';
-import { Ctx, Cmd } from '../ctx';
+import { Cmd, Ctx } from '../ctx';
 
 interface FindMatchingBraceParams {
   textDocument: TextDocumentIdentifier;

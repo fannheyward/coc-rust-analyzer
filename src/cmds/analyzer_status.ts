@@ -1,5 +1,5 @@
 import { workspace } from 'coc.nvim';
-import { Ctx, Cmd } from '../ctx';
+import { Cmd, Ctx } from '../ctx';
 
 export async function handler() {}
 

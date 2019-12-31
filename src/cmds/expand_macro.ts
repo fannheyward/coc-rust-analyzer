@@ -1,11 +1,6 @@
 import { workspace } from 'coc.nvim';
-import { Position, TextDocumentIdentifier } from 'vscode-languageserver-protocol';
-import { Server } from '../server';
-
-interface MacroExpandParams {
-  textDocument: TextDocumentIdentifier;
-  position: Position;
-}
+import { TextDocumentPositionParams } from 'vscode-languageserver-protocol';
+import { Cmd, Ctx } from '../ctx';
 
 interface ExpandedMacro {
   name: string;
@@ -21,24 +16,26 @@ function codeFormat(expanded: ExpandedMacro): string {
   return result;
 }
 
-export async function handler() {
-  const { document, position } = await workspace.getCurrentState();
-  if (document.languageId !== 'rust') {
-    return;
-  }
+export function expandMacro(ctx: Ctx): Cmd {
+  return async () => {
+    const { document, position } = await workspace.getCurrentState();
+    if (document.languageId !== 'rust') {
+      return;
+    }
 
-  const param: MacroExpandParams = {
-    textDocument: { uri: document.uri },
-    position
+    const param: TextDocumentPositionParams = {
+      textDocument: { uri: document.uri },
+      position
+    };
+
+    const expanded = await ctx.client.sendRequest<ExpandedMacro>('rust-analyzer/expandMacro', param);
+    if (!expanded) {
+      return;
+    }
+
+    await workspace.nvim.command('tabnew').then(async () => {
+      const buf = await workspace.nvim.buffer;
+      buf.setLines(codeFormat(expanded).split('\n'), { start: 0, end: -1 });
+    });
   };
-
-  const expanded = await Server.client.sendRequest<ExpandedMacro>('rust-analyzer/expandMacro', param);
-  if (!expanded) {
-    return;
-  }
-
-  await workspace.nvim.command('tabnew').then(async () => {
-    const buf = await workspace.nvim.buffer;
-    buf.setLines(codeFormat(expanded).split('\n'), { start: 0, end: -1 });
-  });
 }

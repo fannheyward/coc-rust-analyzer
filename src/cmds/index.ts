@@ -1,14 +1,15 @@
-import { Ctx, Cmd } from '../ctx';
+import { commands, Uri } from 'coc.nvim';
+import { Location, Position } from 'vscode-languageserver-protocol';
+import { Cmd, Ctx } from '../ctx';
+import * as sourceChange from '../source_change';
 import { analyzerStatus } from './analyzer_status';
+import { expandMacro } from './expand_macro';
+import { joinLines } from './join_lines';
 import { matchingBrace } from './matching_brace';
-import * as applySourceChange from './apply_source_change';
-// import * as inlayHints from './inlay_hints';
-import * as joinLines from './join_lines';
-import * as onEnter from './on_enter';
-import * as parentModule from './parent_module';
-import * as runnables from './runnables';
-import * as syntaxTree from './syntaxTree';
-import * as expandMacro from './expand_macro';
+import { onEnter } from './on_enter';
+import { parentModule } from './parent_module';
+import { run, runSingle } from './runnables';
+import { syntaxTree } from './syntax_tree';
 
 function collectGarbage(ctx: Ctx): Cmd {
   return async () => {
@@ -16,4 +17,16 @@ function collectGarbage(ctx: Ctx): Cmd {
   };
 }
 
-export { analyzerStatus, applySourceChange, joinLines, matchingBrace, onEnter, parentModule, runnables, syntaxTree, expandMacro, collectGarbage };
+function showReferences(): Cmd {
+  return (uri: string, position: Position, locations: Location[]) => {
+    commands.executeCommand('editor.action.showReferences', Uri.parse(uri), position, locations);
+  };
+}
+
+function applySourceChange(): Cmd {
+  return async (change: sourceChange.SourceChange) => {
+    sourceChange.applySourceChange(change);
+  };
+}
+
+export { analyzerStatus, applySourceChange, joinLines, matchingBrace, onEnter, parentModule, run, runSingle, syntaxTree, expandMacro, collectGarbage, showReferences };

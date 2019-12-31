@@ -1,9 +1,9 @@
-import { commands, ExtensionContext, services, Uri, workspace } from 'coc.nvim';
-import { GenericNotificationHandler, Location, Position } from 'vscode-languageserver-protocol';
+import { commands, ExtensionContext, services, workspace } from 'coc.nvim';
+import { GenericNotificationHandler } from 'vscode-languageserver-protocol';
 import * as cmds from './cmds';
-import { Server } from './server';
-import { StatusDisplay } from './cmds/watch_status';
+import { StatusDisplay } from './status_display';
 import { Ctx } from './ctx';
+import { Server } from './server';
 
 export async function activate(context: ExtensionContext): Promise<void> {
   const run = Server.prepare();
@@ -18,15 +18,9 @@ export async function activate(context: ExtensionContext): Promise<void> {
 
   const ctx = new Ctx(context);
 
-  function registerCommand(name: string, f: any) {
-    context.subscriptions.push(commands.registerCommand(name, f));
-  }
-
-  const watchStatus = new StatusDisplay(Server.config.cargoWatchOptions.command);
+  const watchStatus = new StatusDisplay(ctx.config.cargoWatchOptions.command);
   context.subscriptions.push(watchStatus);
 
-  // Notifications are events triggered by the language server
-  // const allNotifications: Iterable<[string, GenericNotificationHandler]> = [['rust-analyzer/publishDecorations', notifications.publishDecorations.handle]];
   const allNotifications: Iterable<[string, GenericNotificationHandler]> = [['$/progress', params => watchStatus.handleProgressNotification(params)]];
   Server.start(allNotifications);
   if (Server.client) {
@@ -34,22 +28,19 @@ export async function activate(context: ExtensionContext): Promise<void> {
   }
 
   // Commands are requests from vscode to the language server
-  ctx.registerCommand('rust-analyzer.analyzerStatus', cmds.analyzerStatus);
-  ctx.registerCommand('rust-analyzer.collectGarbage', cmds.collectGarbage);
-  ctx.registerCommand('rust-analyzer.matchingBrace', cmds.matchingBrace);
-  registerCommand('rust-analyzer.joinLines', cmds.joinLines.handle);
-  registerCommand('rust-analyzer.parentModule', cmds.parentModule.handle);
-  registerCommand('rust-analyzer.run', cmds.runnables.handle);
-  registerCommand('rust-analyzer.runSingle', cmds.runnables.handleSingle);
-  registerCommand('rust-analyzer.applySourceChange', cmds.applySourceChange.handle);
-  registerCommand('rust-analyzer.syntaxTree', cmds.syntaxTree.handler);
-  registerCommand('rust-analyzer.expandMacro', cmds.expandMacro.handler);
-  registerCommand('rust-analyzer.showReferences', (uri: string, position: Position, locations: Location[]) => {
-    // TODO
-    return commands.executeCommand('editor.action.showReferences', Uri.parse(uri), position, locations);
-  });
+  ctx.registerCommand('analyzerStatus', cmds.analyzerStatus);
+  ctx.registerCommand('applySourceChange', cmds.applySourceChange);
+  ctx.registerCommand('collectGarbage', cmds.collectGarbage);
+  ctx.registerCommand('expandMacro', cmds.expandMacro);
+  ctx.registerCommand('joinLines', cmds.joinLines);
+  ctx.registerCommand('matchingBrace', cmds.matchingBrace);
+  ctx.registerCommand('parentModule', cmds.parentModule);
+  ctx.registerCommand('run', cmds.run);
+  ctx.registerCommand('runSingle', cmds.runSingle);
+  ctx.registerCommand('syntaxTree', cmds.syntaxTree);
+  ctx.registerCommand('showReferences', cmds.showReferences);
 
-  registerCommand('rust-analyzer.reload', async () => {
+  commands.registerCommand('rust-analyzer.reload', async () => {
     if (Server.client != null) {
       workspace.showMessage(`Reloading rust-analyzer...`);
       await Server.client.stop();

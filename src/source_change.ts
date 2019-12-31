@@ -7,7 +7,7 @@ export interface SourceChange {
   cursorPosition?: TextDocumentPositionParams;
 }
 
-export async function handle(change: SourceChange) {
+export async function applySourceChange(change: SourceChange) {
   if (!change) {
     return;
   }
