@@ -14,7 +14,8 @@ export function joinLines(ctx: Ctx): Cmd {
     if (doc.textDocument.languageId !== 'rust') {
       return;
     }
-    const range = await workspace.getSelectedRange('v', doc);
+    const mode = await workspace.nvim.call('visualmode');
+    const range = await workspace.getSelectedRange(mode, doc);
     if (!range) {
       return;
     }
