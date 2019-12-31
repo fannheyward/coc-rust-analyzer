@@ -3,6 +3,7 @@ import { GenericNotificationHandler, Location, Position } from 'vscode-languages
 import * as cmds from './cmds';
 import { Server } from './server';
 import { StatusDisplay } from './cmds/watch_status';
+import { Ctx } from './ctx';
 
 export async function activate(context: ExtensionContext): Promise<void> {
   const run = Server.prepare();
@@ -14,6 +15,8 @@ export async function activate(context: ExtensionContext): Promise<void> {
     }
     return;
   }
+
+  const ctx = new Ctx(context);
 
   function registerCommand(name: string, f: any) {
     context.subscriptions.push(commands.registerCommand(name, f));
@@ -31,13 +34,13 @@ export async function activate(context: ExtensionContext): Promise<void> {
   }
 
   // Commands are requests from vscode to the language server
-  registerCommand('rust-analyzer.analyzerStatus', cmds.analyzerStatus.handler);
-  registerCommand('rust-analyzer.matchingBrace', cmds.matchingBrace.handle);
+  ctx.registerCommand('rust-analyzer.analyzerStatus', cmds.analyzerStatus);
+  ctx.registerCommand('rust-analyzer.collectGarbage', cmds.collectGarbage);
+  ctx.registerCommand('rust-analyzer.matchingBrace', cmds.matchingBrace);
   registerCommand('rust-analyzer.joinLines', cmds.joinLines.handle);
   registerCommand('rust-analyzer.parentModule', cmds.parentModule.handle);
   registerCommand('rust-analyzer.run', cmds.runnables.handle);
   registerCommand('rust-analyzer.runSingle', cmds.runnables.handleSingle);
-  registerCommand('rust-analyzer.collectGarbage', () => Server.client.sendRequest<null>('rust-analyzer/collectGarbage', null));
   registerCommand('rust-analyzer.applySourceChange', cmds.applySourceChange.handle);
   registerCommand('rust-analyzer.syntaxTree', cmds.syntaxTree.handler);
   registerCommand('rust-analyzer.expandMacro', cmds.expandMacro.handler);
@@ -53,34 +56,6 @@ export async function activate(context: ExtensionContext): Promise<void> {
       Server.start(allNotifications);
     }
   });
-
-  // if (Server.config.enableEnhancedTyping) {
-  //   cmds.onEnter.handle();
-  // }
-
-  // const syntaxTreeContentProvider = new SyntaxTreeContentProvider();
-  // vscode.window.onDidChangeActiveTextEditor(events.changeActiveTextEditor.makeHandler(syntaxTreeContentProvider));
-  // disposeOnDeactivation(vscode.workspace.registerTextDocumentContentProvider('rust-analyzer', syntaxTreeContentProvider));
-  // vscode.workspace.onDidChangeTextDocument(events.changeTextDocument.createHandler(syntaxTreeContentProvider), null, context.subscriptions);
-
-  //   if (Server.config.displayInlayHints) {
-  //     const hintsUpdater = new HintsUpdater();
-  //     hintsUpdater.refreshHintsForVisibleEditors().then(() => {
-  //       // vscode may ignore top level hintsUpdater.refreshHintsForVisibleEditors()
-  //       // so update the hints once when the focus changes to guarantee their presence
-  //       let editorChangeDisposable: vscode.Disposable | null = null;
-  //       editorChangeDisposable = vscode.window.onDidChangeActiveTextEditor(_ => {
-  //         if (editorChangeDisposable !== null) {
-  //           editorChangeDisposable.dispose();
-  //         }
-  //         return hintsUpdater.refreshHintsForVisibleEditors();
-  //       });
-
-  //       disposeOnDeactivation(vscode.window.onDidChangeVisibleTextEditors(_ => hintsUpdater.refreshHintsForVisibleEditors()));
-  //       disposeOnDeactivation(vscode.workspace.onDidChangeTextDocument(e => hintsUpdater.refreshHintsForVisibleEditors(e)));
-  //       disposeOnDeactivation(vscode.workspace.onDidChangeConfiguration(_ => hintsUpdater.toggleHintsDisplay(Server.config.displayInlayHints)));
-  //     });
-  //   }
 }
 
 export function deactivate(): Thenable<void> {
