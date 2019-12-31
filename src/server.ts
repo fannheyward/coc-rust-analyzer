@@ -56,7 +56,7 @@ export class Server {
         publishDecorations: false,
         lruCapacity: this.config.lruCapacity,
         cargoWatchEnable: Server.config.cargoWatchOptions.enable,
-        cargoWatchArgumets: Server.config.cargoWatchOptions.arguments,
+        cargoWatchArgs: Server.config.cargoWatchOptions.arguments,
         cargoWatchCommand: Server.config.cargoWatchOptions.command,
         cargoWatchAllTargets: Server.config.cargoWatchOptions.allTargets,
         excludeGlobs: this.config.excludeGlobs,
