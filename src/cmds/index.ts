@@ -19,6 +19,9 @@ function collectGarbage(ctx: Ctx): Cmd {
 
 function showReferences(): Cmd {
   return (uri: string, position: Position, locations: Location[]) => {
+    if (!uri) {
+      return;
+    }
     commands.executeCommand('editor.action.showReferences', Uri.parse(uri), position, locations);
   };
 }
