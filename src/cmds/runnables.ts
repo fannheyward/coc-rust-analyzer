@@ -1,6 +1,6 @@
 import { Terminal, TerminalOptions, workspace } from 'coc.nvim';
 import { Position, Range, TextDocumentIdentifier } from 'vscode-languageserver-protocol';
-import { Ctx, Cmd } from '../ctx';
+import { Cmd, Ctx } from '../ctx';
 
 interface RunnablesParams {
   textDocument: TextDocumentIdentifier;
@@ -27,7 +27,7 @@ class RunnableQuickPick {
 export function run(ctx: Ctx): Cmd {
   return async () => {
     const { document, position } = await workspace.getCurrentState();
-    if (document.languageId !== 'rust') {
+    if (document.languageId !== 'rust' || !ctx.client) {
       return;
     }
 

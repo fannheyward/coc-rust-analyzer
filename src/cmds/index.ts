@@ -1,4 +1,4 @@
-import { commands, Uri } from 'coc.nvim';
+import { commands, Uri, workspace } from 'coc.nvim';
 import { Location, Position } from 'vscode-languageserver-protocol';
 import { Cmd, Ctx } from '../ctx';
 import * as sourceChange from '../source_change';
@@ -13,7 +13,7 @@ import { syntaxTree } from './syntax_tree';
 
 function collectGarbage(ctx: Ctx): Cmd {
   return async () => {
-    ctx.client.sendRequest<null>('rust-analyzer/collectGarbage', null);
+    ctx.client?.sendRequest<null>('rust-analyzer/collectGarbage', null);
   };
 }
 
@@ -32,4 +32,11 @@ function applySourceChange(): Cmd {
   };
 }
 
-export { analyzerStatus, applySourceChange, joinLines, matchingBrace, onEnter, parentModule, run, runSingle, syntaxTree, expandMacro, collectGarbage, showReferences };
+function reload(ctx: Ctx): Cmd {
+  return async () => {
+    workspace.showMessage(`Reloading rust-analyzer...`);
+    await ctx.restartServer();
+  };
+}
+
+export { analyzerStatus, applySourceChange, joinLines, matchingBrace, onEnter, parentModule, run, runSingle, syntaxTree, expandMacro, collectGarbage, showReferences, reload };

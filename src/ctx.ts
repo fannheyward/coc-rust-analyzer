@@ -1,22 +1,18 @@
-import { commands, ExtensionContext, LanguageClient } from 'coc.nvim';
+import { commands, ExtensionContext, services, LanguageClient } from 'coc.nvim';
+import { createClient } from './client';
 import { Config } from './config';
-import { Server } from './server';
 
 export type Cmd = (...args: any[]) => any;
 
 export class Ctx {
+  public readonly config: Config;
+  client: LanguageClient | null = null;
   private extCtx: ExtensionContext;
+  private onDidRestartHooks: Array<(client: LanguageClient) => void> = [];
 
   constructor(extCtx: ExtensionContext) {
+    this.config = new Config();
     this.extCtx = extCtx;
-  }
-
-  get client(): LanguageClient {
-    return Server.client;
-  }
-
-  get config(): Config {
-    return Server.config;
   }
 
   registerCommand(name: string, factory: (ctx: Ctx) => Cmd) {
@@ -24,5 +20,33 @@ export class Ctx {
     const cmd = factory(this);
     const d = commands.registerCommand(fullName, cmd);
     this.extCtx.subscriptions.push(d);
+  }
+
+  async restartServer() {
+    const old = this.client;
+    if (old) {
+      await old.stop();
+    }
+
+    this.client = null;
+    const client = createClient(this.config);
+    if (!client) {
+      return;
+    }
+
+    this.extCtx.subscriptions.push(services.registLanguageClient(client));
+    if (!client.started) {
+      client.start();
+    }
+    await client.onReady();
+
+    this.client = client;
+    for (const hook of this.onDidRestartHooks) {
+      hook(client);
+    }
+  }
+
+  onDidRestart(hook: (client: LanguageClient) => void) {
+    this.onDidRestartHooks.push(hook);
   }
 }

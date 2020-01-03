@@ -10,7 +10,7 @@ interface FindMatchingBraceParams {
 export function matchingBrace(ctx: Ctx): Cmd {
   return async () => {
     const { document, position } = await workspace.getCurrentState();
-    if (document.languageId !== 'rust') {
+    if (document.languageId !== 'rust' || !ctx.client) {
       return;
     }
 

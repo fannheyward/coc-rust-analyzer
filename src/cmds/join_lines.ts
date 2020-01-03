@@ -11,7 +11,7 @@ interface JoinLinesParams {
 export function joinLines(ctx: Ctx): Cmd {
   return async () => {
     const doc = await workspace.document;
-    if (doc.textDocument.languageId !== 'rust') {
+    if (doc.textDocument.languageId !== 'rust' || !ctx.client) {
       return;
     }
     const mode = await workspace.nvim.call('visualmode');

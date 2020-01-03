@@ -1,4 +1,5 @@
 import { Disposable, StatusBarItem, workspace } from 'coc.nvim';
+import { Ctx } from './ctx';
 
 // FIXME: Replace this once vscode-languageclient is updated to LSP 3.15
 interface ProgressParams {
@@ -19,7 +20,7 @@ interface WorkDoneProgress {
   percentage?: string;
 }
 
-export class StatusDisplay implements Disposable {
+class StatusDisplay implements Disposable {
   private packageName?: string;
   private statusBarItem: StatusBarItem;
   private command: string;
@@ -70,4 +71,11 @@ export class StatusDisplay implements Disposable {
         break;
     }
   }
+}
+
+export function activateStatusDisplay(ctx: Ctx) {
+  const statusDisplay = new StatusDisplay(ctx.config.cargoWatchOptions.command);
+  ctx.onDidRestart(client => {
+    client.onNotification('$/progress', params => statusDisplay.handleProgressNotification(params));
+  });
 }

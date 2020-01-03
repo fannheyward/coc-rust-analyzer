@@ -1,6 +1,6 @@
 import { workspace } from 'coc.nvim';
 import { Range, TextDocumentIdentifier } from 'vscode-languageserver-protocol';
-import { Ctx, Cmd } from '../ctx';
+import { Cmd, Ctx } from '../ctx';
 
 interface SyntaxTreeParams {
   textDocument: TextDocumentIdentifier;
@@ -10,7 +10,7 @@ interface SyntaxTreeParams {
 export function syntaxTree(ctx: Ctx): Cmd {
   return async () => {
     const doc = await workspace.document;
-    if (doc.textDocument.languageId !== 'rust') {
+    if (doc.textDocument.languageId !== 'rust' || !ctx.client) {
       return;
     }
 
