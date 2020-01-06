@@ -34,7 +34,7 @@ export class Ctx {
       return;
     }
 
-    this.extCtx.subscriptions.push(client.start())
+    this.extCtx.subscriptions.push(client.start());
     this.extCtx.subscriptions.push(services.registLanguageClient(client));
     await client.onReady();
 
