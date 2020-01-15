@@ -76,6 +76,11 @@
               "type": "boolean",
               "default": true,
               "description": "Show notifications on workspace loaded"
+            },
+            "notifications.cargo-toml-not-found": {
+              "type": "boolean",
+              "default": true,
+              "description": "Show notifications when Cargo.toml not found"
             }
           },
           "type": "object",
