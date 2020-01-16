@@ -20,7 +20,7 @@ async function getLatestVersion(): Promise<{ tag: string; url: string; name: str
 }
 
 export async function downloadServer(root: string): Promise<void> {
-  let statusItem = workspace.createStatusBarItem(0, { progress: true });
+  const statusItem = workspace.createStatusBarItem(0, { progress: true });
   statusItem.text = 'Getting the latest version...';
   statusItem.show();
 
