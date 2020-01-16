@@ -44,6 +44,7 @@ export async function activate(context: ExtensionContext): Promise<void> {
   ctx.registerCommand('syntaxTree', cmds.syntaxTree);
   ctx.registerCommand('showReferences', cmds.showReferences);
   ctx.registerCommand('reload', cmds.reload);
+  ctx.registerCommand('upgrade', cmds.upgrade);
 
   try {
     await ctx.restartServer();

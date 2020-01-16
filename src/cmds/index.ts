@@ -1,6 +1,7 @@
 import { commands, Uri, workspace } from 'coc.nvim';
 import { Location, Position } from 'vscode-languageserver-protocol';
 import { Cmd, Ctx } from '../ctx';
+import { downloadServer } from '../downloader';
 import * as sourceChange from '../source_change';
 import { analyzerStatus } from './analyzer_status';
 import { expandMacro } from './expand_macro';
@@ -52,6 +53,12 @@ function reload(ctx: Ctx): Cmd {
   };
 }
 
+function upgrade(ctx: Ctx) {
+  return async () => {
+    await downloadServer(ctx.extCtx.storagePath);
+  };
+}
+
 export {
   analyzerStatus,
   selectAndApplySourceChange,
@@ -66,5 +73,6 @@ export {
   expandMacro,
   collectGarbage,
   showReferences,
+  upgrade,
   reload
 };

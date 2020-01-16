@@ -46,6 +46,7 @@ Settings not specific to `rust-analyzer` can be found at `:help coc-configuratio
 
 - `rust-analyzer.analyzerStatus`: Show rust-analyzer status
 - `rust-analyzer.applySourceChange`: Apply source change
+- `rust-analyzer.selectAndApplySourceChange`: Apply selected source change
 - `rust-analyzer.collectGarbage`: Run garbage collection
 - `rust-analyzer.expandMacro`: Expand macro recursively
 - `rust-analyzer.joinLines`: Join lines
@@ -55,6 +56,7 @@ Settings not specific to `rust-analyzer` can be found at `:help coc-configuratio
 - `rust-analyzer.run`: List available runnables of current file
 - `rust-analyzer.runSingle`: Run runnable at position
 - `rust-analyzer.syntaxTree`: Show syntax tree
+- `rust-analyzer.upgrade`: Download latest `ra_lsp_server` from [GitHub release](https://github.com/rust-analyzer/rust-analyzer/releases)
 
 ## License
 

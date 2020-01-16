@@ -1,14 +1,14 @@
 import { commands, ExtensionContext, LanguageClient, services } from 'coc.nvim';
-import { createClient, resolveBin } from './client';
+import { createClient } from './client';
 import { Config } from './config';
 
 export type Cmd = (...args: any[]) => any;
 
 export class Ctx {
-  public readonly config: Config;
-  client: LanguageClient | null = null;
-  private extCtx: ExtensionContext;
   private onDidRestartHooks: Array<(client: LanguageClient) => void> = [];
+  public readonly config: Config;
+  public readonly extCtx: ExtensionContext;
+  client: LanguageClient | null = null;
 
   constructor(extCtx: ExtensionContext) {
     this.config = new Config();
