@@ -1,5 +1,5 @@
-import { commands, ExtensionContext, services, LanguageClient } from 'coc.nvim';
-import { createClient } from './client';
+import { commands, ExtensionContext, LanguageClient, services } from 'coc.nvim';
+import { createClient, resolveBin } from './client';
 import { Config } from './config';
 
 export type Cmd = (...args: any[]) => any;
@@ -29,7 +29,7 @@ export class Ctx {
     }
 
     this.client = null;
-    const client = createClient(this.config);
+    const client = createClient(this.config, this.extCtx.storagePath);
     if (!client) {
       return;
     }

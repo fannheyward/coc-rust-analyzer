@@ -1,5 +1,7 @@
 import { Executable, LanguageClient, LanguageClientOptions, ServerOptions, Uri, workspace } from 'coc.nvim';
+import { existsSync } from 'fs';
 import { homedir } from 'os';
+import { join } from 'path';
 import which from 'which';
 import { Config } from './config';
 
@@ -10,12 +12,24 @@ function expandPathResolving(path: string) {
   return path;
 }
 
-export function prepare(config: Config): Executable | undefined {
-  const bin = expandPathResolving(config.raLspServerPath);
+export function resolveBin(config: Config, serverRoot: string): string | undefined {
+  // 1. from config
+  // 2. in PATH
+  // 3. in coc-server-root
+  let bin = expandPathResolving(config.raLspServerPath);
   if (bin === 'ra_lsp_server') {
-    if (!which.sync(bin, { nothrow: true })) {
-      return;
-    }
+    bin = which.sync(bin, { nothrow: true }) || join(serverRoot, bin);
+  }
+
+  if (existsSync(bin)) {
+    return bin;
+  }
+}
+
+export function createClient(config: Config, serverRoot: string): LanguageClient | undefined {
+  const bin = resolveBin(config, serverRoot);
+  if (!bin) {
+    return;
   }
 
   let folder = '.';
@@ -27,15 +41,6 @@ export function prepare(config: Config): Executable | undefined {
     command: bin,
     options: { cwd: folder }
   };
-
-  return run;
-}
-
-export function createClient(config: Config): LanguageClient | undefined {
-  const run = prepare(config);
-  if (!run) {
-    return;
-  }
 
   const serverOptions: ServerOptions = {
     run,

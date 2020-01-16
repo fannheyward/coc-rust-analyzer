@@ -1,20 +1,32 @@
-import { commands, ExtensionContext, workspace } from 'coc.nvim';
-import { prepare } from './client';
+import { ExtensionContext, workspace } from 'coc.nvim';
+import { existsSync, mkdirSync } from 'fs';
+import { resolveBin } from './client';
 import * as cmds from './cmds';
 import { Ctx } from './ctx';
+import { downloadServer } from './downloader';
 import { activateStatusDisplay } from './status_display';
 
 export async function activate(context: ExtensionContext): Promise<void> {
   const ctx = new Ctx(context);
 
-  const run = prepare(ctx.config);
-  if (!run) {
-    workspace.showMessage(`ra_lsp_server is not found, you need to build rust-analyzer from source`, 'error');
-    const ret = await workspace.showQuickpick(['Yes', 'No'], 'Get ra_lsp_server?');
-    if (ret === 0) {
-      commands.executeCommand('vscode.open', 'https://github.com/rust-analyzer/rust-analyzer').catch(() => {});
+  const serverRoot = context.storagePath;
+  if (!existsSync(serverRoot)) {
+    mkdirSync(serverRoot);
+  }
+
+  const bin = resolveBin(ctx.config, serverRoot);
+  if (!bin) {
+    let msg = 'ra_lsp_server is not found, download from GitHub release?';
+    const ret = await workspace.showQuickpick(['Download', 'Cancel'], msg);
+    if (ret === 1) return;
+
+    try {
+      await downloadServer(serverRoot);
+    } catch (e) {
+      msg = 'Download ra_lsp_server failed, you can get it from https://github.com/rust-analyzer/rust-analyzer';
+      workspace.showMessage(msg, 'error');
+      return;
     }
-    return;
   }
 
   activateStatusDisplay(ctx);
