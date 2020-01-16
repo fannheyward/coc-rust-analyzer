@@ -32,6 +32,19 @@ function applySourceChange(): Cmd {
   };
 }
 
+function selectAndApplySourceChange(): Cmd {
+  return async (changes: sourceChange.SourceChange[]) => {
+    if (changes?.length === 1) {
+      await sourceChange.applySourceChange(changes[0]);
+    } else if (changes?.length > 0) {
+      const pick = await workspace.showQuickpick(changes.map(c => c.label));
+      if (pick) {
+        await sourceChange.applySourceChange(changes[pick]);
+      }
+    }
+  };
+}
+
 function reload(ctx: Ctx): Cmd {
   return async () => {
     workspace.showMessage(`Reloading rust-analyzer...`);
@@ -39,4 +52,19 @@ function reload(ctx: Ctx): Cmd {
   };
 }
 
-export { analyzerStatus, applySourceChange, joinLines, matchingBrace, onEnter, parentModule, run, runSingle, syntaxTree, expandMacro, collectGarbage, showReferences, reload };
+export {
+  analyzerStatus,
+  selectAndApplySourceChange,
+  applySourceChange,
+  joinLines,
+  matchingBrace,
+  onEnter,
+  parentModule,
+  run,
+  runSingle,
+  syntaxTree,
+  expandMacro,
+  collectGarbage,
+  showReferences,
+  reload
+};
