@@ -1,5 +1,5 @@
 import { workspace } from 'coc.nvim';
-import { createWriteStream } from 'fs';
+import { chmodSync, createWriteStream } from 'fs';
 import fetch from 'node-fetch';
 import os from 'os';
 import { join } from 'path';
@@ -49,6 +49,7 @@ export async function downloadServer(root: string): Promise<void> {
             }
           })
           .on('end', () => {
+            chmodSync(_path, '755');
             statusItem.hide();
             resolve();
           })
