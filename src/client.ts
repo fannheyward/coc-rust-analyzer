@@ -1,4 +1,5 @@
 import { Executable, LanguageClient, LanguageClientOptions, ServerOptions, Uri, workspace } from 'coc.nvim';
+import executable from 'executable';
 import { existsSync } from 'fs';
 import { homedir } from 'os';
 import { join } from 'path';
@@ -22,6 +23,11 @@ export function resolveBin(config: Config, serverRoot: string): string | undefin
   }
 
   if (!existsSync(bin)) {
+    return;
+  }
+
+  if (!executable.sync(bin)) {
+    workspace.showMessage(`${bin} is not executable`, 'error');
     return;
   }
 

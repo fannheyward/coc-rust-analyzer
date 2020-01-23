@@ -18,14 +18,14 @@ export async function activate(context: ExtensionContext): Promise<void> {
   if (!bin) {
     let msg = 'ra_lsp_server is not found, download from GitHub release?';
     const ret = await workspace.showQuickpick(['Download', 'Cancel'], msg);
-    if (ret === 1) return;
-
-    try {
-      await downloadServer(serverRoot);
-    } catch (e) {
-      msg = 'Download ra_lsp_server failed, you can get it from https://github.com/rust-analyzer/rust-analyzer';
-      workspace.showMessage(msg, 'error');
-      return;
+    if (ret === 0) {
+      try {
+        await downloadServer(serverRoot);
+      } catch (e) {
+        msg = 'Download ra_lsp_server failed, you can get it from https://github.com/rust-analyzer/rust-analyzer';
+        workspace.showMessage(msg, 'error');
+        return;
+      }
     }
   }
 
