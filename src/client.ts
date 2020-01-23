@@ -1,5 +1,4 @@
 import { Executable, LanguageClient, LanguageClientOptions, ServerOptions, Uri, workspace } from 'coc.nvim';
-import { spawnSync } from 'child_process';
 import { existsSync } from 'fs';
 import { homedir } from 'os';
 import { join } from 'path';
@@ -23,11 +22,6 @@ export function resolveBin(config: Config, serverRoot: string): string | undefin
   }
 
   if (!existsSync(bin)) {
-    return;
-  }
-
-  if (spawnSync(bin, ['--version'], { shell: process.platform === 'win32' }).status !== 0) {
-    workspace.showMessage(`Unable to execute '${bin} --version'`);
     return;
   }
 
