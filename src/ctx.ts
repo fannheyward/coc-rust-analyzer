@@ -44,6 +44,14 @@ export class Ctx {
     }
   }
 
+  async stopServer() {
+    if (this.client) {
+      await this.client.stop()
+    }
+
+    this.client = null;
+  }
+
   onDidRestart(hook: (client: LanguageClient) => void) {
     this.onDidRestartHooks.push(hook);
   }
