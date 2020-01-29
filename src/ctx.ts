@@ -46,7 +46,7 @@ export class Ctx {
 
   async stopServer() {
     if (this.client) {
-      await this.client.stop()
+      await this.client.stop();
     }
 
     this.client = null;

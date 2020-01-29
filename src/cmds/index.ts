@@ -55,9 +55,9 @@ function reload(ctx: Ctx): Cmd {
 
 function upgrade(ctx: Ctx) {
   return async () => {
-    await ctx.stopServer()
+    await ctx.stopServer();
     await downloadServer(ctx.extCtx.storagePath);
-    await ctx.restartServer()
+    await ctx.restartServer();
   };
 }
 
