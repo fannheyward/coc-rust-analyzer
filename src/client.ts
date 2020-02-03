@@ -80,7 +80,7 @@ export function createClient(config: Config, serverRoot: string): LanguageClient
   // This also requires considering our settings strategy, which is work which needs doing
   // @ts-ignore The tracer is private to vscode-languageclient, but we need access to it to not log publishDecorations requests
   client._tracer = {
-    log: (messageOrDataObject: string | any, data?: string) => {
+    log: (messageOrDataObject: string | unknown, data?: string) => {
       if (typeof messageOrDataObject === 'string') {
         if (messageOrDataObject.includes('rust-analyzer/publishDecorations') || messageOrDataObject.includes('rust-analyzer/decorationsRequest')) {
           // Don't log publish decorations requests

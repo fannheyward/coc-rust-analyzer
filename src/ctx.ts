@@ -2,7 +2,7 @@ import { commands, ExtensionContext, LanguageClient, services } from 'coc.nvim';
 import { createClient } from './client';
 import { Config } from './config';
 
-export type Cmd = (...args: any[]) => any;
+export type Cmd = (...args: any[]) => unknown;
 
 export class Ctx {
   private onDidRestartHooks: Array<(client: LanguageClient) => void> = [];
