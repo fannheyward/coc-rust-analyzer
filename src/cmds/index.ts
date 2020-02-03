@@ -3,22 +3,23 @@ import { Location, Position } from 'vscode-languageserver-protocol';
 import { Cmd, Ctx } from '../ctx';
 import { downloadServer } from '../downloader';
 import * as sourceChange from '../source_change';
-import { analyzerStatus } from './analyzer_status';
-import { expandMacro } from './expand_macro';
-import { joinLines } from './join_lines';
-import { matchingBrace } from './matching_brace';
-import { onEnter } from './on_enter';
-import { parentModule } from './parent_module';
-import { run, runSingle } from './runnables';
-import { syntaxTree } from './syntax_tree';
 
-function collectGarbage(ctx: Ctx): Cmd {
+export * from './analyzer_status';
+export * from './expand_macro';
+export * from './join_lines';
+export * from './matching_brace';
+export * from './on_enter';
+export * from './parent_module';
+export * from './runnables';
+export * from './syntax_tree';
+
+export function collectGarbage(ctx: Ctx): Cmd {
   return async () => {
     ctx.client?.sendRequest<null>('rust-analyzer/collectGarbage', null);
   };
 }
 
-function showReferences(): Cmd {
+export function showReferences(): Cmd {
   return (uri: string, position: Position, locations: Location[]) => {
     if (!uri) {
       return;
@@ -27,13 +28,13 @@ function showReferences(): Cmd {
   };
 }
 
-function applySourceChange(): Cmd {
+export function applySourceChange(): Cmd {
   return async (change: sourceChange.SourceChange) => {
     sourceChange.applySourceChange(change);
   };
 }
 
-function selectAndApplySourceChange(): Cmd {
+export function selectAndApplySourceChange(): Cmd {
   return async (changes: sourceChange.SourceChange[]) => {
     if (changes?.length === 1) {
       await sourceChange.applySourceChange(changes[0]);
@@ -46,35 +47,17 @@ function selectAndApplySourceChange(): Cmd {
   };
 }
 
-function reload(ctx: Ctx): Cmd {
+export function reload(ctx: Ctx): Cmd {
   return async () => {
     workspace.showMessage(`Reloading rust-analyzer...`);
     await ctx.restartServer();
   };
 }
 
-function upgrade(ctx: Ctx) {
+export function upgrade(ctx: Ctx) {
   return async () => {
     await ctx.stopServer();
     await downloadServer(ctx.extCtx.storagePath);
     await ctx.restartServer();
   };
 }
-
-export {
-  analyzerStatus,
-  selectAndApplySourceChange,
-  applySourceChange,
-  joinLines,
-  matchingBrace,
-  onEnter,
-  parentModule,
-  run,
-  runSingle,
-  syntaxTree,
-  expandMacro,
-  collectGarbage,
-  showReferences,
-  upgrade,
-  reload
-};
