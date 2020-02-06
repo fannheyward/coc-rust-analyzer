@@ -56,6 +56,7 @@ export async function downloadServer(root: string): Promise<void> {
           .pipe(createWriteStream(_path));
       })
       .catch(e => {
+        statusItem.hide();
         reject(e);
       });
   });
