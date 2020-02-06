@@ -22,7 +22,7 @@ export class Config {
   public raLspServerPath = RA_LSP_DEBUG || 'ra_lsp_server';
   public lruCapacity: null | number = null;
   public displayInlayHints = true;
-  public excludeGlobs = [];
+  public excludeGlobs: string[] = [];
   public useClientWatching = true;
   public featureFlags = {};
   public cargoWatchOptions: CargoWatchOptions = {
