@@ -100,7 +100,7 @@
           "type": [
             "string"
           ],
-          "default": "ra_lsp_server",
+          "default": "",
           "description": "Path to ra_lsp_server executable"
         },
         "rust-analyzer.excludeGlobs": {

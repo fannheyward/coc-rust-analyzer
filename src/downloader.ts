@@ -1,10 +1,16 @@
-import { workspace } from 'coc.nvim';
+import { ExtensionContext, workspace } from 'coc.nvim';
 import { chmodSync, createWriteStream } from 'fs';
 import fetch from 'node-fetch';
 import os from 'os';
 import { join } from 'path';
 
-async function getLatestVersion(): Promise<{ tag: string; url: string; name: string } | undefined> {
+export interface ReleaseTag {
+  tag: string;
+  url: string;
+  name: string;
+}
+
+export async function getLatestRelease(): Promise<ReleaseTag | undefined> {
   const fix = { win32: 'windows', darwin: 'mac' }[os.platform()] || 'linux';
   const releaseURL = 'https://api.github.com/repos/rust-analyzer/rust-analyzer/releases/latest';
   return fetch(releaseURL)
@@ -19,20 +25,19 @@ async function getLatestVersion(): Promise<{ tag: string; url: string; name: str
     });
 }
 
-export async function downloadServer(root: string): Promise<void> {
+export async function downloadServer(context: ExtensionContext): Promise<void> {
   const statusItem = workspace.createStatusBarItem(0, { progress: true });
   statusItem.text = 'Getting the latest version...';
   statusItem.show();
 
-  const latest = await getLatestVersion();
+  const latest = await getLatestRelease();
   if (!latest) {
     statusItem.hide();
     workspace.showMessage(`Can't get latest ra_lsp_server release`);
-
     return;
   }
 
-  const _path = join(root, latest.name);
+  const _path = join(context.storagePath, latest.name);
   statusItem.text = `Downloading ra_lsp_server ${latest.tag}`;
 
   return new Promise((resolve, reject) => {
@@ -49,6 +54,7 @@ export async function downloadServer(root: string): Promise<void> {
             }
           })
           .on('end', () => {
+            context.globalState.update('release', latest.tag);
             chmodSync(_path, '755');
             statusItem.hide();
             resolve();

@@ -5,6 +5,7 @@ import { homedir } from 'os';
 import { join } from 'path';
 import { createClient } from './client';
 import { Config } from './config';
+import { downloadServer, getLatestRelease } from './downloader';
 
 export type Cmd = (...args: any[]) => unknown;
 
@@ -66,17 +67,17 @@ export class Ctx {
   }
 
   resolveBin(): string | undefined {
-    // 1. bundled in coc-server-root
-    // 2. from config
+    // 1. from config, custom server path
+    // 2. bundled
     let bin = join(this.extCtx.storagePath, process.platform === 'win32' ? 'ra_lsp_server.exe' : 'ra_lsp_server');
-    if (!existsSync(bin) && this.config.raLspServerPath.length > 0) {
+    if (this.config.raLspServerPath.length > 0) {
       bin = this.config.raLspServerPath;
       if (bin.startsWith('~/')) {
         bin = bin.replace('~', homedir());
       }
-      if (!existsSync(bin)) {
-        return;
-      }
+    }
+    if (!existsSync(bin)) {
+      return;
     }
 
     if (!executable.sync(bin)) {
@@ -85,5 +86,42 @@ export class Ctx {
     }
 
     return bin;
+  }
+
+  async checkUpdate(auto = true) {
+    if (auto && this.config.raLspServerPath.length > 0) {
+      // no auto update if using custom server
+      return;
+    }
+
+    const latest = await getLatestRelease();
+    if (!latest) {
+      return;
+    }
+
+    const old = this.extCtx.globalState.get('release') || 'unknown release';
+    if (old === latest.tag) {
+      if (!auto) {
+        workspace.showMessage(`Your Rust Analyzer release is updated`);
+      }
+      return;
+    }
+
+    const msg = `Rust Analyzer has a new release: ${latest.tag}, you're using ${old}. Would you like to downlaod from GitHub`;
+    const ret = await workspace.showQuickpick(['Yes', 'Check GitHub releases', 'Cancel'], msg);
+    if (ret === 0) {
+      await this.stopServer();
+      try {
+        await downloadServer(this.extCtx);
+      } catch (e) {
+        workspace.showMessage(`Upgrade rust-analyzer failed, please try again`, 'error');
+        return;
+      }
+      await this.restartServer();
+
+      this.extCtx.globalState.update('release', latest.tag);
+    } else if (ret === 1) {
+      commands.executeCommand('vscode.open', 'https://github.com/rust-analyzer/rust-analyzer/releases').catch(() => {});
+    }
   }
 }

@@ -1,7 +1,6 @@
 import { commands, Uri, workspace } from 'coc.nvim';
 import { Location, Position } from 'vscode-languageserver-protocol';
 import { Cmd, Ctx } from '../ctx';
-import { downloadServer } from '../downloader';
 import * as sourceChange from '../source_change';
 
 export * from './analyzer_status';
@@ -56,13 +55,6 @@ export function reload(ctx: Ctx): Cmd {
 
 export function upgrade(ctx: Ctx) {
   return async () => {
-    await ctx.stopServer();
-    try {
-      await downloadServer(ctx.extCtx.storagePath);
-    } catch (e) {
-      workspace.showMessage(`Upgrade rust-analyzer failed, please try again`, 'error');
-      return;
-    }
-    await ctx.restartServer();
+    await ctx.checkUpdate(false);
   };
 }

@@ -15,16 +15,18 @@ export async function activate(context: ExtensionContext): Promise<void> {
 
   const bin = ctx.resolveBin();
   if (!bin) {
-    let msg = 'ra_lsp_server is not found, download from GitHub release?';
-    const ret = await workspace.showQuickpick(['Download', 'Cancel'], msg);
+    let msg = 'Rust Analyzer is not found, download from GitHub release?';
+    const ret = await workspace.showQuickpick(['Yes', 'Cancel'], msg);
     if (ret === 0) {
       try {
-        await downloadServer(serverRoot);
+        await downloadServer(context);
       } catch (e) {
         msg = 'Download ra_lsp_server failed, you can get it from https://github.com/rust-analyzer/rust-analyzer';
         workspace.showMessage(msg, 'error');
         return;
       }
+    } else {
+      return;
     }
   }
 
@@ -50,4 +52,6 @@ export async function activate(context: ExtensionContext): Promise<void> {
   } catch (e) {
     workspace.showMessage(e.message, 'error');
   }
+
+  await ctx.checkUpdate();
 }
