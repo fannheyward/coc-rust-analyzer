@@ -1,45 +1,7 @@
 import { Executable, LanguageClient, LanguageClientOptions, ServerOptions, Uri, workspace } from 'coc.nvim';
-import executable from 'executable';
-import { existsSync } from 'fs';
-import { homedir } from 'os';
-import { join } from 'path';
-import which from 'which';
 import { Config } from './config';
 
-function expandPathResolving(path: string) {
-  if (path.startsWith('~/')) {
-    return path.replace('~', homedir());
-  }
-  return path;
-}
-
-export function resolveBin(config: Config, serverRoot: string): string | undefined {
-  // 1. from config
-  // 2. in PATH
-  // 3. in coc-server-root
-  let bin = expandPathResolving(config.raLspServerPath);
-  if (bin === 'ra_lsp_server') {
-    bin = which.sync(bin, { nothrow: true }) || join(serverRoot, bin);
-  }
-
-  if (!existsSync(bin)) {
-    return;
-  }
-
-  if (!executable.sync(bin)) {
-    workspace.showMessage(`${bin} is not executable`, 'error');
-    return;
-  }
-
-  return bin;
-}
-
-export function createClient(config: Config, serverRoot: string): LanguageClient | undefined {
-  const bin = resolveBin(config, serverRoot);
-  if (!bin) {
-    return;
-  }
-
+export function createClient(config: Config, bin: string): LanguageClient | undefined {
   let folder = '.';
   if (workspace.workspaceFolder?.uri.length > 0) {
     folder = Uri.parse(workspace.workspaceFolder.uri).fsPath;

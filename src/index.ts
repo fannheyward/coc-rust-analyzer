@@ -1,6 +1,5 @@
 import { ExtensionContext, workspace } from 'coc.nvim';
 import { existsSync, mkdirSync } from 'fs';
-import { resolveBin } from './client';
 import * as cmds from './cmds';
 import { Ctx } from './ctx';
 import { downloadServer } from './downloader';
@@ -14,7 +13,7 @@ export async function activate(context: ExtensionContext): Promise<void> {
     mkdirSync(serverRoot);
   }
 
-  const bin = resolveBin(ctx.config, serverRoot);
+  const bin = ctx.resolveBin();
   if (!bin) {
     let msg = 'ra_lsp_server is not found, download from GitHub release?';
     const ret = await workspace.showQuickpick(['Download', 'Cancel'], msg);

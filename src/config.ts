@@ -1,7 +1,5 @@
 import { workspace, commands } from 'coc.nvim';
 
-const RA_LSP_DEBUG = process.env.__RA_LSP_SERVER_DEBUG;
-
 export interface CargoWatchOptions {
   enable: boolean;
   arguments: string[];
@@ -19,7 +17,7 @@ export class Config {
   public highlightingOn = true;
   public rainbowHighlightingOn = false;
   public enableEnhancedTyping = true;
-  public raLspServerPath = RA_LSP_DEBUG || 'ra_lsp_server';
+  public raLspServerPath = '';
   public lruCapacity: null | number = null;
   public displayInlayHints = true;
   public excludeGlobs: string[] = [];
@@ -78,7 +76,7 @@ export class Config {
     }
 
     if (config.has('raLspServerPath')) {
-      this.raLspServerPath = RA_LSP_DEBUG || (config.get('raLspServerPath') as string);
+      this.raLspServerPath = config.get<string>('raLspServerPath', '');
     }
 
     if (config.has('cargo-watch.enable')) {
