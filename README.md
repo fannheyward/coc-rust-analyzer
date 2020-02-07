@@ -10,23 +10,12 @@
 
 > remove `ra_lsp_server` config from `coc-settings.json` if you set
 
-## Quick Start
-
-You need `ra_lsp_server` installed. You can build it from source:
-
-```sh
-git clone https://github.com/rust-analyzer/rust-analyzer && cd rust-analyzer
-
-rustup component add rust-src
-cargo xtask install --server
-```
-
 ## Configurations
 
 This extension is configured using a jsonc file. You can open this configuration file using
 the command `:CocConfig`, and it is typically located at `$HOME/.config/nvim/coc-settings.json`.
 
-- `rust-analyzer.raLspServerPath`: Path to ra_lsp_server executable, default: `ra_lsp_server`
+- `rust-analyzer.raLspServerPath`: Path to ra_lsp_server executable, default: `''`
 - `rust-analyzer.featureFlags`: Fine grained feature flags to disable annoying features, default: `{}`, available [flags](https://github.com/rust-analyzer/rust-analyzer/blob/master/crates/ra_ide/src/feature_flags.rs#L55)
 - `rust-analyzer.excludeGlobs`: Paths to exclude from analysis, default: `[]`
 - `rust-analyzer.lruCapacity`: Number of syntax trees rust-analyzer keeps in memory, default: `null`
