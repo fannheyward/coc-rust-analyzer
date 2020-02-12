@@ -1,5 +1,5 @@
 import { ExtensionContext, workspace } from 'coc.nvim';
-import { chmodSync, createWriteStream } from 'fs';
+import { createWriteStream } from 'fs';
 import fetch from 'node-fetch';
 import os from 'os';
 import { join } from 'path';
@@ -53,13 +53,16 @@ export async function downloadServer(context: ExtensionContext): Promise<void> {
               statusItem.text = `${p}% Downloading ra_lsp_server ${latest.tag}`;
             }
           })
+          .on('error', e => {
+            statusItem.hide();
+            reject(e);
+          })
           .on('end', () => {
             context.globalState.update('release', latest.tag);
-            chmodSync(_path, '755');
             statusItem.hide();
             resolve();
           })
-          .pipe(createWriteStream(_path));
+          .pipe(createWriteStream(_path, { mode: 0o755 }));
       })
       .catch(e => {
         statusItem.hide();
