@@ -103,6 +103,9 @@
         },
         "rust-analyzer.excludeGlobs": {
           "type": "array",
+          "items": {
+            "type": "string"
+          },
           "default": [],
           "description": "Paths to exclude from analysis"
         },
@@ -118,6 +121,9 @@
         },
         "rust-analyzer.cargo-watch.arguments": {
           "type": "array",
+          "items": {
+            "type": "string"
+          },
           "description": "`cargo-watch` arguments. (e.g: `--features=\"shumway,pdf\"` will run as `cargo watch -x \"check --features=\"shumway,pdf\"\"` )",
           "default": []
         },
@@ -167,6 +173,9 @@
         },
         "rust-analyzer.cargoFeatures.features": {
           "type": "array",
+          "items": {
+            "type": "string"
+          },
           "default": [],
           "description": "List of features to activate"
         }
