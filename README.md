@@ -15,8 +15,8 @@
 This extension is configured using a jsonc file. You can open this configuration file using
 the command `:CocConfig`, and it is typically located at `$HOME/.config/nvim/coc-settings.json`.
 
-- `rust-analyzer.raLspServerPath`: Path to ra_lsp_server executable, default: `''`
-- `rust-analyzer.featureFlags`: Fine grained feature flags to disable annoying features, default: `{}`, available [flags](https://github.com/rust-analyzer/rust-analyzer/blob/master/crates/ra_ide/src/feature_flags.rs#L55)
+- `rust-analyzer.raLspServerPath`: Path to custom ra_lsp_server executable, default: `''`
+- `rust-analyzer.featureFlags`: Fine grained feature flags to disable annoying features, default: `{}`, available [flags](https://github.com/rust-analyzer/rust-analyzer/blob/master/crates/ra_ide_db/src/feature_flags.rs#L55)
 - `rust-analyzer.excludeGlobs`: Paths to exclude from analysis, default: `[]`
 - `rust-analyzer.lruCapacity`: Number of syntax trees rust-analyzer keeps in memory, default: `null`
 - `rust-analyzer.useClientWatching`: use client provided file watching instead of notify watching, default: `true`
@@ -32,6 +32,8 @@ the command `:CocConfig`, and it is typically located at `$HOME/.config/nvim/coc
 Settings not specific to `rust-analyzer` can be found at `:help coc-configuration`.
 
 ## Commands
+
+You can use these commands by `:CocCommand XYZ`.
 
 - `rust-analyzer.analyzerStatus`: Show rust-analyzer status
 - `rust-analyzer.applySourceChange`: Apply source change
