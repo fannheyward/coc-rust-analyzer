@@ -1,4 +1,4 @@
-import { workspace, commands } from 'coc.nvim';
+import { commands, ConfigurationChangeEvent, workspace, WorkspaceConfiguration } from 'coc.nvim';
 
 export interface CargoWatchOptions {
   enable: boolean;
@@ -14,144 +14,79 @@ export interface CargoFeatures {
 }
 
 export class Config {
-  public highlightingOn = true;
-  public rainbowHighlightingOn = false;
-  public enableEnhancedTyping = true;
-  public raLspServerPath = '';
-  public lruCapacity: null | number = null;
-  public displayInlayHints = true;
-  public excludeGlobs: string[] = [];
-  public useClientWatching = true;
-  public featureFlags = {};
-  public cargoWatchOptions: CargoWatchOptions = {
-    enable: true,
-    arguments: [],
-    command: '',
-    allTargets: true
-  };
-  public cargoFeatures: CargoFeatures = {
-    noDefaultFeatures: false,
-    allFeatures: true,
-    features: []
-  };
-
-  private prevEnhancedTyping: null | boolean = null;
-  private prevCargoFeatures: null | CargoFeatures = null;
-  private prevCargoWatchOptions: null | CargoWatchOptions = null;
+  private static readonly rootSection = 'rust-analyzer';
+  private static readonly requiresReloadOpts = ['cargoFeatures', 'cargo-watch'].map(opt => `${Config.rootSection}.${opt}`);
+  private cfg!: WorkspaceConfiguration;
 
   constructor() {
-    workspace.onDidChangeConfiguration(() => this.userConfigChanged());
-    this.userConfigChanged();
+    workspace.onDidChangeConfiguration(event => this.onConfigChange(event));
+    this.cfg = workspace.getConfiguration(Config.rootSection);
   }
 
-  public userConfigChanged() {
-    const config = workspace.getConfiguration('rust-analyzer');
-    let requireReloadMessage = '';
+  private async onConfigChange(event: ConfigurationChangeEvent) {
+    this.cfg = workspace.getConfiguration(Config.rootSection);
 
-    if (config.has('highlightingOn')) {
-      this.highlightingOn = config.get('highlightingOn') as boolean;
-    }
+    const requiresReloadOpt = Config.requiresReloadOpts.find(opt => event.affectsConfiguration(opt));
+    if (!requiresReloadOpt) return;
 
-    if (config.has('rainbowHighlightingOn')) {
-      this.rainbowHighlightingOn = config.get('rainbowHighlightingOn') as boolean;
-    }
-
-    // if (!this.highlightingOn && Server) {
-    //   // Server.highlighter.removeHighlights();
-    // }
-
-    if (config.has('enableEnhancedTyping')) {
-      this.enableEnhancedTyping = config.get('enableEnhancedTyping') as boolean;
-
-      if (this.prevEnhancedTyping === null) {
-        this.prevEnhancedTyping = this.enableEnhancedTyping;
+    const msg = `Changing "${requiresReloadOpt}" requires a reload`;
+    workspace.showPrompt(`${msg}. Reload Now?`).then(prompt => {
+      if (prompt) {
+        commands.executeCommand(`workbench.action.reloadWindow`);
       }
-    } else if (this.prevEnhancedTyping === null) {
-      this.prevEnhancedTyping = this.enableEnhancedTyping;
-    }
+    });
+  }
 
-    if (this.prevEnhancedTyping !== this.enableEnhancedTyping) {
-      requireReloadMessage = 'Changing enhanced typing setting requires a reload';
-      this.prevEnhancedTyping = this.enableEnhancedTyping;
-    }
+  get raLspServerPath() {
+    return this.cfg.get('raLspServerPath', '');
+  }
 
-    if (config.has('raLspServerPath')) {
-      this.raLspServerPath = config.get<string>('raLspServerPath', '');
-    }
+  get highlightingOn() {
+    return this.cfg.get('highlightingOn', true);
+  }
 
-    if (config.has('cargo-watch.enable')) {
-      this.cargoWatchOptions.enable = config.get<boolean>('cargo-watch.enable', true);
-    }
+  get rainbowHighlightingOn() {
+    return this.cfg.get('rainbowHighlightingOn', false);
+  }
 
-    if (config.has('cargo-watch.arguments')) {
-      this.cargoWatchOptions.arguments = config.get<string[]>('cargo-watch.arguments', []);
-    }
+  get lruCapacity() {
+    return this.cfg.get('lruCapacity') as number | null;
+  }
 
-    if (config.has('cargo-watch.command')) {
-      this.cargoWatchOptions.command = config.get<string>('cargo-watch.command', '');
-    }
+  get displayInlayHints() {
+    return this.cfg.get('displayInlayHints', true);
+  }
 
-    if (config.has('cargo-watch.allTargets')) {
-      this.cargoWatchOptions.allTargets = config.get<boolean>('cargo-watch.allTargets', true);
-    }
+  get maxInlayHintLength() {
+    return this.cfg.get('maxInlayHintLength') as number;
+  }
 
-    if (config.has('lruCapacity')) {
-      this.lruCapacity = config.get('lruCapacity') as number;
-    }
+  get excludeGlobs() {
+    return this.cfg.get<string[]>('excludeGlobs', []);
+  }
 
-    if (config.has('displayInlayHints')) {
-      this.displayInlayHints = config.get('displayInlayHints') as boolean;
-    }
-    if (config.has('excludeGlobs')) {
-      this.excludeGlobs = config.get('excludeGlobs', []);
-    }
-    if (config.has('useClientWatching')) {
-      this.useClientWatching = config.get('useClientWatching', true);
-    }
-    if (config.has('featureFlags')) {
-      this.featureFlags = config.get('featureFlags', {});
-    }
-    if (config.has('cargoFeatures.noDefaultFeatures')) {
-      this.cargoFeatures.noDefaultFeatures = config.get('cargoFeatures.noDefaultFeatures', false);
-    }
-    if (config.has('cargoFeatures.allFeatures')) {
-      this.cargoFeatures.allFeatures = config.get('cargoFeatures.allFeatures', true);
-    }
-    if (config.has('cargoFeatures.features')) {
-      this.cargoFeatures.features = config.get('cargoFeatures.features', []);
-    }
+  get useClientWatching() {
+    return this.cfg.get('useClientWatching', true);
+  }
 
-    if (this.prevCargoFeatures !== null) {
-      const changed =
-        this.cargoFeatures.allFeatures !== this.prevCargoFeatures.allFeatures ||
-        this.cargoFeatures.noDefaultFeatures !== this.prevCargoFeatures.noDefaultFeatures ||
-        this.cargoFeatures.features.length !== this.prevCargoFeatures.features.length ||
-        this.cargoFeatures.features.some((v, i) => v !== this.prevCargoFeatures!.features[i]);
-      if (changed) {
-        requireReloadMessage = 'Changing cargo features requires a reload';
-      }
-    }
-    this.prevCargoFeatures = { ...this.cargoFeatures };
+  get featureFlags() {
+    return this.cfg.get('featureFlags') as Record<string, boolean>;
+  }
 
-    if (this.prevCargoWatchOptions !== null) {
-      const changed =
-        this.cargoWatchOptions.enable !== this.prevCargoWatchOptions.enable ||
-        this.cargoWatchOptions.command !== this.prevCargoWatchOptions.command ||
-        this.cargoWatchOptions.allTargets !== this.prevCargoWatchOptions.allTargets ||
-        this.cargoWatchOptions.arguments.length !== this.prevCargoWatchOptions.arguments.length ||
-        this.cargoWatchOptions.arguments.some((v, i) => v !== this.prevCargoWatchOptions!.arguments[i]);
-      if (changed) {
-        requireReloadMessage = 'Changing cargo-watch options requires a reload';
-      }
-    }
-    this.prevCargoWatchOptions = { ...this.cargoWatchOptions };
+  get cargoWatchOptions(): CargoWatchOptions {
+    return {
+      enable: this.cfg.get('cargo-watch.enable', true),
+      arguments: this.cfg.get('cargo-watch.arguments', []),
+      command: this.cfg.get('cargo-watch.command', ''),
+      allTargets: this.cfg.get('cargo-watch.allTargets', true)
+    };
+  }
 
-    if (requireReloadMessage) {
-      workspace.showPrompt(`${requireReloadMessage}. Reload Now?`).then(prompt => {
-        if (prompt) {
-          commands.executeCommand(`workbench.action.reloadWindow`);
-        }
-      });
-    }
+  get cargoFeatures(): CargoFeatures {
+    return {
+      noDefaultFeatures: this.cfg.get('cargoFeatures.noDefaultFeatures', false),
+      allFeatures: this.cfg.get('cargoFeatures.allFeatures', true),
+      features: this.cfg.get('cargoFeatures.features', [])
+    };
   }
 }
