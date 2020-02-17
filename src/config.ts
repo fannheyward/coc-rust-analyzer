@@ -73,6 +73,10 @@ export class Config {
     return this.cfg.get('featureFlags') as Record<string, boolean>;
   }
 
+  get withSysroot() {
+    return this.cfg.get('withSysroot', true);
+  }
+
   get cargoWatchOptions(): CargoWatchOptions {
     return {
       enable: this.cfg.get('cargo-watch.enable', true),

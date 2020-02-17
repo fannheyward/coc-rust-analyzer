@@ -28,6 +28,7 @@ export function createClient(config: Config, bin: string): LanguageClient | unde
       cargoWatchAllTargets: config.cargoWatchOptions.allTargets,
       excludeGlobs: config.excludeGlobs,
       useClientWatching: config.useClientWatching,
+      withSysroot: config.withSysroot,
       cargoFeatures: config.cargoFeatures,
       featureFlags: config.featureFlags
     },
