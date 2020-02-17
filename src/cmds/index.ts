@@ -1,6 +1,7 @@
 import { commands, Uri, workspace } from 'coc.nvim';
 import { Location, Position } from 'vscode-languageserver-protocol';
 import { Cmd, Ctx } from '../ctx';
+import { activate } from '../index';
 import * as sourceChange from '../source_change';
 
 export * from './analyzer_status';
@@ -49,7 +50,16 @@ export function selectAndApplySourceChange(): Cmd {
 export function reload(ctx: Ctx): Cmd {
   return async () => {
     workspace.showMessage(`Reloading rust-analyzer...`);
-    await ctx.restartServer();
+
+    for (const sub of ctx.extCtx.subscriptions) {
+      try {
+        sub.dispose();
+      } catch (e) {
+        console.error(e);
+      }
+    }
+
+    await activate(ctx.extCtx);
   };
 }
 
