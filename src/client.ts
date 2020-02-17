@@ -30,6 +30,7 @@ export function createClient(config: Config, bin: string): LanguageClient | unde
       useClientWatching: config.useClientWatching,
       withSysroot: config.withSysroot,
       cargoFeatures: config.cargoFeatures,
+      rustfmtArgs: config.rustfmtArgs,
       featureFlags: config.featureFlags
     },
     outputChannel

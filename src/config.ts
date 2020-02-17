@@ -77,6 +77,10 @@ export class Config {
     return this.cfg.get('withSysroot', true);
   }
 
+  get rustfmtArgs() {
+    return this.cfg.get<string[]>('rustfmtArgs', []);
+  }
+
   get cargoWatchOptions(): CargoWatchOptions {
     return {
       enable: this.cfg.get('cargo-watch.enable', true),

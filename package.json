@@ -109,6 +109,14 @@
           "default": [],
           "description": "Paths to exclude from analysis"
         },
+        "rust-analyzer.rustfmtArgs": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "default": [],
+          "description": "Additional arguments to rustfmt"
+        },
         "rust-analyzer.useClientWatching": {
           "type": "boolean",
           "default": true,
@@ -155,10 +163,11 @@
         },
         "rust-analyzer.lruCapacity": {
           "type": [
-            "number",
+            "integer",
             "null"
           ],
           "default": null,
+          "minimum": 0,
           "description": "Number of syntax trees rust-analyzer keeps in memory"
         },
         "rust-analyzer.cargoFeatures.noDefaultFeatures": {
