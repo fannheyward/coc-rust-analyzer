@@ -21,7 +21,7 @@ export async function activate(context: ExtensionContext): Promise<void> {
       try {
         await downloadServer(context);
       } catch (e) {
-        msg = 'Download ra_lsp_server failed, you can get it from https://github.com/rust-analyzer/rust-analyzer';
+        msg = 'Download rust-analyzer failed, you can get it from https://github.com/rust-analyzer/rust-analyzer';
         workspace.showMessage(msg, 'error');
         return;
       }

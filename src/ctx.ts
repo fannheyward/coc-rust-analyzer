@@ -69,9 +69,13 @@ export class Ctx {
   resolveBin(): string | undefined {
     // 1. from config, custom server path
     // 2. bundled
-    let bin = join(this.extCtx.storagePath, process.platform === 'win32' ? 'ra_lsp_server.exe' : 'ra_lsp_server');
-    if (this.config.raLspServerPath.length > 0) {
-      bin = this.config.raLspServerPath;
+    let bin = join(this.extCtx.storagePath, process.platform === 'win32' ? 'rust-analyzer.exe' : 'rust-analyzer');
+    if (!existsSync(bin)) {
+      // fallback to old ra_lsp_server naming
+      bin = join(this.extCtx.storagePath, process.platform === 'win32' ? 'ra_lsp_server.exe' : 'ra_lsp_server');
+    }
+    if (this.config.serverPath.length > 0) {
+      bin = this.config.serverPath;
       if (bin.startsWith('~/')) {
         bin = bin.replace('~', homedir());
       }
@@ -89,7 +93,7 @@ export class Ctx {
   }
 
   async checkUpdate(auto = true) {
-    if (auto && this.config.raLspServerPath.length > 0) {
+    if (auto && this.config.serverPath.length > 0) {
       // no auto update if using custom server
       return;
     }

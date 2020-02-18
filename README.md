@@ -8,14 +8,14 @@
 
 `:CocInstall coc-rust-analyzer`
 
-> remove `ra_lsp_server` config from `coc-settings.json` if you set
+> remove `rust-analyzer` config from `coc-settings.json` if you set
 
 ## Configurations
 
 This extension is configured using a jsonc file. You can open this configuration file using
 the command `:CocConfig`, and it is typically located at `$HOME/.config/nvim/coc-settings.json`.
 
-- `rust-analyzer.raLspServerPath`: Path to custom ra_lsp_server executable, default: `''`
+- `rust-analyzer.serverPath`: Path to custom `rust-analyzer` executable, default: `''`
 - `rust-analyzer.featureFlags`: Fine grained feature flags to disable annoying features, default: `{}`, available [flags](https://github.com/rust-analyzer/rust-analyzer/blob/master/crates/ra_ide_db/src/feature_flags.rs#L55)
 - `rust-analyzer.excludeGlobs`: Paths to exclude from analysis, default: `[]`
 - `rust-analyzer.lruCapacity`: Number of syntax trees rust-analyzer keeps in memory, default: `null`
@@ -27,7 +27,7 @@ the command `:CocConfig`, and it is typically located at `$HOME/.config/nvim/coc
 - `rust-analyzer.cargoFeatures.noDefaultFeatures`: do not activate the `default` feature
 - `rust-analyzer.cargoFeatures.allFeatures`: activate all available features
 - `rust-analyzer.cargoFeatures.features`: list of features to activate
-- `rust-analyzer.trace.server`: Trace requests to the ra_lsp_server, default: `off`
+- `rust-analyzer.trace.server`: Trace requests to server, default: `off`
 
 Settings not specific to `rust-analyzer` can be found at `:help coc-configuration`.
 
@@ -47,11 +47,12 @@ You can use these commands by `:CocCommand XYZ`.
 - `rust-analyzer.run`: List available runnables of current file
 - `rust-analyzer.runSingle`: Run runnable at position
 - `rust-analyzer.syntaxTree`: Show syntax tree
-- `rust-analyzer.upgrade`: Download latest `ra_lsp_server` from [GitHub release](https://github.com/rust-analyzer/rust-analyzer/releases)
+- `rust-analyzer.upgrade`: Download latest `rust-analyzer` from [GitHub release](https://github.com/rust-analyzer/rust-analyzer/releases)
 
 ## License
 
 MIT
 
 ---
+
 > This extension is created by [create-coc-extension](https://github.com/fannheyward/create-coc-extension)

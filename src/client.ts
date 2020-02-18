@@ -12,10 +12,7 @@ export function createClient(config: Config, bin: string): LanguageClient {
     options: { cwd: folder }
   };
 
-  const serverOptions: ServerOptions = {
-    run,
-    debug: run
-  };
+  const serverOptions: ServerOptions = run;
   const outputChannel = workspace.createOutputChannel('Rust Analyzer Language Server Trace');
   const clientOptions: LanguageClientOptions = {
     documentSelector: [{ language: 'rust' }, { pattern: 'Cargo.toml' }],

@@ -11,13 +11,13 @@ export interface ReleaseTag {
 }
 
 export async function getLatestRelease(): Promise<ReleaseTag | undefined> {
-  const fix = { win32: 'windows', darwin: 'mac' }[os.platform()] || 'linux';
+  const fix = { win32: '-windows', darwin: '-mac' }[os.platform()] || '-linux';
   const releaseURL = 'https://api.github.com/repos/rust-analyzer/rust-analyzer/releases/latest';
   return fetch(releaseURL)
     .then(resp => resp.json())
     .then(resp => {
       const asset = (resp.assets as any[]).find(val => val.browser_download_url.includes(fix));
-      const name = asset.name.substr(0, 13) + (fix === 'windows' ? '.exe' : '');
+      const name = (asset.name as string).replace(fix, '');
       return { tag: resp.tag_name, url: asset.browser_download_url, name };
     })
     .catch(() => {
@@ -33,12 +33,12 @@ export async function downloadServer(context: ExtensionContext): Promise<void> {
   const latest = await getLatestRelease();
   if (!latest) {
     statusItem.hide();
-    workspace.showMessage(`Can't get latest ra_lsp_server release`);
+    workspace.showMessage(`Can't get latest rust-analyzer release`);
     return;
   }
 
   const _path = join(context.storagePath, latest.name);
-  statusItem.text = `Downloading ra_lsp_server ${latest.tag}`;
+  statusItem.text = `Downloading rust-analyzer ${latest.tag}`;
 
   return new Promise((resolve, reject) => {
     fetch(latest.url)
@@ -50,7 +50,7 @@ export async function downloadServer(context: ExtensionContext): Promise<void> {
             if (!isNaN(len)) {
               cur += chunk.length;
               const p = ((cur / len) * 100).toFixed(2);
-              statusItem.text = `${p}% Downloading ra_lsp_server ${latest.tag}`;
+              statusItem.text = `${p}% Downloading rust-analyzer ${latest.tag}`;
             }
           })
           .on('error', e => {

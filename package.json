@@ -99,7 +99,14 @@
             "string"
           ],
           "default": "",
-          "description": "Path to ra_lsp_server executable"
+          "description": "[Deprecated] Use `rust-analyzer.serverPath` instead. Path to rust-analyzer executable"
+        },
+        "rust-analyzer.serverPath": {
+          "type": [
+            "string"
+          ],
+          "default": "",
+          "description": "Path to rust-analyzer executable"
         },
         "rust-analyzer.excludeGlobs": {
           "type": "array",
@@ -159,7 +166,7 @@
             "Full log"
           ],
           "default": "off",
-          "description": "Trace requests to the ra_lsp_server"
+          "description": "Trace requests to the rust-analyzer"
         },
         "rust-analyzer.lruCapacity": {
           "type": [

@@ -37,8 +37,8 @@ export class Config {
     });
   }
 
-  get raLspServerPath() {
-    return this.cfg.get('raLspServerPath', '');
+  get serverPath() {
+    return this.cfg.get('serverPath', '');
   }
 
   get highlightingOn() {
