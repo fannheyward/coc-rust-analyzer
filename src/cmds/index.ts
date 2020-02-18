@@ -15,7 +15,7 @@ export * from './syntax_tree';
 
 export function collectGarbage(ctx: Ctx): Cmd {
   return async () => {
-    ctx.client?.sendRequest<null>('rust-analyzer/collectGarbage', null);
+    await ctx.client?.sendRequest<null>('rust-analyzer/collectGarbage', null);
   };
 }
 

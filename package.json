@@ -58,6 +58,14 @@
     }
   },
   "contributes": {
+    "rootPatterns": [
+      {
+        "filetype": "rust",
+        "patterns": [
+          "Cargo.toml"
+        ]
+      }
+    ],
     "configuration": {
       "type": "object",
       "title": "coc-rust-analyzer configuration",
