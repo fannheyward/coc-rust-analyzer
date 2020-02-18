@@ -16,7 +16,7 @@ export interface CargoFeatures {
 export class Config {
   private static readonly rootSection = 'rust-analyzer';
   private static readonly requiresReloadOpts = ['cargoFeatures', 'cargo-watch'].map(opt => `${Config.rootSection}.${opt}`);
-  private cfg!: WorkspaceConfiguration;
+  private cfg: WorkspaceConfiguration;
 
   constructor() {
     workspace.onDidChangeConfiguration(event => this.onConfigChange(event));
