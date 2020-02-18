@@ -1,7 +1,7 @@
 import { Executable, LanguageClient, LanguageClientOptions, ServerOptions, Uri, workspace } from 'coc.nvim';
 import { Config } from './config';
 
-export function createClient(config: Config, bin: string): LanguageClient | undefined {
+export function createClient(config: Config, bin: string): LanguageClient {
   let folder = '.';
   if (workspace.workspaceFolder?.uri.length > 0) {
     folder = Uri.parse(workspace.workspaceFolder.uri).fsPath;

@@ -30,6 +30,8 @@ export async function activate(context: ExtensionContext): Promise<void> {
     }
   }
 
+  await ctx.startServer();
+
   activateStatusDisplay(ctx);
 
   ctx.registerCommand('analyzerStatus', cmds.analyzerStatus);
@@ -44,15 +46,23 @@ export async function activate(context: ExtensionContext): Promise<void> {
   ctx.registerCommand('runSingle', cmds.runSingle);
   ctx.registerCommand('syntaxTree', cmds.syntaxTree);
   ctx.registerCommand('showReferences', cmds.showReferences);
-  ctx.registerCommand('reload', cmds.reload);
   ctx.registerCommand('upgrade', cmds.upgrade);
   ctx.registerCommand('ssr', cmds.ssr);
+  ctx.registerCommand('reload', ctx => {
+    return async () => {
+      workspace.showMessage(`Reloading rust-analyzer...`);
 
-  try {
-    await ctx.restartServer();
-  } catch (e) {
-    workspace.showMessage(e.message, 'error');
-  }
+      for (const sub of ctx.subscriptions) {
+        try {
+          sub.dispose();
+        } catch (e) {
+          console.error(e);
+        }
+      }
+
+      await activate(context);
+    };
+  });
 
   await ctx.checkUpdate();
 }

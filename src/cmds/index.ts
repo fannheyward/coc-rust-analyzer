@@ -1,7 +1,6 @@
 import { commands, Uri, workspace } from 'coc.nvim';
 import { Location, Position } from 'vscode-languageserver-protocol';
 import { Cmd, Ctx } from '../ctx';
-import { activate } from '../index';
 import * as sourceChange from '../source_change';
 
 export * from './analyzer_status';
@@ -11,8 +10,8 @@ export * from './matching_brace';
 export * from './on_enter';
 export * from './parent_module';
 export * from './runnables';
-export * from './syntax_tree';
 export * from './ssr';
+export * from './syntax_tree';
 
 export function collectGarbage(ctx: Ctx): Cmd {
   return async () => {
@@ -45,22 +44,6 @@ export function selectAndApplySourceChange(): Cmd {
         await sourceChange.applySourceChange(changes[pick]);
       }
     }
-  };
-}
-
-export function reload(ctx: Ctx): Cmd {
-  return async () => {
-    workspace.showMessage(`Reloading rust-analyzer...`);
-
-    for (const sub of ctx.extCtx.subscriptions) {
-      try {
-        sub.dispose();
-      } catch (e) {
-        console.error(e);
-      }
-    }
-
-    await activate(ctx.extCtx);
   };
 }
 

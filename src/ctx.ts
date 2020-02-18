@@ -1,4 +1,4 @@
-import { commands, ExtensionContext, LanguageClient, services, workspace } from 'coc.nvim';
+import { commands, Disposable, ExtensionContext, LanguageClient, services, workspace } from 'coc.nvim';
 import executable from 'executable';
 import { existsSync } from 'fs';
 import { homedir } from 'os';
@@ -12,10 +12,9 @@ export type Cmd = (...args: any[]) => unknown;
 export class Ctx {
   private onDidRestartHooks: Array<(client: LanguageClient) => void> = [];
   public readonly config: Config;
-  public readonly extCtx: ExtensionContext;
   client: LanguageClient | null = null;
 
-  constructor(extCtx: ExtensionContext) {
+  constructor(private readonly extCtx: ExtensionContext) {
     this.config = new Config();
     this.extCtx = extCtx;
   }
@@ -27,7 +26,7 @@ export class Ctx {
     this.extCtx.subscriptions.push(d);
   }
 
-  async restartServer() {
+  async startServer() {
     const bin = this.resolveBin();
     if (!bin) {
       return;
@@ -40,9 +39,6 @@ export class Ctx {
 
     this.client = null;
     const client = createClient(this.config, bin);
-    if (!client) {
-      return;
-    }
 
     this.extCtx.subscriptions.push(client.start());
     this.extCtx.subscriptions.push(services.registLanguageClient(client));
@@ -60,6 +56,10 @@ export class Ctx {
     }
 
     this.client = null;
+  }
+
+  get subscriptions(): Disposable[] {
+    return this.extCtx.subscriptions;
   }
 
   onDidRestart(hook: (client: LanguageClient) => void) {
@@ -117,7 +117,7 @@ export class Ctx {
         workspace.showMessage(`Upgrade rust-analyzer failed, please try again`, 'error');
         return;
       }
-      await this.restartServer();
+      await this.startServer();
 
       this.extCtx.globalState.update('release', latest.tag);
     } else if (ret === 1) {
