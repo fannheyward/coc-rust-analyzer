@@ -22,7 +22,7 @@ the command `:CocConfig`, and it is typically located at `$HOME/.config/nvim/coc
 - `rust-analyzer.useClientWatching`: use client provided file watching instead of notify watching, default: `true`
 - `rust-analyzer.cargo-watch.enable`: Run `cargo check` for diagnostics on save, default: `true`
 - `rust-analyzer.cargo-watch.arguments`: `cargo-watch` arguments, default: `[]`
-- `rust-analyzer.cargo-watch.command`: `cargo-watch` arguments, default: `check`
+- `rust-analyzer.cargo-watch.command`: `cargo-watch` command, default: `check`
 - `rust-analyzer.cargo-watch.allTargets`: Check all targets and tests (will be passed as `--all-targets`)
 - `rust-analyzer.cargoFeatures.noDefaultFeatures`: do not activate the `default` feature
 - `rust-analyzer.cargoFeatures.allFeatures`: activate all available features
