@@ -30,9 +30,9 @@ export async function activate(context: ExtensionContext): Promise<void> {
     }
   }
 
-  await ctx.startServer();
-
   activateStatusDisplay(ctx);
+
+  await ctx.startServer();
 
   ctx.registerCommand('analyzerStatus', cmds.analyzerStatus);
   ctx.registerCommand('applySourceChange', cmds.applySourceChange);

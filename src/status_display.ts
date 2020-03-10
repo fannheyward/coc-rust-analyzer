@@ -1,24 +1,6 @@
 import { Disposable, StatusBarItem, workspace } from 'coc.nvim';
+import { WorkDoneProgressBegin, WorkDoneProgressEnd, WorkDoneProgressReport, WorkDoneProgress } from 'vscode-languageserver-protocol';
 import { Ctx } from './ctx';
-
-// FIXME: Replace this once vscode-languageclient is updated to LSP 3.15
-interface ProgressParams {
-  token: string;
-  value: WorkDoneProgress;
-}
-
-enum WorkDoneProgressKind {
-  Begin = 'begin',
-  Report = 'report',
-  End = 'end'
-}
-
-interface WorkDoneProgress {
-  kind: WorkDoneProgressKind;
-  message?: string;
-  cancelable?: boolean;
-  percentage?: string;
-}
 
 class StatusDisplay implements Disposable {
   private packageName?: string;
@@ -51,19 +33,14 @@ class StatusDisplay implements Disposable {
     this.statusBarItem.dispose();
   }
 
-  public handleProgressNotification(params: ProgressParams) {
-    const { token, value } = params;
-    if (token !== 'rustAnalyzer/cargoWatcher') {
-      return;
-    }
-
-    switch (value.kind) {
+  public handleProgressNotification(params: WorkDoneProgressBegin | WorkDoneProgressReport | WorkDoneProgressEnd) {
+    switch (params.kind) {
       case 'begin':
         this.show();
         break;
       case 'report':
-        if (value.message) {
-          this.packageName = value.message;
+        if (params.message) {
+          this.packageName = params.message;
         }
         break;
       case 'end':
@@ -76,6 +53,6 @@ class StatusDisplay implements Disposable {
 export function activateStatusDisplay(ctx: Ctx) {
   const statusDisplay = new StatusDisplay(ctx.config.cargoWatchOptions.command);
   ctx.onDidRestart(client => {
-    client.onNotification('$/progress', params => statusDisplay.handleProgressNotification(params));
+    client.onProgress(WorkDoneProgress.type, 'rustAnalyzer/cargoWatcher', params => statusDisplay.handleProgressNotification(params));
   });
 }
