@@ -1,6 +1,7 @@
 import { commands, Uri, workspace } from 'coc.nvim';
 import { Location, Position } from 'vscode-languageserver-protocol';
 import { Cmd, Ctx } from '../ctx';
+import * as ra from '../rust-analyzer-api';
 import * as sourceChange from '../source_change';
 
 export * from './analyzer_status';
@@ -15,7 +16,7 @@ export * from './syntax_tree';
 
 export function collectGarbage(ctx: Ctx): Cmd {
   return async () => {
-    await ctx.client?.sendRequest<null>('rust-analyzer/collectGarbage', null);
+    await ctx.client?.sendRequest(ra.collectGarbage, null);
   };
 }
 
@@ -29,13 +30,13 @@ export function showReferences(): Cmd {
 }
 
 export function applySourceChange(): Cmd {
-  return async (change: sourceChange.SourceChange) => {
+  return async (change: ra.SourceChange) => {
     await sourceChange.applySourceChange(change);
   };
 }
 
 export function selectAndApplySourceChange(): Cmd {
-  return async (changes: sourceChange.SourceChange[]) => {
+  return async (changes: ra.SourceChange[]) => {
     if (changes?.length === 1) {
       await sourceChange.applySourceChange(changes[0]);
     } else if (changes?.length > 0) {

@@ -1,25 +1,11 @@
 import { Terminal, TerminalOptions, workspace } from 'coc.nvim';
-import { Position, Range, TextDocumentIdentifier } from 'vscode-languageserver-protocol';
 import { Cmd, Ctx } from '../ctx';
-
-interface RunnablesParams {
-  textDocument: TextDocumentIdentifier;
-  position?: Position;
-}
-
-interface Runnable {
-  label: string;
-  bin: string;
-  args: string[];
-  env: { [index: string]: string };
-  cwd?: string;
-  range: Range;
-}
+import * as ra from '../rust-analyzer-api';
 
 class RunnableQuickPick {
   label: string;
 
-  constructor(public runnable: Runnable) {
+  constructor(public runnable: ra.Runnable) {
     this.label = runnable.label;
   }
 }
@@ -33,11 +19,11 @@ export function run(ctx: Ctx): Cmd {
 
     workspace.showMessage(`Fetching runnable...`);
 
-    const params: RunnablesParams = {
+    const params: ra.RunnablesParams = {
       textDocument: { uri: document.uri },
       position
     };
-    const runnables = await ctx.client.sendRequest<Runnable[]>('rust-analyzer/runnables', params);
+    const runnables = await ctx.client.sendRequest(ra.runnables, params);
 
     const items: RunnableQuickPick[] = [];
     for (const r of runnables) {
@@ -53,7 +39,7 @@ export function run(ctx: Ctx): Cmd {
     const cmd = `${runnable.bin} ${runnable.args.join(' ')}`;
     const opt: TerminalOptions = {
       name: runnable.label,
-      cwd: runnable.cwd,
+      cwd: runnable.cwd!,
       env: runnable.env
     };
     workspace.createTerminal(opt).then((t: Terminal) => {
@@ -63,7 +49,7 @@ export function run(ctx: Ctx): Cmd {
 }
 
 export function runSingle(): Cmd {
-  return async (runnable: Runnable) => {
+  return async (runnable: ra.Runnable) => {
     const { document } = await workspace.getCurrentState();
     if (!runnable || document.languageId !== 'rust') {
       return;
@@ -72,7 +58,7 @@ export function runSingle(): Cmd {
     const cmd = `${runnable.bin} ${runnable.args.join(' ')}`;
     const opt: TerminalOptions = {
       name: runnable.label,
-      cwd: runnable.cwd,
+      cwd: runnable.cwd!,
       env: runnable.env
     };
     workspace.createTerminal(opt).then((t: Terminal) => {

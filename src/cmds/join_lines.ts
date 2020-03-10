@@ -1,12 +1,7 @@
 import { workspace } from 'coc.nvim';
-import { Range, TextDocumentIdentifier } from 'vscode-languageserver-protocol';
 import { Cmd, Ctx } from '../ctx';
-import { applySourceChange, SourceChange } from '../source_change';
-
-interface JoinLinesParams {
-  textDocument: TextDocumentIdentifier;
-  range: Range;
-}
+import * as ra from '../rust-analyzer-api';
+import { applySourceChange } from '../source_change';
 
 export function joinLines(ctx: Ctx): Cmd {
   return async () => {
@@ -19,11 +14,11 @@ export function joinLines(ctx: Ctx): Cmd {
     if (!range) {
       return;
     }
-    const param: JoinLinesParams = {
+    const param: ra.JoinLinesParams = {
       textDocument: { uri: doc.uri },
       range
     };
-    const change = await ctx.client.sendRequest<SourceChange>('rust-analyzer/joinLines', param);
+    const change = await ctx.client.sendRequest(ra.joinLines, param);
     await applySourceChange(change);
   };
 }

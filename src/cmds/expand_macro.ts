@@ -1,13 +1,9 @@
 import { workspace } from 'coc.nvim';
 import { TextDocumentPositionParams } from 'vscode-languageserver-protocol';
 import { Cmd, Ctx } from '../ctx';
+import * as ra from '../rust-analyzer-api';
 
-interface ExpandedMacro {
-  name: string;
-  expansion: string;
-}
-
-function codeFormat(expanded: ExpandedMacro): string {
+function codeFormat(expanded: ra.ExpandedMacro): string {
   let result = `// Recursive expansion of ${expanded.name}! macro\n`;
   result += '// ' + '='.repeat(result.length - 3);
   result += '\n\n';
@@ -28,7 +24,7 @@ export function expandMacro(ctx: Ctx): Cmd {
       position
     };
 
-    const expanded = await ctx.client.sendRequest<ExpandedMacro>('rust-analyzer/expandMacro', param);
+    const expanded = await ctx.client.sendRequest(ra.expandMacro, param);
     if (!expanded) {
       return;
     }

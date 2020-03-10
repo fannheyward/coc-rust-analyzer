@@ -1,6 +1,7 @@
 import { workspace } from 'coc.nvim';
-import { Location, TextDocumentPositionParams } from 'vscode-languageserver-protocol';
+import { TextDocumentPositionParams } from 'vscode-languageserver-protocol';
 import { Cmd, Ctx } from '../ctx';
+import * as ra from '../rust-analyzer-api';
 
 export function parentModule(ctx: Ctx): Cmd {
   return async () => {
@@ -14,7 +15,7 @@ export function parentModule(ctx: Ctx): Cmd {
       position
     };
 
-    const response = await ctx.client.sendRequest<Location[]>('rust-analyzer/parentModule', param);
+    const response = await ctx.client.sendRequest(ra.parentModule, param);
     if (response.length > 0) {
       const uri = response[0].uri;
       const range = response[0].range;

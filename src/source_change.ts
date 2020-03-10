@@ -1,11 +1,6 @@
 import { Uri, workspace } from 'coc.nvim';
-import { CreateFile, RenameFile, TextDocumentPositionParams, WorkspaceEdit } from 'vscode-languageserver-protocol';
-
-export interface SourceChange {
-  label: string;
-  workspaceEdit: WorkspaceEdit;
-  cursorPosition?: TextDocumentPositionParams;
-}
+import { CreateFile, RenameFile } from 'vscode-languageserver-protocol';
+import { SourceChange } from './rust-analyzer-api';
 
 export async function applySourceChange(change: SourceChange) {
   if (!change) {

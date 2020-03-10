@@ -1,7 +1,8 @@
 import { events, workspace } from 'coc.nvim';
 import { TextDocumentPositionParams } from 'vscode-languageserver-protocol';
 import { Cmd, Ctx } from '../ctx';
-import { applySourceChange, SourceChange } from '../source_change';
+import * as ra from '../rust-analyzer-api';
+import { applySourceChange } from '../source_change';
 
 function sleep(ms: number): Promise<any> {
   return new Promise(resolve => {
@@ -39,7 +40,7 @@ export function onEnter(ctx: Ctx): Cmd {
           textDocument: { uri: document.uri },
           position
         };
-        const change = await ctx.client.sendRequest<undefined | SourceChange>('rust-analyzer/onEnter', request);
+        const change = await ctx.client.sendRequest(ra.onEnter, request);
         if (!change) {
           return;
         }

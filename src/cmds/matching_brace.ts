@@ -1,11 +1,6 @@
 import { workspace } from 'coc.nvim';
-import { Position, TextDocumentIdentifier } from 'vscode-languageserver-protocol';
 import { Cmd, Ctx } from '../ctx';
-
-interface FindMatchingBraceParams {
-  textDocument: TextDocumentIdentifier;
-  offsets: Position[];
-}
+import * as ra from '../rust-analyzer-api';
 
 export function matchingBrace(ctx: Ctx): Cmd {
   return async () => {
@@ -14,12 +9,12 @@ export function matchingBrace(ctx: Ctx): Cmd {
       return;
     }
 
-    const request: FindMatchingBraceParams = {
+    const params: ra.FindMatchingBraceParams = {
       textDocument: { uri: document.uri },
       offsets: [position]
     };
 
-    const response = await ctx.client.sendRequest<Position[]>('rust-analyzer/findMatchingBrace', request);
+    const response = await ctx.client.sendRequest(ra.findMatchingBrace, params);
     if (response.length > 0) {
       workspace.jumpTo(document.uri, response[0]);
     }
