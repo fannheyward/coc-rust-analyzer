@@ -83,10 +83,20 @@
               "default": true,
               "description": "Automatically insert `()` and `<>` when completing functions and types."
             },
+            "completion.insertion.add-argument-snippets": {
+              "type": "boolean",
+              "default": true,
+              "description": "Whether to add argument snippets when completing functions"
+            },
             "completion.enable-postfix": {
               "type": "boolean",
               "default": true,
               "description": "Enable completions like `.if`, `.match`, etc."
+            },
+            "call-info.full": {
+              "type": "boolean",
+              "default": true,
+              "description": "Show function name and docs in parameter hints"
             },
             "notifications.workspace-loaded": {
               "type": "boolean",
