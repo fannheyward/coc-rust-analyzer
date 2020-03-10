@@ -13,7 +13,7 @@
     "url": "https://github.com/fannheyward/coc-rust-analyzer.git"
   },
   "engines": {
-    "coc": "^0.0.70"
+    "coc": "^0.0.76"
   },
   "activationEvents": [
     "onLanguage:rust",
