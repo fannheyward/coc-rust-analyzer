@@ -31,7 +31,7 @@
     "@types/node-fetch": "^2.5.4",
     "@typescript-eslint/eslint-plugin": "^2.7.0",
     "@typescript-eslint/parser": "^2.7.0",
-    "coc.nvim": "^0.0.75",
+    "coc.nvim": "^0.0.76",
     "eslint": "^6.6.0",
     "eslint-config-prettier": "^6.9.0",
     "eslint-plugin-prettier": "^3.1.2",
@@ -44,6 +44,7 @@
     "shx": "^0.3.2",
     "ts-loader": "^6.0.4",
     "typescript": "^3.6.2",
+    "vscode-languageserver-protocol": "^3.15.3",
     "webpack": "^4.41.2",
     "webpack-cli": "^3.3.10"
   },
