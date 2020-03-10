@@ -47,6 +47,8 @@ You can use these commands by `:CocCommand XYZ`.
 - `rust-analyzer.run`: List available runnables of current file
 - `rust-analyzer.runSingle`: Run runnable at position
 - `rust-analyzer.syntaxTree`: Show syntax tree
+- `rust-analyzer.ssr`: Structural Search Replace
+- `rust-analyzer.serverVersion`: Show current Rust Analyzer server version
 - `rust-analyzer.upgrade`: Download latest `rust-analyzer` from [GitHub release](https://github.com/rust-analyzer/rust-analyzer/releases)
 
 ## License

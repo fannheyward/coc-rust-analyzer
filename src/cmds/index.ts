@@ -11,6 +11,7 @@ export * from './matching_brace';
 export * from './on_enter';
 export * from './parent_module';
 export * from './runnables';
+export * from './server_version';
 export * from './ssr';
 export * from './syntax_tree';
 

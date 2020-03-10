@@ -263,6 +263,11 @@
         "category": "Rust Analyzer"
       },
       {
+        "command": "rust-analyzer.serverVersion",
+        "title": "Show current Rust Analyzer server version",
+        "category": "Rust Analyzer"
+      },
+      {
         "command": "rust-analyzer.syntaxTree",
         "title": "Show Syntax Tree",
         "category": "Rust Analyzer"
