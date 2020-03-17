@@ -27,11 +27,11 @@
     "prepare": "npm-run-all clean build"
   },
   "devDependencies": {
-    "@types/node": "^13.1.0",
+    "@types/node": "^13.9.1",
     "@types/node-fetch": "^2.5.4",
     "@typescript-eslint/eslint-plugin": "^2.7.0",
     "@typescript-eslint/parser": "^2.7.0",
-    "coc.nvim": "^0.0.76",
+    "coc.nvim": "^0.0.77",
     "eslint": "^6.6.0",
     "eslint-config-prettier": "^6.9.0",
     "eslint-plugin-prettier": "^3.1.2",
@@ -43,7 +43,7 @@
     "rimraf": "^3.0.0",
     "shx": "^0.3.2",
     "ts-loader": "^6.0.4",
-    "typescript": "^3.6.2",
+    "typescript": "^3.8.3",
     "vscode-languageserver-protocol": "^3.15.3",
     "webpack": "^4.41.2",
     "webpack-cli": "^3.3.10"
