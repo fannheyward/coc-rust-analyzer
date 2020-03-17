@@ -31,6 +31,12 @@ export function createClient(config: Config, bin: string): LanguageClient {
       rustfmtArgs: config.rustfmtArgs,
       featureFlags: config.featureFlags
     },
+    middleware: {
+      provideSignatureHelp: async (document, position, token, next) => {
+        position.character = position.character + 1;
+        return next(document, position, token);
+      }
+    },
     outputChannel
   };
 
