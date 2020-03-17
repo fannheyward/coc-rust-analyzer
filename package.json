@@ -127,6 +127,11 @@
           "default": "",
           "description": "Path to rust-analyzer executable"
         },
+        "rust-analyzer.additionalOutDirs": {
+          "type": "object",
+          "default": {},
+          "description": "Fine grained controls for OUT_DIR `env!(\"OUT_DIR\")` variable. e.g. `{\"foo\":\"/path/to/foo\"}`"
+        },
         "rust-analyzer.excludeGlobs": {
           "type": "array",
           "items": {

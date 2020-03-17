@@ -77,6 +77,10 @@ export class Config {
     return this.cfg.get('withSysroot', true);
   }
 
+  get additionalOutDirs() {
+    return this.cfg.get('additionalOutDirs') as Record<string, string>;
+  }
+
   get rustfmtArgs() {
     return this.cfg.get<string[]>('rustfmtArgs', []);
   }
