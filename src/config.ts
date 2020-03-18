@@ -11,6 +11,7 @@ export interface CargoFeatures {
   noDefaultFeatures: boolean;
   allFeatures: boolean;
   features: string[];
+  loadOutDirsFromCheck: boolean;
 }
 
 export class Config {
@@ -77,8 +78,8 @@ export class Config {
     return this.cfg.get('withSysroot', true);
   }
 
-  get additionalOutDirs() {
-    return this.cfg.get('additionalOutDirs') as Record<string, string>;
+  get loadOutDirsFromCheck() {
+    return this.cfg.get('loadOutDirsFromCheck') as boolean;
   }
 
   get rustfmtArgs() {
@@ -98,6 +99,7 @@ export class Config {
     return {
       noDefaultFeatures: this.cfg.get('cargoFeatures.noDefaultFeatures', false),
       allFeatures: this.cfg.get('cargoFeatures.allFeatures', true),
+      loadOutDirsFromCheck: this.cfg.get('cargoFeatures.loadOutDirsFromCheck') as boolean,
       features: this.cfg.get('cargoFeatures.features', [])
     };
   }

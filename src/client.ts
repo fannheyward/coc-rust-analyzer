@@ -26,7 +26,6 @@ export function createClient(config: Config, bin: string): LanguageClient {
       excludeGlobs: config.excludeGlobs,
       useClientWatching: config.useClientWatching,
       withSysroot: config.withSysroot,
-      additionalOutDirs: config.additionalOutDirs,
       cargoFeatures: config.cargoFeatures,
       rustfmtArgs: config.rustfmtArgs,
       featureFlags: config.featureFlags
