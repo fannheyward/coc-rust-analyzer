@@ -32,8 +32,11 @@ export function createClient(config: Config, bin: string): LanguageClient {
     },
     middleware: {
       provideSignatureHelp: async (document, position, token, next) => {
-        position.character = position.character + 1;
-        return next(document, position, token);
+        const character = position.character;
+        position.character = character + 1;
+        const help = await next(document, position, token);
+        position.character = character - 1;
+        return help;
       }
     },
     outputChannel
