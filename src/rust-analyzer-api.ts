@@ -81,7 +81,7 @@ export type InlayHint = InlayHint.TypeHint | InlayHint.ParamHint;
 export namespace InlayHint {
   export const enum Kind {
     TypeHint = 'TypeHint',
-    ParamHint = 'ParameterHint'
+    ParamHint = 'ParameterHint',
   }
   interface Common {
     range: Range;

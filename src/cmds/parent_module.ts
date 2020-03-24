@@ -12,7 +12,7 @@ export function parentModule(ctx: Ctx): Cmd {
 
     const param: TextDocumentPositionParams = {
       textDocument: { uri: document.uri },
-      position
+      position,
     };
 
     const response = await ctx.client.sendRequest(ra.parentModule, param);

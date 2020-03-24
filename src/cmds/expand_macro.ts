@@ -21,7 +21,7 @@ export function expandMacro(ctx: Ctx): Cmd {
 
     const param: TextDocumentPositionParams = {
       textDocument: { uri: document.uri },
-      position
+      position,
     };
 
     const expanded = await ctx.client.sendRequest(ra.expandMacro, param);

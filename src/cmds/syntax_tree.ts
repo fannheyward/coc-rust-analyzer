@@ -17,7 +17,7 @@ export function syntaxTree(ctx: Ctx): Cmd {
     }
     const param: ra.SyntaxTreeParams = {
       textDocument: { uri: doc.uri },
-      range
+      range,
     };
 
     const ret = await ctx.client.sendRequest(ra.syntaxTree, param);

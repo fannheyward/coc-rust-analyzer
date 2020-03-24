@@ -16,7 +16,7 @@ export function joinLines(ctx: Ctx): Cmd {
     }
     const param: ra.JoinLinesParams = {
       textDocument: { uri: doc.uri },
-      range
+      range,
     };
     const change = await ctx.client.sendRequest(ra.joinLines, param);
     await applySourceChange(change);

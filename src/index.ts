@@ -49,7 +49,7 @@ export async function activate(context: ExtensionContext): Promise<void> {
   ctx.registerCommand('upgrade', cmds.upgrade);
   ctx.registerCommand('ssr', cmds.ssr);
   ctx.registerCommand('serverVersion', cmds.serverVersion);
-  ctx.registerCommand('reload', ctx => {
+  ctx.registerCommand('reload', (ctx) => {
     return async () => {
       workspace.showMessage(`Reloading rust-analyzer...`);
 

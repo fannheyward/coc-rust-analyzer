@@ -21,7 +21,7 @@ export function run(ctx: Ctx): Cmd {
 
     const params: ra.RunnablesParams = {
       textDocument: { uri: document.uri },
-      position
+      position,
     };
     const runnables = await ctx.client.sendRequest(ra.runnables, params);
 
@@ -30,7 +30,7 @@ export function run(ctx: Ctx): Cmd {
       items.push(new RunnableQuickPick(r));
     }
 
-    const idx = await workspace.showQuickpick(items.map(o => o.label));
+    const idx = await workspace.showQuickpick(items.map((o) => o.label));
     if (idx === -1) {
       return;
     }
@@ -40,7 +40,7 @@ export function run(ctx: Ctx): Cmd {
     const opt: TerminalOptions = {
       name: runnable.label,
       cwd: runnable.cwd!,
-      env: runnable.env
+      env: runnable.env,
     };
     workspace.createTerminal(opt).then((t: Terminal) => {
       t.sendText(cmd);
@@ -59,7 +59,7 @@ export function runSingle(): Cmd {
     const opt: TerminalOptions = {
       name: runnable.label,
       cwd: runnable.cwd!,
-      env: runnable.env
+      env: runnable.env,
     };
     workspace.createTerminal(opt).then((t: Terminal) => {
       t.sendText(cmd);

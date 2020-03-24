@@ -16,22 +16,22 @@ export interface CargoFeatures {
 
 export class Config {
   private static readonly rootSection = 'rust-analyzer';
-  private static readonly requiresReloadOpts = ['cargoFeatures', 'cargo-watch'].map(opt => `${Config.rootSection}.${opt}`);
+  private static readonly requiresReloadOpts = ['cargoFeatures', 'cargo-watch'].map((opt) => `${Config.rootSection}.${opt}`);
   private cfg: WorkspaceConfiguration;
 
   constructor() {
-    workspace.onDidChangeConfiguration(event => this.onConfigChange(event));
+    workspace.onDidChangeConfiguration((event) => this.onConfigChange(event));
     this.cfg = workspace.getConfiguration(Config.rootSection);
   }
 
   private async onConfigChange(event: ConfigurationChangeEvent) {
     this.cfg = workspace.getConfiguration(Config.rootSection);
 
-    const requiresReloadOpt = Config.requiresReloadOpts.find(opt => event.affectsConfiguration(opt));
+    const requiresReloadOpt = Config.requiresReloadOpts.find((opt) => event.affectsConfiguration(opt));
     if (!requiresReloadOpt) return;
 
     const msg = `Changing "${requiresReloadOpt}" requires a reload`;
-    workspace.showPrompt(`${msg}. Reload Now?`).then(prompt => {
+    workspace.showPrompt(`${msg}. Reload Now?`).then((prompt) => {
       if (prompt) {
         commands.executeCommand(`workbench.action.reloadWindow`);
       }
@@ -91,7 +91,7 @@ export class Config {
       enable: this.cfg.get('cargo-watch.enable', true),
       arguments: this.cfg.get('cargo-watch.arguments', []),
       command: this.cfg.get('cargo-watch.command', ''),
-      allTargets: this.cfg.get('cargo-watch.allTargets', true)
+      allTargets: this.cfg.get('cargo-watch.allTargets', true),
     };
   }
 
@@ -100,7 +100,7 @@ export class Config {
       noDefaultFeatures: this.cfg.get('cargoFeatures.noDefaultFeatures', false),
       allFeatures: this.cfg.get('cargoFeatures.allFeatures', true),
       loadOutDirsFromCheck: this.cfg.get('cargoFeatures.loadOutDirsFromCheck') as boolean,
-      features: this.cfg.get('cargoFeatures.features', [])
+      features: this.cfg.get('cargoFeatures.features', []),
     };
   }
 }

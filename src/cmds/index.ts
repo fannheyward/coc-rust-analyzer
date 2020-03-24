@@ -41,7 +41,7 @@ export function selectAndApplySourceChange(): Cmd {
     if (changes?.length === 1) {
       await sourceChange.applySourceChange(changes[0]);
     } else if (changes?.length > 0) {
-      const pick = await workspace.showQuickpick(changes.map(c => c.label));
+      const pick = await workspace.showQuickpick(changes.map((c) => c.label));
       if (pick) {
         await sourceChange.applySourceChange(changes[pick]);
       }

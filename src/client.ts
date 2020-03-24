@@ -9,7 +9,7 @@ export function createClient(config: Config, bin: string): LanguageClient {
 
   const run: Executable = {
     command: bin,
-    options: { cwd: folder }
+    options: { cwd: folder },
   };
 
   const serverOptions: ServerOptions = run;
@@ -28,7 +28,7 @@ export function createClient(config: Config, bin: string): LanguageClient {
       withSysroot: config.withSysroot,
       cargoFeatures: config.cargoFeatures,
       rustfmtArgs: config.rustfmtArgs,
-      featureFlags: config.featureFlags
+      featureFlags: config.featureFlags,
     },
     middleware: {
       provideSignatureHelp: async (document, position, token, next) => {
@@ -37,9 +37,9 @@ export function createClient(config: Config, bin: string): LanguageClient {
         const help = await next(document, position, token);
         position.character = character - 1;
         return help;
-      }
+      },
     },
-    outputChannel
+    outputChannel,
   };
 
   const client = new LanguageClient('rust-analyzer', 'Rust Analyzer Language Server', serverOptions, clientOptions);
@@ -62,7 +62,7 @@ export function createClient(config: Config, bin: string): LanguageClient {
         // @ts-ignore
         client.logObjectTrace(messageOrDataObject);
       }
-    }
+    },
   };
   client.registerProposedFeatures();
   return client;

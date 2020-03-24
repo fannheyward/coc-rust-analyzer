@@ -11,7 +11,7 @@ export function matchingBrace(ctx: Ctx): Cmd {
 
     const params: ra.FindMatchingBraceParams = {
       textDocument: { uri: document.uri },
-      offsets: [position]
+      offsets: [position],
     };
 
     const response = await ctx.client.sendRequest(ra.findMatchingBrace, params);

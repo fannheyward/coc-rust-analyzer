@@ -5,7 +5,7 @@ import * as ra from '../rust-analyzer-api';
 import { applySourceChange } from '../source_change';
 
 function sleep(ms: number): Promise<any> {
-  return new Promise(resolve => {
+  return new Promise((resolve) => {
     setTimeout(() => {
       resolve();
     }, ms);
@@ -38,7 +38,7 @@ export function onEnter(ctx: Ctx): Cmd {
         const { document, position } = await workspace.getCurrentState();
         const request: TextDocumentPositionParams = {
           textDocument: { uri: document.uri },
-          position
+          position,
         };
         const change = await ctx.client.sendRequest(ra.onEnter, request);
         if (!change) {
