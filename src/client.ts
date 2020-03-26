@@ -1,5 +1,5 @@
 import { Executable, LanguageClient, LanguageClientOptions, ServerOptions, Uri, workspace } from 'coc.nvim';
-import path from 'path';
+import { Diagnostic, DiagnosticSeverity } from 'vscode-languageserver-protocol';
 import { Config } from './config';
 
 export function createClient(config: Config, bin: string): LanguageClient {
@@ -40,18 +40,20 @@ export function createClient(config: Config, bin: string): LanguageClient {
         return help;
       },
       handleDiagnostics: async (uri, diagnostics, next) => {
+        const relatedDiagnostics: Diagnostic[] = [];
         diagnostics.map((diagnostic) => {
           if (diagnostic.relatedInformation) {
-            let message = `${diagnostic.message}\n\nRelated diagnostics: (Run \`:CocCommand workspace.diagnosticRelated\` to jump)\n`;
             for (const info of diagnostic.relatedInformation) {
-              const basename = path.basename(Uri.parse(info.location.uri).fsPath);
-              const ln = info.location.range.start.line;
-              message = `${message}\n${basename}(line ${ln + 1}): ${info.message}`;
+              const related = Diagnostic.create(info.location.range, info.message);
+              related.code = diagnostic.code;
+              related.source = diagnostic.source;
+              related.severity = DiagnosticSeverity.Hint;
+
+              relatedDiagnostics.push(related);
             }
-            diagnostic.message = message;
           }
         });
-        next(uri, diagnostics);
+        next(uri, diagnostics.concat(relatedDiagnostics));
       },
     },
     outputChannel,
