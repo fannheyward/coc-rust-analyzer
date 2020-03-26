@@ -39,22 +39,6 @@ export function createClient(config: Config, bin: string): LanguageClient {
         position.character = character - 1;
         return help;
       },
-      handleDiagnostics: async (uri, diagnostics, next) => {
-        const relatedDiagnostics: Diagnostic[] = [];
-        diagnostics.map((diagnostic) => {
-          if (diagnostic.relatedInformation) {
-            for (const info of diagnostic.relatedInformation) {
-              const related = Diagnostic.create(info.location.range, info.message);
-              related.code = diagnostic.code;
-              related.source = diagnostic.source;
-              related.severity = DiagnosticSeverity.Hint;
-
-              relatedDiagnostics.push(related);
-            }
-          }
-        });
-        next(uri, diagnostics.concat(relatedDiagnostics));
-      },
     },
     outputChannel,
   };
