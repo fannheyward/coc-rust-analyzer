@@ -1,5 +1,4 @@
 import { Executable, LanguageClient, LanguageClientOptions, ServerOptions, Uri, workspace } from 'coc.nvim';
-import { Diagnostic, DiagnosticSeverity } from 'vscode-languageserver-protocol';
 import { Config } from './config';
 
 export function createClient(config: Config, bin: string): LanguageClient {
