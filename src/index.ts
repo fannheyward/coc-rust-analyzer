@@ -2,11 +2,13 @@ import { ExtensionContext, workspace } from 'coc.nvim';
 import { existsSync, mkdirSync } from 'fs';
 import * as cmds from './cmds';
 import { Ctx } from './ctx';
+import { Config } from './config';
 import { downloadServer } from './downloader';
 import { activateStatusDisplay } from './status_display';
 
 export async function activate(context: ExtensionContext): Promise<void> {
   const ctx = new Ctx(context);
+  const config = new Config();
 
   const serverRoot = context.storagePath;
   if (!existsSync(serverRoot)) {
@@ -19,7 +21,7 @@ export async function activate(context: ExtensionContext): Promise<void> {
     const ret = await workspace.showQuickpick(['Yes', 'Cancel'], msg);
     if (ret === 0) {
       try {
-        await downloadServer(context);
+        await downloadServer(context, config.channel);
       } catch (e) {
         msg = 'Download rust-analyzer failed, you can get it from https://github.com/rust-analyzer/rust-analyzer';
         workspace.showMessage(msg, 'error');

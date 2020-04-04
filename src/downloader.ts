@@ -3,6 +3,7 @@ import { createWriteStream } from 'fs';
 import fetch from 'node-fetch';
 import os from 'os';
 import { join } from 'path';
+import { UpdatesChannel } from './config';
 
 export interface ReleaseTag {
   tag: string;
@@ -10,9 +11,12 @@ export interface ReleaseTag {
   name: string;
 }
 
-export async function getLatestRelease(): Promise<ReleaseTag | undefined> {
+export async function getLatestRelease(updatesChannel: UpdatesChannel): Promise<ReleaseTag | undefined> {
   const fix = { win32: '-windows', darwin: '-mac' }[os.platform()] || '-linux';
-  const releaseURL = 'https://api.github.com/repos/rust-analyzer/rust-analyzer/releases/latest';
+  let releaseURL = 'https://api.github.com/repos/rust-analyzer/rust-analyzer/releases/latest';
+  if (updatesChannel === 'nightly') {
+    releaseURL = 'https://api.github.com/repos/rust-analyzer/rust-analyzer/releases/tags/nightly';
+  }
   return fetch(releaseURL)
     .then((resp) => resp.json())
     .then((resp) => {
@@ -25,12 +29,12 @@ export async function getLatestRelease(): Promise<ReleaseTag | undefined> {
     });
 }
 
-export async function downloadServer(context: ExtensionContext): Promise<void> {
+export async function downloadServer(context: ExtensionContext, updatesChannel: UpdatesChannel): Promise<void> {
   const statusItem = workspace.createStatusBarItem(0, { progress: true });
   statusItem.text = 'Getting the latest version...';
   statusItem.show();
 
-  const latest = await getLatestRelease();
+  const latest = await getLatestRelease(updatesChannel);
   if (!latest) {
     statusItem.hide();
     workspace.showMessage(`Can't get latest rust-analyzer release`);
