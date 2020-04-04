@@ -14,9 +14,11 @@ export interface CargoFeatures {
   loadOutDirsFromCheck: boolean;
 }
 
+export type UpdatesChannel = 'stable' | 'nightly';
+
 export class Config {
   private static readonly rootSection = 'rust-analyzer';
-  private static readonly requiresReloadOpts = ['serverPath', 'cargo', 'files'].map((opt) => `${Config.rootSection}.${opt}`);
+  private static readonly requiresReloadOpts = ['serverPath', 'cargo', 'files', 'updates'].map((opt) => `${Config.rootSection}.${opt}`);
   private cfg: WorkspaceConfiguration;
 
   constructor() {
@@ -46,5 +48,9 @@ export class Config {
     return {
       command: this.cfg.get<string>('checkOnSave.command')!,
     };
+  }
+
+  get channel() {
+    return this.cfg.get<UpdatesChannel>('updates.channel')!;
   }
 }

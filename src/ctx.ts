@@ -97,7 +97,7 @@ export class Ctx {
       return;
     }
 
-    const latest = await getLatestRelease();
+    const latest = await getLatestRelease(this.config.channel);
     if (!latest) {
       return;
     }
@@ -115,7 +115,7 @@ export class Ctx {
     if (ret === 0) {
       await this.stopServer();
       try {
-        await downloadServer(this.extCtx);
+        await downloadServer(this.extCtx, this.config.channel);
       } catch (e) {
         workspace.showMessage(`Upgrade rust-analyzer failed, please try again`, 'error');
         return;
