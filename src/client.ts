@@ -1,7 +1,6 @@
 import { Executable, LanguageClient, LanguageClientOptions, ServerOptions, Uri, workspace } from 'coc.nvim';
-import { Config } from './config';
 
-export function createClient(config: Config, bin: string): LanguageClient {
+export function createClient(bin: string): LanguageClient {
   let folder = '.';
   if (workspace.workspaceFolder?.uri.length > 0) {
     folder = Uri.parse(workspace.workspaceFolder.uri).fsPath;
@@ -16,20 +15,7 @@ export function createClient(config: Config, bin: string): LanguageClient {
   const outputChannel = workspace.createOutputChannel('Rust Analyzer Language Server Trace');
   const clientOptions: LanguageClientOptions = {
     documentSelector: [{ language: 'rust' }, { pattern: 'Cargo.toml' }],
-    initializationOptions: {
-      publishDecorations: false,
-      lruCapacity: config.lruCapacity,
-      cargoWatchEnable: config.cargoWatchOptions.enable,
-      cargoWatchArgs: config.cargoWatchOptions.arguments,
-      cargoWatchCommand: config.cargoWatchOptions.command,
-      cargoWatchAllTargets: config.cargoWatchOptions.allTargets,
-      excludeGlobs: config.excludeGlobs,
-      useClientWatching: config.useClientWatching,
-      withSysroot: config.withSysroot,
-      cargoFeatures: config.cargoFeatures,
-      rustfmtArgs: config.rustfmtArgs,
-      featureFlags: config.featureFlags,
-    },
+    initializationOptions: workspace.getConfiguration('rust-analyzer'),
     middleware: {
       provideSignatureHelp: async (document, position, token, next) => {
         const character = position.character;

@@ -38,7 +38,7 @@ export class Ctx {
     }
 
     this.client = null;
-    const client = createClient(this.config, bin);
+    const client = createClient(bin);
 
     this.extCtx.subscriptions.push(services.registLanguageClient(client));
     await client.onReady();
@@ -73,7 +73,7 @@ export class Ctx {
       // fallback to old ra_lsp_server naming
       bin = join(this.extCtx.storagePath, process.platform === 'win32' ? 'ra_lsp_server.exe' : 'ra_lsp_server');
     }
-    if (this.config.serverPath.length > 0) {
+    if (this.config.serverPath) {
       bin = this.config.serverPath;
       if (bin.startsWith('~/')) {
         bin = bin.replace('~', homedir());
@@ -92,7 +92,7 @@ export class Ctx {
   }
 
   async checkUpdate(auto = true) {
-    if (auto && this.config.serverPath.length > 0) {
+    if (auto && this.config.serverPath) {
       // no auto update if using custom server
       return;
     }

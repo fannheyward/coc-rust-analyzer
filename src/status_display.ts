@@ -51,7 +51,7 @@ class StatusDisplay implements Disposable {
 }
 
 export function activateStatusDisplay(ctx: Ctx) {
-  const statusDisplay = new StatusDisplay(ctx.config.cargoWatchOptions.command);
+  const statusDisplay = new StatusDisplay(ctx.config.checkOnSave.command);
   ctx.onDidRestart((client) => {
     client.onProgress(WorkDoneProgress.type, 'rustAnalyzer/cargoWatcher', (params) => statusDisplay.handleProgressNotification(params));
   });

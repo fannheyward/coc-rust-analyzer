@@ -12,21 +12,30 @@
 
 ## Configurations
 
-This extension is configured using a jsonc file. You can open this configuration file using
-the command `:CocConfig`, and it is typically located at `$HOME/.config/nvim/coc-settings.json`.
+This extension is configured using a jsonc file. You can open this configuration file using the command `:CocConfig`, and it is typically located at `$HOME/.config/nvim/coc-settings.json`.
 
 - `rust-analyzer.serverPath`: Path to custom `rust-analyzer` executable, default: `''`
-- `rust-analyzer.featureFlags`: Fine grained feature flags to disable annoying features, default: `{}`, available [flags](https://github.com/rust-analyzer/rust-analyzer/blob/master/crates/rust-analyzer/src/config.rs#L141)
-- `rust-analyzer.excludeGlobs`: Paths to exclude from analysis, default: `[]`
+- `rust-analyzer.diagnostics.enable`: Whether to show native rust-analyzer diagnostics, default: `true`
 - `rust-analyzer.lruCapacity`: Number of syntax trees rust-analyzer keeps in memory, default: `null`
-- `rust-analyzer.useClientWatching`: use client provided file watching instead of notify watching, default: `true`
-- `rust-analyzer.cargo-watch.enable`: Run `cargo check` for diagnostics on save, default: `true`
-- `rust-analyzer.cargo-watch.arguments`: `cargo-watch` arguments, default: `[]`
-- `rust-analyzer.cargo-watch.command`: `cargo-watch` command, default: `check`
-- `rust-analyzer.cargo-watch.allTargets`: Check all targets and tests (will be passed as `--all-targets`)
-- `rust-analyzer.cargoFeatures.noDefaultFeatures`: do not activate the `default` feature
-- `rust-analyzer.cargoFeatures.allFeatures`: activate all available features
-- `rust-analyzer.cargoFeatures.features`: list of features to activate
+- `rust-analyzer.files.watcher`: Controls file watching implementation, default: `client`
+- `rust-analyzer.files.exclude`: Paths to exclude from analysis, default: `[]`
+- `rust-analyzer.notifications.workspaceLoaded`: Whether to show `workspace loaded` message, default: `true`
+- `rust-analyzer.notifications.cargoTomlNotFound`: Whether to show `can't find Cargo.toml` error message, default: `true`
+- `rust-analyzer.cargo.noDefaultFeatures`: Do not activate the `default` feature, default: `false`
+- `rust-analyzer.cargo.allFeatures`: Activate all available features, default: `true`
+- `rust-analyzer.cargo.features`: List of features to activate, default: `[]`
+- `rust-analyzer.cargo.loadOutDirsFromCheck`: Run `cargo check` on startup to get the correct value for package OUT_DIRs, default: `false`
+- `rust-analyzer.rustfmt.extraArgs`: Additional arguments to rustfmt, default: `[]`
+- `rust-analyzer.rustfmt.overrideCommand`: Advanced option, fully override the command rust-analyzer uses for formatting, default: `[]`
+- `rust-analyzer.checkOnSave.enable`: Run specified `cargo check` command for diagnostics on save, default: `true`
+- `rust-analyzer.checkOnSave.extraArgs`: Extra arguments for `cargo check`, default: `[]`
+- `rust-analyzer.checkOnSave.command`: Cargo command to use for `cargo check`, default: `check`
+- `rust-analyzer.checkOnSave.overrideCommand`: Advanced option, fully override the command rust-analyzer uses for checking. The command should include `--message=format=json` or similar option, default: `[]`
+- `rust-analyzer.checkOnSave.allTargets`: Check all targets and tests (will be passed as `--all-targets`), default: `true`
+- `rust-analyzer.completion.addCallParenthesis`: Whether to add parenthesis when completing functions, default: `true`
+- `rust-analyzer.completion.addCallArgumentSnippets`: Whether to add argument snippets when completing functions, default: `true`
+- `rust-analyzer.completion.postfix.enable`: Whether to show postfix snippets like `dbg`, `if`, `not`, etc, default: `true`
+- `rust-analyzer.callInfo.full`: Show function name and docs in parameter hints, default: `true`
 - `rust-analyzer.trace.server`: Trace requests to server, default: `off`
 
 Settings not specific to `rust-analyzer` can be found at `:help coc-configuration`.
