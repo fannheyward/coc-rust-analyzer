@@ -145,11 +145,15 @@
           "description": "Additional arguments to rustfmt"
         },
         "rust-analyzer.rustfmt.overrideCommand": {
-          "type": "array",
+          "type": [
+            "null",
+            "array"
+          ],
           "items": {
+            "minItems": 1,
             "type": "string"
           },
-          "default": [],
+          "default": null,
           "markdownDescription": "Advanced option, fully override the command rust-analyzer uses for formatting."
         },
         "rust-analyzer.checkOnSave.enable": {
@@ -171,11 +175,15 @@
           "markdownDescription": "Cargo command to use for `cargo check`"
         },
         "rust-analyzer.checkOnSave.overrideCommand": {
-          "type": "array",
+          "type": [
+            "null",
+            "array"
+          ],
           "items": {
+            "minItems": 1,
             "type": "string"
           },
-          "default": [],
+          "default": null,
           "markdownDescription": "Advanced option, fully override the command rust-analyzer uses for checking. The command should include `--message=format=json` or similar option."
         },
         "rust-analyzer.checkOnSave.allTargets": {

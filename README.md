@@ -27,11 +27,11 @@ This extension is configured using a jsonc file. You can open this configuration
 - `rust-analyzer.cargo.features`: List of features to activate, default: `[]`
 - `rust-analyzer.cargo.loadOutDirsFromCheck`: Run `cargo check` on startup to get the correct value for package OUT_DIRs, default: `false`
 - `rust-analyzer.rustfmt.extraArgs`: Additional arguments to rustfmt, default: `[]`
-- `rust-analyzer.rustfmt.overrideCommand`: Advanced option, fully override the command rust-analyzer uses for formatting, default: `[]`
+- `rust-analyzer.rustfmt.overrideCommand`: Advanced option, fully override the command rust-analyzer uses for formatting, default: `null`
 - `rust-analyzer.checkOnSave.enable`: Run specified `cargo check` command for diagnostics on save, default: `true`
 - `rust-analyzer.checkOnSave.extraArgs`: Extra arguments for `cargo check`, default: `[]`
 - `rust-analyzer.checkOnSave.command`: Cargo command to use for `cargo check`, default: `check`
-- `rust-analyzer.checkOnSave.overrideCommand`: Advanced option, fully override the command rust-analyzer uses for checking. The command should include `--message=format=json` or similar option, default: `[]`
+- `rust-analyzer.checkOnSave.overrideCommand`: Advanced option, fully override the command rust-analyzer uses for checking. The command should include `--message=format=json` or similar option, default: `null`
 - `rust-analyzer.checkOnSave.allTargets`: Check all targets and tests (will be passed as `--all-targets`), default: `true`
 - `rust-analyzer.completion.addCallParenthesis`: Whether to add parenthesis when completing functions, default: `true`
 - `rust-analyzer.completion.addCallArgumentSnippets`: Whether to add argument snippets when completing functions, default: `true`
