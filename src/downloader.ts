@@ -22,7 +22,11 @@ export async function getLatestRelease(updatesChannel: UpdatesChannel): Promise<
     .then((resp) => {
       const asset = (resp.assets as any[]).find((val) => val.browser_download_url.includes(fix));
       const name = (asset.name as string).replace(fix, '');
-      return { tag: resp.tag_name, url: asset.browser_download_url, name };
+      let tag = resp.tag_name;
+      if (updatesChannel === 'nightly') {
+        tag = `${resp.tag_name} ${resp.published_at.slice(0, 10)}`;
+      }
+      return { tag, url: asset.browser_download_url, name };
     })
     .catch(() => {
       return undefined;

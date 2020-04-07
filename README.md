@@ -15,6 +15,7 @@
 This extension is configured using a jsonc file. You can open this configuration file using the command `:CocConfig`, and it is typically located at `$HOME/.config/nvim/coc-settings.json`.
 
 - `rust-analyzer.serverPath`: Path to custom `rust-analyzer` executable, default: `''`
+- `rust-analyzer.updates.channel`: Use `stable` or `nightly` updates, default: `stable`
 - `rust-analyzer.diagnostics.enable`: Whether to show native rust-analyzer diagnostics, default: `true`
 - `rust-analyzer.lruCapacity`: Number of syntax trees rust-analyzer keeps in memory, default: `null`
 - `rust-analyzer.files.watcher`: Controls file watching implementation, default: `client`
