@@ -1,14 +1,13 @@
 import { ExtensionContext, workspace } from 'coc.nvim';
 import { existsSync, mkdirSync } from 'fs';
 import * as cmds from './cmds';
-import { Ctx } from './ctx';
 import { Config } from './config';
+import { Ctx } from './ctx';
 import { downloadServer } from './downloader';
-import { activateStatusDisplay } from './status_display';
 
 export async function activate(context: ExtensionContext): Promise<void> {
-  const ctx = new Ctx(context);
   const config = new Config();
+  const ctx = new Ctx(context, config);
 
   const serverRoot = context.storagePath;
   if (!existsSync(serverRoot)) {
@@ -31,8 +30,6 @@ export async function activate(context: ExtensionContext): Promise<void> {
       return;
     }
   }
-
-  activateStatusDisplay(ctx);
 
   await ctx.startServer();
 
@@ -64,6 +61,8 @@ export async function activate(context: ExtensionContext): Promise<void> {
       }
 
       await activate(context);
+
+      workspace.showMessage(`Reloaded rust-analyzer`);
     };
   });
 

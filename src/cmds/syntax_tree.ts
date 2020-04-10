@@ -6,7 +6,7 @@ import * as ra from '../rust-analyzer-api';
 export function syntaxTree(ctx: Ctx): Cmd {
   return async () => {
     const doc = await workspace.document;
-    if (doc.textDocument.languageId !== 'rust' || !ctx.client) {
+    if (doc.textDocument.languageId !== 'rust') {
       return;
     }
 

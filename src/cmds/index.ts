@@ -17,7 +17,7 @@ export * from './syntax_tree';
 
 export function collectGarbage(ctx: Ctx): Cmd {
   return async () => {
-    await ctx.client?.sendRequest(ra.collectGarbage, null);
+    await ctx.client.sendRequest(ra.collectGarbage, null);
   };
 }
 

@@ -15,7 +15,7 @@ function sleep(ms: number): Promise<any> {
 export function onEnter(ctx: Ctx): Cmd {
   return async () => {
     const doc = await workspace.document;
-    if (doc.textDocument.languageId !== 'rust' || !ctx.client) {
+    if (doc.textDocument.languageId !== 'rust') {
       return;
     }
 
@@ -28,9 +28,7 @@ export function onEnter(ctx: Ctx): Cmd {
 
     events.on('TextChangedI', async (bufnr: number) => {
       const doc = workspace.getDocument(bufnr);
-      if (!doc || !ctx.client) {
-        return;
-      }
+      if (!doc) return;
 
       if (lastChar && lastChar === '/' && Date.now() - lastTS < 40) {
         await sleep(20);

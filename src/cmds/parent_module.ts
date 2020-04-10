@@ -6,7 +6,7 @@ import * as ra from '../rust-analyzer-api';
 export function parentModule(ctx: Ctx): Cmd {
   return async () => {
     const { document, position } = await workspace.getCurrentState();
-    if (document.languageId !== 'rust' || !ctx.client) {
+    if (document.languageId !== 'rust') {
       return;
     }
 

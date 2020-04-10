@@ -1,22 +1,29 @@
-import { commands, Disposable, ExtensionContext, LanguageClient, services, workspace } from 'coc.nvim';
+import { commands, ExtensionContext, LanguageClient, services, workspace } from 'coc.nvim';
 import executable from 'executable';
 import { existsSync } from 'fs';
 import { homedir } from 'os';
 import { join } from 'path';
+import { Disposable, WorkDoneProgress } from 'vscode-languageserver-protocol';
 import { createClient } from './client';
 import { Config } from './config';
 import { downloadServer, getLatestRelease } from './downloader';
+import { StatusDisplay } from './status_display';
 
 export type Cmd = (...args: any[]) => unknown;
 
 export class Ctx {
-  private onDidRestartHooks: Array<(client: LanguageClient) => void> = [];
-  public readonly config: Config;
-  client: LanguageClient | null = null;
+  client!: LanguageClient;
 
-  constructor(private readonly extCtx: ExtensionContext) {
-    this.config = new Config();
+  constructor(private readonly extCtx: ExtensionContext, readonly config: Config) {
     this.extCtx = extCtx;
+  }
+
+  private async activateStatusDisplay() {
+    await this.client.onReady();
+
+    const status = new StatusDisplay(this.config.checkOnSave.command);
+    this.extCtx.subscriptions.push(status);
+    this.client.onProgress(WorkDoneProgress.type, 'rustAnalyzer/cargoWatcher', (params) => status.handleProgressNotification(params));
   }
 
   registerCommand(name: string, factory: (ctx: Ctx) => Cmd) {
@@ -32,37 +39,16 @@ export class Ctx {
       return;
     }
 
-    const old = this.client;
-    if (old) {
-      await old.stop();
-    }
-
-    this.client = null;
     const client = createClient(bin);
-
     this.extCtx.subscriptions.push(services.registLanguageClient(client));
     await client.onReady();
 
     this.client = client;
-    for (const hook of this.onDidRestartHooks) {
-      hook(client);
-    }
-  }
-
-  async stopServer() {
-    if (this.client) {
-      await this.client.stop();
-    }
-
-    this.client = null;
+    this.activateStatusDisplay();
   }
 
   get subscriptions(): Disposable[] {
     return this.extCtx.subscriptions;
-  }
-
-  onDidRestart(hook: (client: LanguageClient) => void) {
-    this.onDidRestartHooks.push(hook);
   }
 
   resolveBin(): string | undefined {
@@ -113,15 +99,16 @@ export class Ctx {
     const msg = `Rust Analyzer has a new release: ${latest.tag}, you're using ${old}. Would you like to download from GitHub`;
     const ret = await workspace.showQuickpick(['Yes', 'Check GitHub releases', 'Cancel'], msg);
     if (ret === 0) {
-      await this.stopServer();
+      await this.client.stop();
       try {
         await downloadServer(this.extCtx, this.config.channel);
       } catch (e) {
         workspace.showMessage(`Upgrade rust-analyzer failed, please try again`, 'error');
         return;
       }
-      await this.startServer();
+      this.client.start();
 
+      this.activateStatusDisplay();
       this.extCtx.globalState.update('release', latest.tag);
     } else if (ret === 1) {
       commands.executeCommand('vscode.open', 'https://github.com/rust-analyzer/rust-analyzer/releases').catch(() => {});

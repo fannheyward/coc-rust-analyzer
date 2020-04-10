@@ -13,7 +13,7 @@ class RunnableQuickPick {
 export function run(ctx: Ctx): Cmd {
   return async () => {
     const { document, position } = await workspace.getCurrentState();
-    if (document.languageId !== 'rust' || !ctx.client) {
+    if (document.languageId !== 'rust') {
       return;
     }
 

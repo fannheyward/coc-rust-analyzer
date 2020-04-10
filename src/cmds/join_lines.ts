@@ -6,7 +6,7 @@ import { applySourceChange } from '../source_change';
 export function joinLines(ctx: Ctx): Cmd {
   return async () => {
     const doc = await workspace.document;
-    if (doc.textDocument.languageId !== 'rust' || !ctx.client) {
+    if (doc.textDocument.languageId !== 'rust') {
       return;
     }
     const mode = await workspace.nvim.call('visualmode');

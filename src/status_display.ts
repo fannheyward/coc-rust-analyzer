@@ -1,8 +1,7 @@
 import { Disposable, StatusBarItem, workspace } from 'coc.nvim';
-import { WorkDoneProgressBegin, WorkDoneProgressEnd, WorkDoneProgressReport, WorkDoneProgress } from 'vscode-languageserver-protocol';
-import { Ctx } from './ctx';
+import { WorkDoneProgressBegin, WorkDoneProgressEnd, WorkDoneProgressReport } from 'vscode-languageserver-protocol';
 
-class StatusDisplay implements Disposable {
+export class StatusDisplay implements Disposable {
   private packageName?: string;
   private statusBarItem: StatusBarItem;
   private command: string;
@@ -48,11 +47,4 @@ class StatusDisplay implements Disposable {
         break;
     }
   }
-}
-
-export function activateStatusDisplay(ctx: Ctx) {
-  const statusDisplay = new StatusDisplay(ctx.config.checkOnSave.command);
-  ctx.onDidRestart((client) => {
-    client.onProgress(WorkDoneProgress.type, 'rustAnalyzer/cargoWatcher', (params) => statusDisplay.handleProgressNotification(params));
-  });
 }

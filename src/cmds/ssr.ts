@@ -5,11 +5,6 @@ import { applySourceChange } from '../source_change';
 
 export function ssr(ctx: Ctx): Cmd {
   return async () => {
-    const client = ctx.client;
-    if (!client) {
-      return;
-    }
-
     const input = await workspace.callAsync<string>('input', ['Enter request like this: foo($a:expr, $b:expr) ==>> bar($a, foo($b)): ']);
     workspace.nvim.command('normal! :<C-u>', true);
     if (!input) {
@@ -20,7 +15,7 @@ export function ssr(ctx: Ctx): Cmd {
       return;
     }
 
-    const change = await client.sendRequest(ra.ssr, { arg: input });
+    const change = await ctx.client.sendRequest(ra.ssr, { arg: input });
     await applySourceChange(change);
   };
 }
