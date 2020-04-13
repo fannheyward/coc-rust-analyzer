@@ -14,9 +14,7 @@ export type Cmd = (...args: any[]) => unknown;
 export class Ctx {
   client!: LanguageClient;
 
-  constructor(private readonly extCtx: ExtensionContext, readonly config: Config) {
-    this.extCtx = extCtx;
-  }
+  constructor(private readonly extCtx: ExtensionContext, readonly config: Config) {}
 
   private async activateStatusDisplay() {
     await this.client.onReady();
