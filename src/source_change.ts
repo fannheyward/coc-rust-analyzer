@@ -29,11 +29,6 @@ export async function applySourceChange(change: SourceChange) {
   } else if (toReveal) {
     const uri = toReveal.textDocument.uri;
     const position = toReveal.position;
-    const document = await workspace.document;
-    if (document.uri.toString() != uri.toString()) {
-      return;
-    }
-
     workspace.jumpTo(uri, position);
   }
 }
