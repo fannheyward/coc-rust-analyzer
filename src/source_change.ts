@@ -25,8 +25,7 @@ export async function applySourceChange(change: SourceChange) {
   const toReveal = change.cursorPosition;
   await workspace.applyEdit(wsEdit);
   if (toOpen) {
-    const toOpenUri = Uri.parse(toOpen);
-    await workspace.readFile(toOpenUri.fsPath);
+    await workspace.jumpTo(Uri.parse(toOpen).toString());
   } else if (toReveal) {
     const uri = toReveal.textDocument.uri;
     const position = toReveal.position;
