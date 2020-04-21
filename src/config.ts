@@ -18,7 +18,7 @@ export type UpdatesChannel = 'stable' | 'nightly';
 
 export class Config {
   private static readonly rootSection = 'rust-analyzer';
-  private static readonly requiresReloadOpts = ['serverPath', 'cargo', 'files', 'updates'].map((opt) => `${Config.rootSection}.${opt}`);
+  private static readonly requiresReloadOpts = ['serverPath', 'cargo', 'procMacro', 'files', 'updates'].map((opt) => `${Config.rootSection}.${opt}`);
   private cfg: WorkspaceConfiguration;
 
   constructor() {
