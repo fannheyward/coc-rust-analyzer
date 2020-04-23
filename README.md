@@ -26,7 +26,7 @@ This extension is configured using a jsonc file. You can open this configuration
 - `rust-analyzer.cargo.allFeatures`: Activate all available features, default: `true`
 - `rust-analyzer.cargo.features`: List of features to activate, default: `[]`
 - `rust-analyzer.cargo.loadOutDirsFromCheck`: Run `cargo check` on startup to get the correct value for package OUT_DIRs, default: `false`
-- `rust-analyzer.procMacro.enabled`: Enable Proc macro support, `cargo.loadOutDirsFromCheck` must be enabled, default: `false`
+- `rust-analyzer.procMacro.enable`: Enable Proc macro support, `cargo.loadOutDirsFromCheck` must be enabled, default: `false`
 - `rust-analyzer.rustfmt.extraArgs`: Additional arguments to rustfmt, default: `[]`
 - `rust-analyzer.rustfmt.overrideCommand`: Advanced option, fully override the command rust-analyzer uses for formatting, default: `null`
 - `rust-analyzer.checkOnSave.enable`: Run specified `cargo check` command for diagnostics on save, default: `true`
