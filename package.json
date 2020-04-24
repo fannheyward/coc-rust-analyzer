@@ -27,8 +27,8 @@
     "prepare": "npm-run-all clean build"
   },
   "devDependencies": {
-    "@types/node": "^13.13.1",
-    "@types/node-fetch": "^2.5.6",
+    "@types/node": "^13.13.2",
+    "@types/node-fetch": "^2.5.7",
     "@typescript-eslint/eslint-plugin": "^2.26.0",
     "@typescript-eslint/parser": "^2.26.0",
     "coc.nvim": "^0.0.77",
