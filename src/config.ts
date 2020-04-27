@@ -44,6 +44,12 @@ export class Config {
     return this.cfg.get<null | string>('serverPath')!;
   }
 
+  get inlayHints() {
+    return {
+      chainingHints: this.cfg.get('inlayHints.chainingHints') as boolean,
+    };
+  }
+
   get checkOnSave() {
     return {
       command: this.cfg.get<string>('checkOnSave.command')!,

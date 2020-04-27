@@ -3,11 +3,16 @@ import executable from 'executable';
 import { existsSync } from 'fs';
 import { homedir } from 'os';
 import { join } from 'path';
-import { Disposable, WorkDoneProgress } from 'vscode-languageserver-protocol';
+import { Disposable, WorkDoneProgress, TextDocument } from 'vscode-languageserver-protocol';
 import { createClient } from './client';
 import { Config } from './config';
 import { downloadServer, getLatestRelease } from './downloader';
 import { StatusDisplay } from './status_display';
+
+export type RustDocument = TextDocument & { languageId: 'rust' };
+export function isRustDocument(document: TextDocument): document is RustDocument {
+  return document.languageId === 'rust';
+}
 
 export type Cmd = (...args: any[]) => unknown;
 
