@@ -15,7 +15,7 @@ export function ssr(ctx: Ctx): Cmd {
       return;
     }
 
-    const change = await ctx.client.sendRequest(ra.ssr, { arg: input });
-    await applySourceChange(change);
+    const change = await ctx.client.sendRequest(ra.ssr.method, { arg: input });
+    // await applySourceChange(change);
   };
 }

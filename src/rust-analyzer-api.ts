@@ -77,7 +77,7 @@ export interface Runnable {
 }
 export const runnables = request<RunnablesParams, Vec<Runnable>>('runnables');
 
-export type InlayHint = InlayHint.TypeHint | InlayHint.ParamHint;
+export type InlayHint = InlayHint.TypeHint | InlayHint.ParamHint | InlayHint.ChainingHint;
 
 export namespace InlayHint {
   export const enum Kind {

@@ -4,6 +4,7 @@ import * as cmds from './cmds';
 import { Config } from './config';
 import { Ctx } from './ctx';
 import { downloadServer } from './downloader';
+import { activateInlayHints } from './inlay_hints';
 
 export async function activate(context: ExtensionContext): Promise<void> {
   const config = new Config();
@@ -32,6 +33,8 @@ export async function activate(context: ExtensionContext): Promise<void> {
   }
 
   await ctx.startServer();
+
+  activateInlayHints(ctx);
 
   ctx.registerCommand('analyzerStatus', cmds.analyzerStatus);
   ctx.registerCommand('applySourceChange', cmds.applySourceChange);
