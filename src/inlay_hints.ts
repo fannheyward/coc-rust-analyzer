@@ -25,6 +25,7 @@ interface RustSourceFile {
 class HintsUpdater implements Disposable {
   private sourceFiles = new Map<string, RustSourceFile>(); // map Uri -> RustSourceFile
   private readonly disposables: Disposable[] = [];
+  private chainingHintNS = workspace.createNameSpace('rust-chaining-hint');
 
   constructor(private readonly ctx: Ctx) {
     workspace.onDidChangeTextDocument(
@@ -41,6 +42,7 @@ class HintsUpdater implements Disposable {
     // Set up initial cache shape
     workspace.documents.forEach((doc) => {
       if (isRustDocument(doc.textDocument)) {
+        doc.buffer.clearNamespace(this.chainingHintNS);
         this.sourceFiles.set(doc.uri, { document: doc.textDocument, inlaysRequest: null, cachedDecorations: null });
       }
     });
@@ -71,10 +73,12 @@ class HintsUpdater implements Disposable {
   }
 
   private async renderDecorations(decorations: InlaysDecorations) {
-    const ns = workspace.createNameSpace();
-    const buffer = (await workspace.document).buffer;
+    const doc = await workspace.document;
+    if (!doc) return;
+
+    doc.buffer.clearNamespace(this.chainingHintNS);
     for (const item of decorations.chaining) {
-      buffer.setVirtualText(ns, item.range.end.line, [[item.label, 'CocWarningHighlight']], {}).logError();
+      doc.buffer.setVirtualText(this.chainingHintNS, item.range.end.line, [[item.label, 'CocRustChainingHint']], {}).logError();
     }
   }
 
@@ -117,6 +121,7 @@ export function activateInlayHints(ctx: Ctx) {
       }
 
       await ctx.sleep(100);
+      await workspace.nvim.command('hi default link CocRustChainingHint CocHintVirtualText');
       if (this.updater) {
         this.updater.syncCacheAndRenderHints();
       } else {
