@@ -199,7 +199,7 @@
         "rust-analyzer.inlayHints.chainingHints": {
           "type": "boolean",
           "default": true,
-          "description": "Whether to show inlay type hints for method chains"
+          "description": "Whether to show inlay type hints for method chains. *Neovim Only*"
         },
         "rust-analyzer.completion.addCallParenthesis": {
           "type": "boolean",
