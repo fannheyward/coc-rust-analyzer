@@ -1,6 +1,6 @@
 import { workspace } from 'coc.nvim';
 import { TextDocumentPositionParams } from 'vscode-languageserver-protocol';
-import { Cmd, Ctx } from '../ctx';
+import { Cmd, Ctx, isRustDocument } from '../ctx';
 import * as ra from '../rust-analyzer-api';
 
 function codeFormat(expanded: ra.ExpandedMacro): string {
@@ -15,9 +15,7 @@ function codeFormat(expanded: ra.ExpandedMacro): string {
 export function expandMacro(ctx: Ctx): Cmd {
   return async () => {
     const { document, position } = await workspace.getCurrentState();
-    if (document.languageId !== 'rust') {
-      return;
-    }
+    if (!isRustDocument(document)) return;
 
     const param: TextDocumentPositionParams = {
       textDocument: { uri: document.uri },

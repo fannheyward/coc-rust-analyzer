@@ -1,13 +1,11 @@
 import { workspace } from 'coc.nvim';
-import { Cmd, Ctx } from '../ctx';
+import { Cmd, Ctx, isRustDocument } from '../ctx';
 import * as ra from '../rust-analyzer-api';
 
 export function matchingBrace(ctx: Ctx): Cmd {
   return async () => {
     const { document, position } = await workspace.getCurrentState();
-    if (document.languageId !== 'rust') {
-      return;
-    }
+    if (!isRustDocument(document)) return;
 
     const params: ra.FindMatchingBraceParams = {
       textDocument: { uri: document.uri },

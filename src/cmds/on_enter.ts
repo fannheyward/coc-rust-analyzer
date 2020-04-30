@@ -1,6 +1,6 @@
 import { events, workspace } from 'coc.nvim';
 import { TextDocumentPositionParams } from 'vscode-languageserver-protocol';
-import { Cmd, Ctx } from '../ctx';
+import { Cmd, Ctx, isRustDocument } from '../ctx';
 import * as ra from '../rust-analyzer-api';
 import { applySourceChange } from '../source_change';
 
@@ -15,7 +15,7 @@ function sleep(ms: number): Promise<any> {
 export function onEnter(ctx: Ctx): Cmd {
   return async () => {
     const doc = await workspace.document;
-    if (doc.textDocument.languageId !== 'rust') {
+    if (!isRustDocument(doc.textDocument)) {
       return;
     }
 

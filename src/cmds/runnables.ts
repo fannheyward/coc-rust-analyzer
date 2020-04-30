@@ -1,5 +1,5 @@
 import { Terminal, TerminalOptions, workspace } from 'coc.nvim';
-import { Cmd, Ctx } from '../ctx';
+import { Cmd, Ctx, isRustDocument } from '../ctx';
 import * as ra from '../rust-analyzer-api';
 
 class RunnableQuickPick {
@@ -13,9 +13,7 @@ class RunnableQuickPick {
 export function run(ctx: Ctx): Cmd {
   return async () => {
     const { document, position } = await workspace.getCurrentState();
-    if (document.languageId !== 'rust') {
-      return;
-    }
+    if (!isRustDocument(document)) return;
 
     workspace.showMessage(`Fetching runnable...`);
 
@@ -51,9 +49,7 @@ export function run(ctx: Ctx): Cmd {
 export function runSingle(): Cmd {
   return async (runnable: ra.Runnable) => {
     const { document } = await workspace.getCurrentState();
-    if (!runnable || document.languageId !== 'rust') {
-      return;
-    }
+    if (!runnable || !isRustDocument(document)) return;
 
     const cmd = `${runnable.bin} ${runnable.args.join(' ')}`;
     const opt: TerminalOptions = {

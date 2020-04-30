@@ -1,14 +1,12 @@
 import { workspace } from 'coc.nvim';
 import { Range } from 'vscode-languageserver-protocol';
-import { Cmd, Ctx } from '../ctx';
+import { Cmd, Ctx, isRustDocument } from '../ctx';
 import * as ra from '../rust-analyzer-api';
 
 export function syntaxTree(ctx: Ctx): Cmd {
   return async () => {
     const doc = await workspace.document;
-    if (doc.textDocument.languageId !== 'rust') {
-      return;
-    }
+    if (!isRustDocument(doc.textDocument)) return;
 
     const mode = await workspace.nvim.call('visualmode');
     let range: Range | null = null;

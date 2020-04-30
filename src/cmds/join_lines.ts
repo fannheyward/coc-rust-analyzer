@@ -1,14 +1,13 @@
 import { workspace } from 'coc.nvim';
-import { Cmd, Ctx } from '../ctx';
+import { Cmd, Ctx, isRustDocument } from '../ctx';
 import * as ra from '../rust-analyzer-api';
 import { applySourceChange } from '../source_change';
 
 export function joinLines(ctx: Ctx): Cmd {
   return async () => {
     const doc = await workspace.document;
-    if (doc.textDocument.languageId !== 'rust') {
-      return;
-    }
+    if (!isRustDocument(doc.textDocument)) return;
+
     const mode = await workspace.nvim.call('visualmode');
     const range = await workspace.getSelectedRange(mode, doc);
     if (!range) {
