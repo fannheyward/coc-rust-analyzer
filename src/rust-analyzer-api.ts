@@ -71,17 +71,19 @@ export interface Runnable {
   label: string;
   bin: string;
   args: Vec<string>;
+  extraArgs: Vec<string>;
   env: FxHashMap<string, string>;
   cwd: Option<string>;
 }
 export const runnables = request<RunnablesParams, Vec<Runnable>>('runnables');
 
-export type InlayHint = InlayHint.TypeHint | InlayHint.ParamHint;
+export type InlayHint = InlayHint.TypeHint | InlayHint.ParamHint | InlayHint.ChainingHint;
 
 export namespace InlayHint {
   export const enum Kind {
     TypeHint = 'TypeHint',
     ParamHint = 'ParameterHint',
+    ChainingHint = 'ChainingHint',
   }
   interface Common {
     range: Range;
@@ -89,6 +91,7 @@ export namespace InlayHint {
   }
   export type TypeHint = Common & { kind: Kind.TypeHint };
   export type ParamHint = Common & { kind: Kind.ParamHint };
+  export type ChainingHint = Common & { kind: Kind.ChainingHint };
 }
 export interface InlayHintsParams {
   textDocument: TextDocumentIdentifier;
@@ -96,7 +99,8 @@ export interface InlayHintsParams {
 export const inlayHints = request<InlayHintsParams, Vec<InlayHint>>('inlayHints');
 
 export interface SsrParams {
-  arg: string;
+  query: string;
+  parseOnly: boolean;
 }
 export const ssr = request<SsrParams, SourceChange>('ssr');
 

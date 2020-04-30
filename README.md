@@ -18,6 +18,7 @@ This extension is configured using a jsonc file. You can open this configuration
 - `rust-analyzer.updates.channel`: Use `stable` or `nightly` updates, default: `stable`
 - `rust-analyzer.diagnostics.enable`: Whether to show native rust-analyzer diagnostics, default: `true`
 - `rust-analyzer.lruCapacity`: Number of syntax trees rust-analyzer keeps in memory, default: `null`
+- `rust-analyzer.inlayHints.chainingHints`: Whether to show inlay type hints for method chains, **Neovim Only**, default `true`
 - `rust-analyzer.files.watcher`: Controls file watching implementation, default: `client`
 - `rust-analyzer.files.exclude`: Paths to exclude from analysis, default: `[]`
 - `rust-analyzer.notifications.workspaceLoaded`: Whether to show `workspace loaded` message, default: `true`
@@ -61,6 +62,10 @@ You can use these commands by `:CocCommand XYZ`.
 - `rust-analyzer.ssr`: Structural Search Replace
 - `rust-analyzer.serverVersion`: Show current Rust Analyzer server version
 - `rust-analyzer.upgrade`: Download latest `rust-analyzer` from [GitHub release](https://github.com/rust-analyzer/rust-analyzer/releases)
+
+## Highlight Group
+
+- `CocRustChainingHint`: highlight name for `chainingHints`, default link to `CocHintVirtualText`
 
 ## License
 

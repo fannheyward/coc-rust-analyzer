@@ -196,6 +196,11 @@
           "default": true,
           "markdownDescription": "Check all targets and tests (will be passed as `--all-targets`)"
         },
+        "rust-analyzer.inlayHints.chainingHints": {
+          "type": "boolean",
+          "default": true,
+          "description": "Whether to show inlay type hints for method chains. *Neovim Only*"
+        },
         "rust-analyzer.completion.addCallParenthesis": {
           "type": "boolean",
           "default": true,

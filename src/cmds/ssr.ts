@@ -15,7 +15,12 @@ export function ssr(ctx: Ctx): Cmd {
       return;
     }
 
-    const change = await ctx.client.sendRequest(ra.ssr, { arg: input });
+    const param: ra.SsrParams = {
+      query: input,
+      parseOnly: false,
+    };
+
+    const change = await ctx.client.sendRequest(ra.ssr, param);
     await applySourceChange(change);
   };
 }

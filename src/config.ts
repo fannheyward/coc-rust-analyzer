@@ -44,6 +44,13 @@ export class Config {
     return this.cfg.get<null | string>('serverPath')!;
   }
 
+  get inlayHints() {
+    const hasVirtualText = workspace.isNvim && workspace.nvim.hasFunction('nvim_buf_set_virtual_text');
+    return {
+      chainingHints: hasVirtualText && this.cfg.get<boolean>('inlayHints.chainingHints'),
+    };
+  }
+
   get checkOnSave() {
     return {
       command: this.cfg.get<string>('checkOnSave.command')!,
