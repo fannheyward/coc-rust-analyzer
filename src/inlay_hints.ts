@@ -121,7 +121,7 @@ export function activateInlayHints(ctx: Ctx) {
       }
 
       await ctx.sleep(100);
-      await workspace.nvim.command('hi default link CocRustChainingHint CocHintVirtualText');
+      await workspace.nvim.command('hi default link CocRustChainingHint CocHintSign');
       if (this.updater) {
         this.updater.syncCacheAndRenderHints();
       } else {

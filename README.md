@@ -65,7 +65,7 @@ You can use these commands by `:CocCommand XYZ`.
 
 ## Highlight Group
 
-- `CocRustChainingHint`: highlight name for `chainingHints`, default link to `CocHintVirtualText`
+- `CocRustChainingHint`: highlight name for `chainingHints`, default link to `CocHintSign`
 
 ## License
 
