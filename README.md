@@ -21,7 +21,6 @@ This extension is configured using a jsonc file. You can open this configuration
 - `rust-analyzer.inlayHints.chainingHints`: Whether to show inlay type hints for method chains, **Neovim Only**, default `true`
 - `rust-analyzer.files.watcher`: Controls file watching implementation, default: `client`
 - `rust-analyzer.files.exclude`: Paths to exclude from analysis, default: `[]`
-- `rust-analyzer.notifications.workspaceLoaded`: Whether to show `workspace loaded` message, default: `true`
 - `rust-analyzer.notifications.cargoTomlNotFound`: Whether to show `can't find Cargo.toml` error message, default: `true`
 - `rust-analyzer.cargo.noDefaultFeatures`: Do not activate the `default` feature, default: `false`
 - `rust-analyzer.cargo.allFeatures`: Activate all available features, default: `true`
