@@ -62,10 +62,6 @@ export class Ctx {
     // 1. from config, custom server path
     // 2. bundled
     let bin = join(this.extCtx.storagePath, process.platform === 'win32' ? 'rust-analyzer.exe' : 'rust-analyzer');
-    if (!existsSync(bin)) {
-      // fallback to old ra_lsp_server naming
-      bin = join(this.extCtx.storagePath, process.platform === 'win32' ? 'ra_lsp_server.exe' : 'ra_lsp_server');
-    }
     if (this.config.serverPath) {
       bin = this.config.serverPath;
       if (bin.startsWith('~/')) {
