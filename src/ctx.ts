@@ -4,6 +4,7 @@ import { existsSync } from 'fs';
 import { homedir } from 'os';
 import { join } from 'path';
 import { CancellationToken, Disposable, ErrorCodes, RequestType, TextDocument, WorkDoneProgress } from 'vscode-languageserver-protocol';
+import which from 'which';
 import { createClient } from './client';
 import { Config } from './config';
 import { downloadServer, getLatestRelease } from './downloader';
@@ -67,6 +68,8 @@ export class Ctx {
       if (bin.startsWith('~/')) {
         bin = bin.replace('~', homedir());
       }
+
+      bin = which.sync(bin, { nothrow: true }) || bin;
     }
     if (!existsSync(bin)) {
       return;
@@ -81,8 +84,8 @@ export class Ctx {
   }
 
   async checkUpdate(auto = true) {
-    if (auto && this.config.serverPath) {
-      // no auto update if using custom server
+    if (this.config.serverPath) {
+      // no update checking if using custom server
       return;
     }
 
