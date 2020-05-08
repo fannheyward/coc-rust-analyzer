@@ -54,3 +54,16 @@ export function upgrade(ctx: Ctx) {
     await ctx.checkUpdate(false);
   };
 }
+
+export function toggleInlayHints(ctx: Ctx) {
+  return async () => {
+    if (!ctx.config.inlayHints.chainingHints) {
+      workspace.showMessage(`Inlay hints for method chains is disabled. Toggle action does nothing;`, 'warning');
+      return;
+    }
+    for (const sub of ctx.subscriptions) {
+      // @ts-ignore
+      if (typeof sub.toggle === 'function') sub.toggle();
+    }
+  };
+}

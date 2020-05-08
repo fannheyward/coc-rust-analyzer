@@ -26,6 +26,7 @@ class HintsUpdater implements Disposable {
   private sourceFiles = new Map<string, RustSourceFile>(); // map Uri -> RustSourceFile
   private readonly disposables: Disposable[] = [];
   private chainingHintNS = workspace.createNameSpace('rust-chaining-hint');
+  private chainingHintShowing = true;
 
   constructor(private readonly ctx: Ctx) {
     workspace.onDidChangeTextDocument(
@@ -53,6 +54,21 @@ class HintsUpdater implements Disposable {
   dispose() {
     this.sourceFiles.forEach((file) => file.inlaysRequest?.cancel());
     this.disposables.forEach((d) => d.dispose());
+  }
+
+  async toggle() {
+    if (this.chainingHintShowing) {
+      this.chainingHintShowing = false;
+      this.dispose();
+
+      const doc = await workspace.document;
+      if (!doc) return;
+
+      doc.buffer.clearNamespace(this.chainingHintNS);
+    } else {
+      this.chainingHintShowing = true;
+      this.syncCacheAndRenderHints();
+    }
   }
 
   syncCacheAndRenderHints() {
@@ -127,6 +143,9 @@ export function activateInlayHints(ctx: Ctx) {
       } else {
         this.updater = new HintsUpdater(ctx);
       }
+    },
+    toggle() {
+      this.updater?.toggle();
     },
     dispose() {
       this.updater?.dispose();

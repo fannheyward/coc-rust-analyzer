@@ -337,6 +337,11 @@
         "category": "Rust Analyzer"
       },
       {
+        "command": "rust-analyzer.toggleInlayHints",
+        "title": "Toggle inlay hints on/off",
+        "category": "Rust Analyzer"
+      },
+      {
         "command": "rust-analyzer.upgrade",
         "title": "Upgrade Rust Analyzer from GitHub release",
         "category": "Rust Analyzer"
