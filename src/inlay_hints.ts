@@ -33,6 +33,7 @@ class HintsUpdater implements Disposable {
       async (e) => {
         const doc = workspace.getDocument(e.bufnr);
         if (isRustDocument(doc.textDocument)) {
+          doc.buffer.clearNamespace(this.chainingHintNS);
           this.syncCacheAndRenderHints();
         }
       },
