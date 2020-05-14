@@ -1,4 +1,4 @@
-import { Disposable, workspace } from 'coc.nvim';
+import { Disposable, Document, workspace } from 'coc.nvim';
 import { CancellationTokenSource } from 'vscode-languageserver-protocol';
 import { Ctx, isRustDocument, RustDocument } from './ctx';
 import * as ra from './rust-analyzer-api';
@@ -14,10 +14,6 @@ interface RustSourceFile {
    * Source of the token to cancel in-flight inlay hints request if any.
    */
   inlaysRequest: null | CancellationTokenSource;
-  /**
-   * Last applied decorations.
-   */
-  cachedDecorations: null | InlaysDecorations;
 
   document: RustDocument;
 }
@@ -29,27 +25,45 @@ class HintsUpdater implements Disposable {
   private chainingHintShowing = true;
 
   constructor(private readonly ctx: Ctx) {
+    // Set up initial cache shape
+    workspace.documents.forEach((doc) => {
+      if (isRustDocument(doc.textDocument)) {
+        doc.buffer.clearNamespace(this.chainingHintNS);
+        this.sourceFiles.set(doc.uri, { document: doc.textDocument, inlaysRequest: null });
+      }
+    });
+
     workspace.onDidChangeTextDocument(
-      async (e) => {
+      (e) => {
         const doc = workspace.getDocument(e.bufnr);
         if (isRustDocument(doc.textDocument)) {
           doc.buffer.clearNamespace(this.chainingHintNS);
-          this.syncCacheAndRenderHints();
+          this.syncAndRenderHints();
         }
       },
       this,
       this.disposables
     );
 
-    // Set up initial cache shape
-    workspace.documents.forEach((doc) => {
-      if (isRustDocument(doc.textDocument)) {
-        doc.buffer.clearNamespace(this.chainingHintNS);
-        this.sourceFiles.set(doc.uri, { document: doc.textDocument, inlaysRequest: null, cachedDecorations: null });
-      }
-    });
+    workspace.onDidOpenTextDocument(
+      (e) => {
+        if (isRustDocument(e)) {
+          const file = this.sourceFiles.get(e.uri) ?? {
+            document: e,
+            inlaysRequest: null,
+          };
+          this.sourceFiles.set(e.uri, file);
 
-    this.syncCacheAndRenderHints();
+          const doc = workspace.getDocument(e.uri);
+          doc.buffer.clearNamespace(this.chainingHintNS);
+          this.syncAndRenderHints();
+        }
+      },
+      this,
+      this.disposables
+    );
+
+    this.syncAndRenderHints();
   }
 
   dispose() {
@@ -68,31 +82,26 @@ class HintsUpdater implements Disposable {
       doc.buffer.clearNamespace(this.chainingHintNS);
     } else {
       this.chainingHintShowing = true;
-      this.syncCacheAndRenderHints();
+      this.syncAndRenderHints();
     }
   }
 
-  syncCacheAndRenderHints() {
+  async syncAndRenderHints() {
+    const current = await workspace.document;
     // FIXME: make inlayHints request pass an array of files?
     this.sourceFiles.forEach((file, uri) =>
-      this.fetchHints(file).then((hints) => {
+      this.fetchHints(file).then(async (hints) => {
         if (!hints) return;
 
-        file.cachedDecorations = this.hintsToDecorations(hints);
-
-        for (const doc of workspace.documents) {
-          if (doc.uri === uri) {
-            this.renderDecorations(file.cachedDecorations);
-          }
+        if (current && current.uri === uri && isRustDocument(current.textDocument)) {
+          const decorations = this.hintsToDecorations(hints);
+          this.renderDecorations(current, decorations);
         }
       })
     );
   }
 
-  private async renderDecorations(decorations: InlaysDecorations) {
-    const doc = await workspace.document;
-    if (!doc) return;
-
+  private async renderDecorations(doc: Document, decorations: InlaysDecorations) {
     doc.buffer.clearNamespace(this.chainingHintNS);
     for (const item of decorations.chaining) {
       doc.buffer.setVirtualText(this.chainingHintNS, item.range.end.line, [[item.label, 'CocRustChainingHint']], {}).logError();
@@ -140,7 +149,7 @@ export function activateInlayHints(ctx: Ctx) {
       await ctx.sleep(100);
       await workspace.nvim.command('hi default link CocRustChainingHint CocHintSign');
       if (this.updater) {
-        this.updater.syncCacheAndRenderHints();
+        this.updater.syncAndRenderHints();
       } else {
         this.updater = new HintsUpdater(ctx);
       }
