@@ -231,6 +231,21 @@
           "default": true,
           "description": "Show function name and docs in parameter hints"
         },
+        "rust-analyzer.lens.enable": {
+          "description": "Whether to show CodeLens in Rust files.",
+          "type": "boolean",
+          "default": true
+        },
+        "rust-analyzer.lens.run": {
+          "markdownDescription": "Whether to show Run lens. Only applies when `#rust-analyzer.lens.enable#` is set.",
+          "type": "boolean",
+          "default": true
+        },
+        "rust-analyzer.lens.implementations": {
+          "markdownDescription": "Whether to show Implementations lens. Only applies when `#rust-analyzer.lens.enable#` is set.",
+          "type": "boolean",
+          "default": true
+        },
         "rust-analyzer.serverPath": {
           "type": [
             "null",

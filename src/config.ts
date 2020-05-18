@@ -18,7 +18,7 @@ export type UpdatesChannel = 'stable' | 'nightly';
 
 export class Config {
   private static readonly rootSection = 'rust-analyzer';
-  private static readonly requiresReloadOpts = ['serverPath', 'cargo', 'procMacro', 'files', 'updates'].map((opt) => `${Config.rootSection}.${opt}`);
+  private static readonly requiresReloadOpts = ['serverPath', 'cargo', 'procMacro', 'files', 'updates', 'lens'].map((opt) => `${Config.rootSection}.${opt}`);
   private cfg: WorkspaceConfiguration;
 
   constructor() {
@@ -59,5 +59,14 @@ export class Config {
 
   get channel() {
     return this.cfg.get<UpdatesChannel>('updates.channel')!;
+  }
+
+  get lens() {
+    return {
+      enable: this.cfg.get<boolean>('lens.enable'),
+      run: this.cfg.get<boolean>('lens.run'),
+      debug: false,
+      implementations: this.cfg.get<boolean>('lens.implementations'),
+    };
   }
 }
