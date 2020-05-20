@@ -1,5 +1,5 @@
 import { commands, Uri, workspace } from 'coc.nvim';
-import { Location, Position } from 'vscode-languageserver-protocol';
+import { Location, Position, Range, TextDocumentEdit, TextEdit, WorkspaceEdit } from 'vscode-languageserver-protocol';
 import { Cmd, Ctx } from '../ctx';
 import * as ra from '../rust-analyzer-api';
 import * as sourceChange from '../source_change';
@@ -64,6 +64,35 @@ export function toggleInlayHints(ctx: Ctx) {
     for (const sub of ctx.subscriptions) {
       // @ts-ignore
       if (typeof sub.toggle === 'function') sub.toggle();
+    }
+  };
+}
+
+export function applySnippetWorkspaceEdit(): Cmd {
+  return async (edit: WorkspaceEdit) => {
+    if (edit.documentChanges && edit.documentChanges.length) {
+      let editWithSnippet: TextEdit | undefined = undefined;
+      let lineDelta = 0;
+
+      const edits = (edit.documentChanges as TextDocumentEdit[])[0].edits;
+      for (const indel of edits) {
+        const isSnippet = indel.newText.indexOf('$0') !== -1 || indel.newText.indexOf('${') !== -1;
+        if (isSnippet) {
+          editWithSnippet = indel;
+        } else {
+          if (!editWithSnippet) {
+            lineDelta = (indel.newText.match(/\n/g) || []).length - (indel.range.end.line - indel.range.start.line);
+          }
+          TextEdit.replace(indel.range, indel.newText);
+        }
+      }
+
+      if (editWithSnippet) {
+        const snip = editWithSnippet as TextEdit;
+        const range = Range.create(snip.range.start.line + lineDelta, snip.range.start.character, snip.range.end.line + lineDelta, snip.range.end.character);
+        snip.range = range;
+        await commands.executeCommand('editor.action.insertSnippet', snip);
+      }
     }
   };
 }
