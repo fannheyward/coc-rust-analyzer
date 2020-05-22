@@ -70,28 +70,32 @@ export function toggleInlayHints(ctx: Ctx) {
 
 export function applySnippetWorkspaceEdit(): Cmd {
   return async (edit: WorkspaceEdit) => {
-    if (edit.documentChanges && edit.documentChanges.length) {
-      let editWithSnippet: TextEdit | undefined = undefined;
-      let lineDelta = 0;
+    if (!edit.documentChanges?.length) {
+      return;
+    }
 
-      const edits = (edit.documentChanges as TextDocumentEdit[])[0].edits;
-      for (const indel of edits) {
+    const change = edit.documentChanges[0];
+    if (TextDocumentEdit.is(change)) {
+      let editWithSnippet: TextEdit | undefined = undefined;
+
+      for (const indel of change.edits) {
         const isSnippet = indel.newText.indexOf('$0') !== -1 || indel.newText.indexOf('${') !== -1;
         if (isSnippet) {
           editWithSnippet = indel;
-        } else {
-          if (!editWithSnippet) {
-            lineDelta = (indel.newText.match(/\n/g) || []).length - (indel.range.end.line - indel.range.start.line);
-          }
-          TextEdit.replace(indel.range, indel.newText);
         }
       }
 
       if (editWithSnippet) {
-        const snip = editWithSnippet as TextEdit;
-        const range = Range.create(snip.range.start.line + lineDelta, snip.range.start.character, snip.range.end.line + lineDelta, snip.range.end.character);
-        snip.range = range;
-        await commands.executeCommand('editor.action.insertSnippet', snip);
+        const current = await workspace.document;
+        if (current.uri !== change.textDocument.uri) {
+          const start = Position.create(editWithSnippet.range.start.line - 1, editWithSnippet.range.start.character);
+          const end = Position.create(editWithSnippet.range.end.line - 1, editWithSnippet.range.end.character);
+          editWithSnippet = TextEdit.replace(Range.create(start, end), editWithSnippet.newText);
+
+          await workspace.loadFile(change.textDocument.uri);
+          await workspace.jumpTo(change.textDocument.uri);
+        }
+        await commands.executeCommand('editor.action.insertSnippet', editWithSnippet);
       }
     }
   };
