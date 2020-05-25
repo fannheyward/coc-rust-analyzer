@@ -2,7 +2,17 @@
  * This file mirrors `crates/rust-analyzer/src/req.rs` declarations.
  */
 
-import { Location, NotificationType, Position, Range, RequestType, TextDocumentIdentifier, TextDocumentPositionParams, WorkspaceEdit } from 'vscode-languageserver-protocol';
+import {
+  Location,
+  NotificationType,
+  Position,
+  Range,
+  RequestType,
+  TextDocumentIdentifier,
+  TextDocumentPositionParams,
+  TextEdit,
+  WorkspaceEdit,
+} from 'vscode-languageserver-protocol';
 
 type Option<T> = null | T;
 type Vec<T> = T[];
@@ -56,9 +66,9 @@ export const parentModule = request<TextDocumentPositionParams, Vec<Location>>('
 
 export interface JoinLinesParams {
   textDocument: TextDocumentIdentifier;
-  range: Range;
+  ranges: Range[];
 }
-export const joinLines = request<JoinLinesParams, SourceChange>('joinLines');
+export const joinLines = new RequestType<JoinLinesParams, TextEdit[], unknown>('experimental/joinLines');
 
 export const onEnter = request<TextDocumentPositionParams, Option<SourceChange>>('onEnter');
 

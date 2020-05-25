@@ -1,7 +1,6 @@
 import { workspace } from 'coc.nvim';
 import { Cmd, Ctx, isRustDocument } from '../ctx';
 import * as ra from '../rust-analyzer-api';
-import { applySourceChange } from '../source_change';
 
 export function joinLines(ctx: Ctx): Cmd {
   return async () => {
@@ -15,9 +14,9 @@ export function joinLines(ctx: Ctx): Cmd {
     }
     const param: ra.JoinLinesParams = {
       textDocument: { uri: doc.uri },
-      range,
+      ranges: [range],
     };
-    const change = await ctx.client.sendRequest(ra.joinLines, param);
-    await applySourceChange(change);
+    const items = await ctx.client.sendRequest(ra.joinLines, param);
+    await doc.applyEdits(items);
   };
 }
