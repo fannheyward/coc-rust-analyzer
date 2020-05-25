@@ -1,7 +1,7 @@
 import { Executable, LanguageClient, LanguageClientOptions, ServerOptions, StaticFeature, Uri, workspace } from 'coc.nvim';
 import { ClientCapabilities, CodeAction, CodeActionParams, CodeActionRequest, Command, InsertTextFormat, TextDocumentEdit } from 'vscode-languageserver-protocol';
 
-class SnippetTextEditFeature implements StaticFeature {
+class ExperimentalFeatures implements StaticFeature {
   fillClientCapabilities(capabilities: ClientCapabilities): void {
     const caps: any = capabilities.experimental ?? {};
     caps.snippetTextEdit = true;
@@ -46,25 +46,24 @@ export function createClient(bin: string): LanguageClient {
         position.character = character - 1;
         return help;
       },
-      provideCodeActions(document, range, context, token) {
+      async provideCodeActions(document, range, context, token) {
         const params: CodeActionParams = {
           textDocument: { uri: document.uri },
           range,
           context,
         };
         // eslint-disable-next-line @typescript-eslint/no-use-before-define
-        return client.sendRequest(CodeActionRequest.type, params, token).then((values) => {
-          if (values === null) return undefined;
-          const result: (CodeAction | Command)[] = [];
-          for (const item of values) {
-            if (CodeAction.is(item) && isSnippetEdit(item)) {
-              item.command = Command.create('', 'rust-analyzer.applySnippetWorkspaceEdit', item.edit);
-              item.edit = undefined;
-            }
-            result.push(item);
+        const values = await client.sendRequest(CodeActionRequest.type, params, token);
+        if (values === null) return undefined;
+        const result: (CodeAction | Command)[] = [];
+        for (const item of values) {
+          if (CodeAction.is(item) && isSnippetEdit(item)) {
+            item.command = Command.create('', 'rust-analyzer.applySnippetWorkspaceEdit', item.edit);
+            item.edit = undefined;
           }
-          return result;
-        });
+          result.push(item);
+        }
+        return result;
       },
     },
     outputChannel,
@@ -93,7 +92,7 @@ export function createClient(bin: string): LanguageClient {
     },
   };
   client.registerProposedFeatures();
-  client.registerFeature(new SnippetTextEditFeature());
+  client.registerFeature(new ExperimentalFeatures());
 
   return client;
 }
