@@ -1,7 +1,7 @@
 import { Disposable, Document, workspace } from 'coc.nvim';
 import { CancellationTokenSource } from 'vscode-languageserver-protocol';
 import { Ctx, isRustDocument, RustDocument } from './ctx';
-import * as ra from './rust-analyzer-api';
+import * as ra from './lsp_ext';
 
 interface InlaysDecorations {
   type: ra.InlayHint[];

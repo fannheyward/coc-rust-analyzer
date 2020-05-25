@@ -2,7 +2,7 @@ import { spawnSync } from 'child_process';
 import { commands, Terminal, TerminalOptions, Uri, workspace } from 'coc.nvim';
 import { Location, Position, Range, TextDocumentEdit, TextDocumentPositionParams, TextEdit, WorkspaceEdit } from 'vscode-languageserver-protocol';
 import { Cmd, Ctx, isRustDocument } from './ctx';
-import * as ra from './rust-analyzer-api';
+import * as ra from './lsp_ext';
 
 class RunnableQuickPick {
   label: string;
