@@ -7,12 +7,12 @@ export function matchingBrace(ctx: Ctx): Cmd {
     const { document, position } = await workspace.getCurrentState();
     if (!isRustDocument(document)) return;
 
-    const params: ra.FindMatchingBraceParams = {
+    const params: ra.MatchingBraceParams = {
       textDocument: { uri: document.uri },
-      offsets: [position],
+      positions: [position],
     };
 
-    const response = await ctx.client.sendRequest(ra.findMatchingBrace, params);
+    const response = await ctx.client.sendRequest(ra.matchingBrace, params);
     if (response.length > 0) {
       workspace.jumpTo(document.uri, response[0]);
     }
