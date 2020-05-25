@@ -292,13 +292,8 @@
         "category": "Rust Analyzer"
       },
       {
-        "command": "rust-analyzer.applySourceChange",
-        "title": "Apply source change",
-        "category": "Rust Analyzer"
-      },
-      {
-        "command": "rust-analyzer.selectAndApplySourceChange",
-        "title": "Apply selected source change",
+        "command": "rust-analyzer.applySnippetWorkspaceEdit",
+        "title": "Apply workspace edit",
         "category": "Rust Analyzer"
       },
       {

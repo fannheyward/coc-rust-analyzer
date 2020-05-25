@@ -50,8 +50,6 @@ Settings not specific to `rust-analyzer` can be found at `:help coc-configuratio
 You can use these commands by `:CocCommand XYZ`.
 
 - `rust-analyzer.analyzerStatus`: Show rust-analyzer status
-- `rust-analyzer.applySourceChange`: Apply source change
-- `rust-analyzer.selectAndApplySourceChange`: Apply selected source change
 - `rust-analyzer.collectGarbage`: Run garbage collection
 - `rust-analyzer.expandMacro`: Expand macro recursively
 - `rust-analyzer.joinLines`: Join lines

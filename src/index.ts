@@ -1,6 +1,6 @@
 import { ExtensionContext, workspace } from 'coc.nvim';
 import { existsSync, mkdirSync } from 'fs';
-import * as cmds from './cmds';
+import * as cmds from './commands';
 import { Config } from './config';
 import { Ctx } from './ctx';
 import { downloadServer } from './downloader';
@@ -37,9 +37,7 @@ export async function activate(context: ExtensionContext): Promise<void> {
   activateInlayHints(ctx);
 
   ctx.registerCommand('analyzerStatus', cmds.analyzerStatus);
-  ctx.registerCommand('applySourceChange', cmds.applySourceChange);
   ctx.registerCommand('applySnippetWorkspaceEdit', cmds.applySnippetWorkspaceEditCommand);
-  ctx.registerCommand('selectAndApplySourceChange', cmds.selectAndApplySourceChange);
   ctx.registerCommand('collectGarbage', cmds.collectGarbage);
   ctx.registerCommand('expandMacro', cmds.expandMacro);
   ctx.registerCommand('joinLines', cmds.joinLines);
