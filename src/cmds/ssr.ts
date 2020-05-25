@@ -1,7 +1,6 @@
 import { workspace } from 'coc.nvim';
 import { Cmd, Ctx } from '../ctx';
 import * as ra from '../rust-analyzer-api';
-import { applySourceChange } from '../source_change';
 
 export function ssr(ctx: Ctx): Cmd {
   return async () => {
@@ -20,7 +19,7 @@ export function ssr(ctx: Ctx): Cmd {
       parseOnly: false,
     };
 
-    const change = await ctx.client.sendRequest(ra.ssr, param);
-    await applySourceChange(change);
+    const edit = await ctx.client.sendRequest(ra.ssr, param);
+    await workspace.applyEdit(edit);
   };
 }
