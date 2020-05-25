@@ -68,35 +68,66 @@ export function toggleInlayHints(ctx: Ctx) {
   };
 }
 
-export function applySnippetWorkspaceEdit(): Cmd {
+function parseSnippet(snip: string): [string, [number, number]] | undefined {
+  const m = snip.match(/\$(0|\{0:([^}]*)\})/);
+  if (!m) return undefined;
+  const placeholder = m[2] ?? '';
+  const range: [number, number] = [m.index!!, placeholder.length];
+  const insert = snip.replace(m[0], placeholder);
+  return [insert, range];
+}
+
+function countLines(text: string): number {
+  return (text.match(/\n/g) || []).length;
+}
+
+export async function applySnippetWorkspaceEdit(edit: WorkspaceEdit) {
+  if (!edit.documentChanges?.length) {
+    return;
+  }
+
+  let selection: Range | undefined = undefined;
+  let lineDelta = 0;
+  const change = edit.documentChanges[0];
+  if (TextDocumentEdit.is(change)) {
+    for (const indel of change.edits) {
+      const wsEdit: WorkspaceEdit = {};
+      const parsed = parseSnippet(indel.newText);
+      if (parsed) {
+        const [newText, [placeholderStart, placeholderLength]] = parsed;
+        const prefix = newText.substr(0, placeholderStart);
+        const lastNewline = prefix.lastIndexOf('\n');
+
+        const startLine = indel.range.start.line + lineDelta + countLines(prefix);
+        const startColumn = lastNewline === -1 ? indel.range.start.character + placeholderStart : prefix.length - lastNewline - 1;
+        const endColumn = startColumn + placeholderLength;
+        selection = Range.create(startLine, startColumn, startLine, endColumn);
+
+        const newChange = TextDocumentEdit.create(change.textDocument, [TextEdit.replace(indel.range, newText)]);
+        wsEdit.documentChanges = [newChange];
+      } else {
+        lineDelta = countLines(indel.newText) - (indel.range.end.line - indel.range.start.line);
+        wsEdit.documentChanges = [change];
+      }
+
+      await workspace.applyEdit(wsEdit);
+    }
+
+    if (selection) {
+      const current = await workspace.document;
+      if (current.uri !== change.textDocument.uri) {
+        await workspace.loadFile(change.textDocument.uri);
+        await workspace.jumpTo(change.textDocument.uri);
+        // FIXME
+        return;
+      }
+      await workspace.selectRange(selection);
+    }
+  }
+}
+
+export function applySnippetWorkspaceEditCommand(): Cmd {
   return async (edit: WorkspaceEdit) => {
-    if (!edit.documentChanges?.length) {
-      return;
-    }
-
-    const change = edit.documentChanges[0];
-    if (TextDocumentEdit.is(change)) {
-      let editWithSnippet: TextEdit | undefined = undefined;
-
-      for (const indel of change.edits) {
-        const isSnippet = indel.newText.indexOf('$0') !== -1 || indel.newText.indexOf('${') !== -1;
-        if (isSnippet) {
-          editWithSnippet = indel;
-        }
-      }
-
-      if (editWithSnippet) {
-        const current = await workspace.document;
-        if (current.uri !== change.textDocument.uri) {
-          const start = Position.create(editWithSnippet.range.start.line - 1, editWithSnippet.range.start.character);
-          const end = Position.create(editWithSnippet.range.end.line - 1, editWithSnippet.range.end.character);
-          editWithSnippet = TextEdit.replace(Range.create(start, end), editWithSnippet.newText);
-
-          await workspace.loadFile(change.textDocument.uri);
-          await workspace.jumpTo(change.textDocument.uri);
-        }
-        await commands.executeCommand('editor.action.insertSnippet', editWithSnippet);
-      }
-    }
+    await applySnippetWorkspaceEdit(edit);
   };
 }
