@@ -1,9 +1,13 @@
 import { ExtensionContext, workspace } from 'coc.nvim';
-import { createWriteStream } from 'fs';
+import * as fs from 'fs';
 import fetch from 'node-fetch';
 import os from 'os';
 import { join } from 'path';
+import stream from 'stream';
+import util from 'util';
 import { UpdatesChannel } from './config';
+
+const pipeline = util.promisify(stream.pipeline);
 
 export interface ReleaseTag {
   tag: string;
@@ -48,33 +52,24 @@ export async function downloadServer(context: ExtensionContext, updatesChannel: 
   const _path = join(context.storagePath, latest.name);
   statusItem.text = `Downloading rust-analyzer ${latest.tag}`;
 
-  return new Promise((resolve, reject) => {
-    fetch(latest.url)
-      .then((resp) => {
-        let cur = 0;
-        const len = parseInt(resp.headers.get('content-length') || '', 10);
-        resp.body
-          .on('data', (chunk) => {
-            if (!isNaN(len)) {
-              cur += chunk.length;
-              const p = ((cur / len) * 100).toFixed(2);
-              statusItem.text = `${p}% Downloading rust-analyzer ${latest.tag}`;
-            }
-          })
-          .on('error', (e) => {
-            statusItem.hide();
-            reject(e);
-          })
-          .on('end', () => {
-            context.globalState.update('release', latest.tag);
-            statusItem.hide();
-            resolve();
-          })
-          .pipe(createWriteStream(_path, { mode: 0o755 }));
-      })
-      .catch((e) => {
-        statusItem.hide();
-        reject(e);
-      });
+  const resp = await fetch(latest.url);
+  // const resp = await fetch('http://devd.io/rust-analyzer');
+  if (!resp.ok) {
+    statusItem.hide();
+    throw new Error('Download failed');
+  }
+
+  let cur = 0;
+  const len = Number(resp.headers.get('content-length'));
+  resp.body.on('data', (chunk: Buffer) => {
+    cur += chunk.length;
+    const p = ((cur / len) * 100).toFixed(2);
+    statusItem.text = `${p}% Downloading rust-analyzer ${latest.tag}`;
   });
+
+  const destFileStream = fs.createWriteStream(_path, { mode: 0o755 });
+  await pipeline(resp.body, destFileStream);
+
+  await context.globalState.update('release', latest.tag);
+  statusItem.hide();
 }
