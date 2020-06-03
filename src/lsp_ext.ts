@@ -45,15 +45,16 @@ export interface RunnablesParams {
   position: lc.Position | null;
 }
 export interface Runnable {
-  range: lc.Range;
   label: string;
-  bin: string;
-  args: string[];
-  extraArgs: string[];
-  env: { [key: string]: string };
-  cwd: string | null;
+  location?: lc.LocationLink;
+  kind: 'cargo';
+  args: {
+    workspaceRoot?: string;
+    cargoArgs: string[];
+    executableArgs: string[];
+  };
 }
-export const runnables = new lc.RequestType<RunnablesParams, Runnable[], void>('rust-analyzer/runnables');
+export const runnables = new lc.RequestType<RunnablesParams, Runnable[], void>('experimental/runnables');
 
 export type InlayHint = InlayHint.TypeHint | InlayHint.ParamHint | InlayHint.ChainingHint;
 

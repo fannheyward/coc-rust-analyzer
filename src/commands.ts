@@ -157,11 +157,10 @@ export function run(ctx: Ctx): Cmd {
     }
 
     const runnable = items[idx].runnable;
-    const cmd = `${runnable.bin} ${runnable.args.join(' ')}`;
+    const cmd = `${runnable.kind} ${runnable.args.cargoArgs.join(' ')}`;
     const opt: TerminalOptions = {
       name: runnable.label,
-      cwd: runnable.cwd!,
-      env: runnable.env,
+      cwd: runnable.args.workspaceRoot,
     };
     workspace.createTerminal(opt).then((t: Terminal) => {
       t.sendText(cmd);
@@ -174,11 +173,10 @@ export function runSingle(): Cmd {
     const { document } = await workspace.getCurrentState();
     if (!runnable || !isRustDocument(document)) return;
 
-    const cmd = `${runnable.bin} ${runnable.args.join(' ')}`;
+    const cmd = `${runnable.kind} ${runnable.args.cargoArgs.join(' ')}`;
     const opt: TerminalOptions = {
       name: runnable.label,
-      cwd: runnable.cwd!,
-      env: runnable.env,
+      cwd: runnable.args.workspaceRoot,
     };
     workspace.createTerminal(opt).then((t: Terminal) => {
       t.sendText(cmd);
