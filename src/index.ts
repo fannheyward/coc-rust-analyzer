@@ -38,6 +38,7 @@ export async function activate(context: ExtensionContext): Promise<void> {
 
   ctx.registerCommand('analyzerStatus', cmds.analyzerStatus);
   ctx.registerCommand('applySnippetWorkspaceEdit', cmds.applySnippetWorkspaceEditCommand);
+  ctx.registerCommand('resolveCodeAction', cmds.resolveCodeAction);
   ctx.registerCommand('collectGarbage', cmds.collectGarbage);
   ctx.registerCommand('expandMacro', cmds.expandMacro);
   ctx.registerCommand('joinLines', cmds.joinLines);

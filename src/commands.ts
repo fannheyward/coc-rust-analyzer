@@ -313,3 +313,12 @@ export function applySnippetWorkspaceEditCommand(): Cmd {
     await applySnippetWorkspaceEdit(edit);
   };
 }
+
+export function resolveCodeAction(ctx: Ctx): Cmd {
+  const client = ctx.client;
+  return async (params: ra.ResolveCodeActionParams) => {
+    const edit: WorkspaceEdit = await client.sendRequest(ra.resolveCodeAction, params);
+    if (!edit) return;
+    await applySnippetWorkspaceEdit(edit);
+  };
+}

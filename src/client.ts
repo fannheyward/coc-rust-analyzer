@@ -1,25 +1,26 @@
 import { Executable, LanguageClient, LanguageClientOptions, ServerOptions, StaticFeature, Uri, workspace } from 'coc.nvim';
-import { ClientCapabilities, CodeAction, CodeActionParams, CodeActionRequest, Command, InsertTextFormat, TextDocumentEdit } from 'vscode-languageserver-protocol';
+import { ClientCapabilities, CodeAction, CodeActionParams, CodeActionRequest, Command } from 'vscode-languageserver-protocol';
+import * as ra from './lsp_ext';
 
 class ExperimentalFeatures implements StaticFeature {
   fillClientCapabilities(capabilities: ClientCapabilities): void {
     const caps: any = capabilities.experimental ?? {};
     caps.snippetTextEdit = true;
+    caps.resolveCodeAction = true;
     capabilities.experimental = caps;
   }
   initialize(): void {}
 }
 
-function isSnippetEdit(action: CodeAction): boolean {
-  const documentChanges = action.edit?.documentChanges ?? [];
-  for (const edit of documentChanges) {
-    if (TextDocumentEdit.is(edit)) {
-      if (edit.edits.some((indel) => (indel as any).insertTextFormat === InsertTextFormat.Snippet)) {
-        return true;
-      }
-    }
-  }
-  return false;
+function isCodeActionWithoutEditsAndCommands(value: any): boolean {
+  const candidate: CodeAction = value;
+  return (
+    candidate &&
+    (candidate.diagnostics === void 0 || Array.isArray(candidate.diagnostics)) &&
+    (candidate.kind === void 0 || typeof candidate.kind === 'string') &&
+    candidate.edit === void 0 &&
+    candidate.command === void 0
+  );
 }
 
 export function createClient(bin: string): LanguageClient {
@@ -57,11 +58,27 @@ export function createClient(bin: string): LanguageClient {
         if (values === null) return undefined;
         const result: (CodeAction | Command)[] = [];
         for (const item of values) {
-          if (CodeAction.is(item) && isSnippetEdit(item)) {
-            item.command = Command.create('', 'rust-analyzer.applySnippetWorkspaceEdit', item.edit);
-            item.edit = undefined;
+          // In our case we expect to get code edits only from diagnostics
+          if (CodeAction.is(item)) {
+            result.push(item);
+            continue;
           }
-          result.push(item);
+
+          if (!isCodeActionWithoutEditsAndCommands(item)) {
+            console.error('isCodeActionWithoutEditsAndCommands:', item.title);
+            continue;
+          }
+
+          const resolveParams: ra.ResolveCodeActionParams = {
+            id: (item as any).id,
+            codeActionParams: params,
+          };
+          const command: Command = {
+            command: 'rust-analyzer.resolveCodeAction',
+            title: item.title,
+            arguments: [resolveParams],
+          };
+          result.push(CodeAction.create(item.title, command));
         }
         return result;
       },
