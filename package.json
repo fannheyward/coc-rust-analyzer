@@ -211,6 +211,11 @@
           "default": true,
           "description": "Whether to show inlay type hints for method chains. *Neovim Only*"
         },
+        "rust-analyzer.inlayHints.refreshOnInsertMode": {
+          "type": "boolean",
+          "default": false,
+          "description": "Whether to refresh inlayHints on insert mode"
+        },
         "rust-analyzer.completion.addCallParenthesis": {
           "type": "boolean",
           "default": true,

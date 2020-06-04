@@ -19,6 +19,7 @@ This extension is configured using a jsonc file. You can open this configuration
 - `rust-analyzer.diagnostics.enable`: Whether to show native rust-analyzer diagnostics, default: `true`
 - `rust-analyzer.lruCapacity`: Number of syntax trees rust-analyzer keeps in memory, default: `null`
 - `rust-analyzer.inlayHints.chainingHints`: Whether to show inlay type hints for method chains, **Neovim Only**, default `true`
+- `rust-analyzer.inlayHints.refreshOnInsertMode`: Whether to refresh inlayHints on insert mode, default `false`
 - `rust-analyzer.files.watcher`: Controls file watching implementation, default: `client`
 - `rust-analyzer.files.exclude`: Paths to exclude from analysis, default: `[]`
 - `rust-analyzer.notifications.cargoTomlNotFound`: Whether to show `can't find Cargo.toml` error message, default: `true`

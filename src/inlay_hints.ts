@@ -1,4 +1,4 @@
-import { Disposable, Document, workspace } from 'coc.nvim';
+import { Disposable, Document, events, workspace } from 'coc.nvim';
 import { CancellationTokenSource } from 'vscode-languageserver-protocol';
 import { Ctx, isRustDocument, RustDocument } from './ctx';
 import * as ra from './lsp_ext';
@@ -33,11 +33,22 @@ class HintsUpdater implements Disposable {
       }
     });
 
+    events.on('InsertLeave', async (bufnr) => {
+      const doc = workspace.getDocument(bufnr);
+      if (isRustDocument(doc.textDocument)) {
+        doc.buffer.clearNamespace(this.chainingHintNS);
+        this.syncAndRenderHints();
+      }
+    });
+
     workspace.onDidChangeTextDocument(
       (e) => {
         const doc = workspace.getDocument(e.bufnr);
         if (isRustDocument(doc.textDocument)) {
           doc.buffer.clearNamespace(this.chainingHintNS);
+          if (workspace.insertMode && !this.ctx.config.inlayHints.refreshOnInsertMode) {
+            return;
+          }
           this.syncAndRenderHints();
         }
       },
