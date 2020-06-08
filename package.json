@@ -259,6 +259,17 @@
           "default": null,
           "description": "Path to rust-analyzer executable (points to bundled binary by default). If this is set, then \"rust-analyzer.updates.channel\" setting is not used"
         },
+        "rust-analyzer.linkedProjects": {
+          "markdownDescription": "Disable project auto-discovery in favor of explicitly specified set of projects.  \nElements must be paths pointing to Cargo.toml, rust-project.json, or JSON objects in rust-project.json format",
+          "type": "array",
+          "items": {
+            "type": [
+              "string",
+              "object"
+            ]
+          },
+          "default": null
+        },
         "rust-analyzer.trace.server": {
           "type": "string",
           "scope": "window",
