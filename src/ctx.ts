@@ -109,6 +109,7 @@ export class Ctx {
       try {
         await downloadServer(this.extCtx, this.config.channel);
       } catch (e) {
+        console.error(e);
         workspace.showMessage(`Upgrade rust-analyzer failed, please try again`, 'error');
         return;
       }
