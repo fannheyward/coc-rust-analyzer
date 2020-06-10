@@ -35,6 +35,8 @@ This extension is configured using a jsonc file. You can open this configuration
 - `rust-analyzer.checkOnSave.command`: Cargo command to use for `cargo check`, default: `check`
 - `rust-analyzer.checkOnSave.overrideCommand`: Advanced option, fully override the command rust-analyzer uses for checking. The command should include `--message=format=json` or similar option, default: `null`
 - `rust-analyzer.checkOnSave.allTargets`: Check all targets and tests (will be passed as `--all-targets`), default: `true`
+- `rust-analyzer.checkOnSave.allFeatures`: Check with all features (will be passed as `--all-features`), default: `null`
+- `rust-analyzer.checkOnSave.features`: List of features to activate, default: `null`
 - `rust-analyzer.completion.addCallParenthesis`: Whether to add parenthesis when completing functions, default: `true`
 - `rust-analyzer.completion.addCallArgumentSnippets`: Whether to add argument snippets when completing functions, default: `true`
 - `rust-analyzer.completion.postfix.enable`: Whether to show postfix snippets like `dbg`, `if`, `not`, etc, default: `true`
