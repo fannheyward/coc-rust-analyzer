@@ -272,28 +272,36 @@ export async function applySnippetWorkspaceEdit(edit: WorkspaceEdit) {
   let lineDelta = 0;
   const change = edit.documentChanges[0];
   if (TextDocumentEdit.is(change)) {
+    const newEdits: TextEdit[] = [];
+
     for (const indel of change.edits) {
-      const wsEdit: WorkspaceEdit = {};
+      let { newText } = indel;
       const parsed = parseSnippet(indel.newText);
       if (parsed) {
-        const [newText, [placeholderStart, placeholderLength]] = parsed;
-        const prefix = newText.substr(0, placeholderStart);
+        const [insert, [placeholderStart, placeholderLength]] = parsed;
+        const prefix = insert.substr(0, placeholderStart);
         const lastNewline = prefix.lastIndexOf('\n');
 
         const startLine = indel.range.start.line + lineDelta + countLines(prefix);
         const startColumn = lastNewline === -1 ? indel.range.start.character + placeholderStart : prefix.length - lastNewline - 1;
-        const endColumn = startColumn + placeholderLength;
-        selection = Range.create(startLine, startColumn, startLine, endColumn);
+        if (placeholderLength) {
+          selection = Range.create(startLine, startColumn, startLine, startColumn + placeholderLength);
+        }
 
-        const newChange = TextDocumentEdit.create(change.textDocument, [TextEdit.replace(indel.range, newText)]);
-        wsEdit.documentChanges = [newChange];
+        newText = insert;
       } else {
         lineDelta = countLines(indel.newText) - (indel.range.end.line - indel.range.start.line);
-        wsEdit.documentChanges = [change];
       }
 
-      await workspace.applyEdit(wsEdit);
+      newEdits.push(TextEdit.replace(indel.range, newText));
     }
+
+    const wsEdit: WorkspaceEdit = {
+      changes: {
+        [change.textDocument.uri]: newEdits,
+      },
+    };
+    await workspace.applyEdit(wsEdit);
 
     if (selection) {
       const current = await workspace.document;
