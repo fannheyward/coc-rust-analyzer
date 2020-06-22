@@ -2,6 +2,7 @@ import { exec } from 'child_process';
 import { ExtensionContext, workspace } from 'coc.nvim';
 import { createWriteStream, PathLike, promises as fs } from 'fs';
 import fetch from 'node-fetch';
+import { HttpsProxyAgent } from 'https-proxy-agent';
 import os from 'os';
 import { join } from 'path';
 import stream from 'stream';
@@ -9,6 +10,7 @@ import util from 'util';
 import { UpdatesChannel } from './config';
 
 const pipeline = util.promisify(stream.pipeline);
+const agent = process.env.https_proxy ? new HttpsProxyAgent(process.env.https_proxy as string) : null;
 
 async function patchelf(dest: PathLike): Promise<void> {
   const expression = `
@@ -54,7 +56,8 @@ export async function getLatestRelease(updatesChannel: UpdatesChannel): Promise<
   if (updatesChannel === 'nightly') {
     releaseURL = 'https://api.github.com/repos/rust-analyzer/rust-analyzer/releases/tags/nightly';
   }
-  return fetch(releaseURL)
+  // @ts-ignore
+  return fetch(releaseURL, { agent })
     .then((resp) => resp.json())
     .then((resp) => {
       const asset = (resp.assets as any[]).find((val) => val.browser_download_url.includes(fix));
@@ -85,7 +88,8 @@ export async function downloadServer(context: ExtensionContext, updatesChannel: 
   const _path = join(context.storagePath, latest.name);
   statusItem.text = `Downloading rust-analyzer ${latest.tag}`;
 
-  const resp = await fetch(latest.url);
+  // @ts-ignore
+  const resp = await fetch(latest.url, { agent });
   // const resp = await fetch('http://devd.io/rust-analyzer');
   if (!resp.ok) {
     statusItem.hide();
