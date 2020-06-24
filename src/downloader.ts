@@ -1,10 +1,10 @@
 import { exec } from 'child_process';
 import { ExtensionContext, workspace } from 'coc.nvim';
 import { createWriteStream, PathLike, promises as fs } from 'fs';
-import fetch from 'node-fetch';
 import { HttpsProxyAgent } from 'https-proxy-agent';
+import fetch from 'node-fetch';
 import os from 'os';
-import { join } from 'path';
+import path from 'path';
 import stream from 'stream';
 import util from 'util';
 import { UpdatesChannel } from './config';
@@ -73,6 +73,24 @@ export async function getLatestRelease(updatesChannel: UpdatesChannel): Promise<
     });
 }
 
+async function moveFile(src: PathLike, dest: PathLike) {
+  try {
+    await fs.unlink(dest).catch((err) => {
+      if (err.code !== 'ENOENT') throw err;
+    });
+    await fs.rename(src, dest);
+  } catch (err) {
+    if (err.code === 'EXDEV') {
+      // We are probably moving the file across partitions/devices
+      await fs.copyFile(src, dest);
+      await fs.unlink(src);
+    } else {
+      console.error(`Failed to rename the file ${src} -> ${dest}`, err);
+      throw err;
+    }
+  }
+}
+
 export async function downloadServer(context: ExtensionContext, updatesChannel: UpdatesChannel): Promise<void> {
   const statusItem = workspace.createStatusBarItem(0, { progress: true });
   statusItem.text = 'Getting the latest version...';
@@ -85,7 +103,7 @@ export async function downloadServer(context: ExtensionContext, updatesChannel: 
     return;
   }
 
-  const _path = join(context.storagePath, latest.name);
+  const _path = path.join(context.storagePath, latest.name);
   statusItem.text = `Downloading rust-analyzer ${latest.tag}`;
 
   // @ts-ignore
@@ -104,8 +122,25 @@ export async function downloadServer(context: ExtensionContext, updatesChannel: 
     statusItem.text = `${p}% Downloading rust-analyzer ${latest.tag}`;
   });
 
-  const destFileStream = createWriteStream(_path, { mode: 0o755 });
-  await pipeline(resp.body, destFileStream);
+  try {
+    const osTempDir = await fs.realpath(os.tmpdir());
+    const tempDir = await fs.mkdtemp(path.join(osTempDir, 'rust-analyzer'));
+    const tempFile = path.join(tempDir, path.basename(latest.name));
+
+    const destFileStream = createWriteStream(tempFile, { mode: 0o755 });
+    await pipeline(resp.body, destFileStream);
+    await new Promise<void>((resolve) => {
+      destFileStream.on('close', resolve);
+      destFileStream.destroy();
+      setTimeout(resolve, 1000);
+    });
+
+    await moveFile(tempFile, _path);
+  } catch (e) {
+    statusItem.hide();
+    console.error(`Failed to download rust-analyzer:`, e);
+    throw e;
+  }
 
   await context.globalState.update('release', latest.tag);
 

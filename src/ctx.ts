@@ -105,14 +105,18 @@ export class Ctx {
     const msg = `Rust Analyzer has a new release: ${latest.tag}, you're using ${old}. Would you like to download from GitHub`;
     const ret = await workspace.showQuickpick(['Yes', 'Check GitHub releases', 'Cancel'], msg);
     if (ret === 0) {
-      await this.client.stop();
       try {
         await downloadServer(this.extCtx, this.config.channel);
       } catch (e) {
         console.error(e);
-        workspace.showMessage(`Upgrade rust-analyzer failed, please try again`, 'error');
+        let msg = 'Upgrade rust-analyzer failed, please try again';
+        if (e.code === 'EBUSY' || e.code === 'ETXTBSY') {
+          msg = 'Upgrade rust-analyzer failed, other Vim instances might be using it, you should close them and try again';
+        }
+        workspace.showMessage(msg, 'error');
         return;
       }
+      await this.client.stop();
       this.client.start();
 
       this.activateStatusDisplay();
