@@ -123,8 +123,7 @@ export async function downloadServer(context: ExtensionContext, updatesChannel: 
   });
 
   try {
-    const osTempDir = await fs.realpath(os.tmpdir());
-    const tempDir = await fs.mkdtemp(path.join(osTempDir, 'rust-analyzer'));
+    const tempDir = await fs.mkdtemp(path.join(os.tmpdir(), 'rust-analyzer'));
     const tempFile = path.join(tempDir, path.basename(latest.name));
 
     const destFileStream = createWriteStream(tempFile, { mode: 0o755 });
