@@ -1,5 +1,6 @@
 import { exec } from 'child_process';
 import { ExtensionContext, workspace } from 'coc.nvim';
+import { randomBytes } from 'crypto';
 import { createWriteStream, PathLike, promises as fs } from 'fs';
 import { HttpsProxyAgent } from 'https-proxy-agent';
 import fetch from 'node-fetch';
@@ -73,24 +74,6 @@ export async function getLatestRelease(updatesChannel: UpdatesChannel): Promise<
     });
 }
 
-async function moveFile(src: PathLike, dest: PathLike) {
-  try {
-    await fs.unlink(dest).catch((err) => {
-      if (err.code !== 'ENOENT') throw err;
-    });
-    await fs.rename(src, dest);
-  } catch (err) {
-    if (err.code === 'EXDEV') {
-      // We are probably moving the file across partitions/devices
-      await fs.copyFile(src, dest);
-      await fs.unlink(src);
-    } else {
-      console.error(`Failed to rename the file ${src} -> ${dest}`, err);
-      throw err;
-    }
-  }
-}
-
 export async function downloadServer(context: ExtensionContext, updatesChannel: UpdatesChannel): Promise<void> {
   const statusItem = workspace.createStatusBarItem(0, { progress: true });
   statusItem.text = 'Getting the latest version...';
@@ -103,7 +86,6 @@ export async function downloadServer(context: ExtensionContext, updatesChannel: 
     return;
   }
 
-  const _path = path.join(context.storagePath, latest.name);
   statusItem.text = `Downloading rust-analyzer ${latest.tag}`;
 
   // @ts-ignore
@@ -122,24 +104,22 @@ export async function downloadServer(context: ExtensionContext, updatesChannel: 
     statusItem.text = `${p}% Downloading rust-analyzer ${latest.tag}`;
   });
 
-  try {
-    const tempDir = await fs.mkdtemp(path.join(os.tmpdir(), 'rust-analyzer'));
-    const tempFile = path.join(tempDir, path.basename(latest.name));
+  const _path = path.join(context.storagePath, latest.name);
+  const randomHex = randomBytes(5).toString('hex');
+  const tempFile = path.join(context.storagePath, `${latest.name}${randomHex}`);
 
-    const destFileStream = createWriteStream(tempFile, { mode: 0o755 });
-    await pipeline(resp.body, destFileStream);
-    await new Promise<void>((resolve) => {
-      destFileStream.on('close', resolve);
-      destFileStream.destroy();
-      setTimeout(resolve, 1000);
-    });
+  const destFileStream = createWriteStream(tempFile, { mode: 0o755 });
+  await pipeline(resp.body, destFileStream);
+  await new Promise<void>((resolve) => {
+    destFileStream.on('close', resolve);
+    destFileStream.destroy();
+    setTimeout(resolve, 1000);
+  });
 
-    await moveFile(tempFile, _path);
-  } catch (e) {
-    statusItem.hide();
-    console.error(`Failed to download rust-analyzer:`, e);
-    throw e;
-  }
+  await fs.unlink(_path).catch((err) => {
+    if (err.code !== 'ENOENT') throw err;
+  });
+  await fs.rename(tempFile, _path);
 
   await context.globalState.update('release', latest.tag);
 
