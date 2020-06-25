@@ -3,12 +3,11 @@ import executable from 'executable';
 import { existsSync } from 'fs';
 import { homedir } from 'os';
 import { join } from 'path';
-import { CancellationToken, Disposable, ErrorCodes, RequestType, TextDocument, WorkDoneProgress } from 'vscode-languageserver-protocol';
+import { CancellationToken, Disposable, ErrorCodes, RequestType, TextDocument } from 'vscode-languageserver-protocol';
 import which from 'which';
 import { createClient } from './client';
 import { Config } from './config';
 import { downloadServer, getLatestRelease } from './downloader';
-import { StatusDisplay } from './status_display';
 
 export type RustDocument = TextDocument & { languageId: 'rust' };
 export function isRustDocument(document: TextDocument): document is RustDocument {
@@ -21,14 +20,6 @@ export class Ctx {
   client!: LanguageClient;
 
   constructor(private readonly extCtx: ExtensionContext, readonly config: Config) {}
-
-  private async activateStatusDisplay() {
-    await this.client.onReady();
-
-    const status = new StatusDisplay(this.config.checkOnSave.command);
-    this.extCtx.subscriptions.push(status);
-    this.client.onProgress(WorkDoneProgress.type, 'rustAnalyzer/cargoWatcher', (params) => status.handleProgressNotification(params));
-  }
 
   registerCommand(name: string, factory: (ctx: Ctx) => Cmd) {
     const fullName = `rust-analyzer.${name}`;
@@ -48,7 +39,6 @@ export class Ctx {
     await client.onReady();
 
     this.client = client;
-    this.activateStatusDisplay();
   }
 
   get subscriptions(): Disposable[] {
@@ -119,7 +109,6 @@ export class Ctx {
       await this.client.stop();
       this.client.start();
 
-      this.activateStatusDisplay();
       this.extCtx.globalState.update('release', latest.tag);
     } else if (ret === 1) {
       commands.executeCommand('vscode.open', 'https://github.com/rust-analyzer/rust-analyzer/releases').catch(() => {});
