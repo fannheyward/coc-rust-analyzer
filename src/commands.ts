@@ -269,6 +269,7 @@ export async function applySnippetWorkspaceEdit(edit: WorkspaceEdit) {
   }
 
   let selection: Range | undefined = undefined;
+  let position: Position | undefined = undefined;
   let lineDelta = 0;
   const change = edit.documentChanges[0];
   if (TextDocumentEdit.is(change)) {
@@ -286,6 +287,8 @@ export async function applySnippetWorkspaceEdit(edit: WorkspaceEdit) {
         const startColumn = lastNewline === -1 ? indel.range.start.character + placeholderStart : prefix.length - lastNewline - 1;
         if (placeholderLength) {
           selection = Range.create(startLine, startColumn, startLine, startColumn + placeholderLength);
+        } else {
+          position = Position.create(startLine, startColumn);
         }
 
         newText = insert;
@@ -303,15 +306,18 @@ export async function applySnippetWorkspaceEdit(edit: WorkspaceEdit) {
     };
     await workspace.applyEdit(wsEdit);
 
+    const current = await workspace.document;
+    if (current.uri !== change.textDocument.uri) {
+      await workspace.loadFile(change.textDocument.uri);
+      await workspace.jumpTo(change.textDocument.uri);
+      // FIXME
+      return;
+    }
+
     if (selection) {
-      const current = await workspace.document;
-      if (current.uri !== change.textDocument.uri) {
-        await workspace.loadFile(change.textDocument.uri);
-        await workspace.jumpTo(change.textDocument.uri);
-        // FIXME
-        return;
-      }
       await workspace.selectRange(selection);
+    } else if (position) {
+      await workspace.moveTo(position);
     }
   }
 }
