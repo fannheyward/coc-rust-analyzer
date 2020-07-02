@@ -1,4 +1,4 @@
-import { commands, ExtensionContext, LanguageClient, services, workspace } from 'coc.nvim';
+import { commands, ExtensionContext, LanguageClient, services, StatusBarItem, workspace } from 'coc.nvim';
 import executable from 'executable';
 import { existsSync } from 'fs';
 import { homedir } from 'os';
@@ -8,6 +8,7 @@ import which from 'which';
 import { createClient } from './client';
 import { Config } from './config';
 import { downloadServer, getLatestRelease } from './downloader';
+import * as ra from './lsp_ext';
 
 export type RustDocument = TextDocument & { languageId: 'rust' };
 export function isRustDocument(document: TextDocument): document is RustDocument {
@@ -18,8 +19,13 @@ export type Cmd = (...args: any[]) => unknown;
 
 export class Ctx {
   client!: LanguageClient;
+  private statusBar: StatusBarItem;
 
-  constructor(private readonly extCtx: ExtensionContext, readonly config: Config) {}
+  constructor(private readonly extCtx: ExtensionContext, readonly config: Config) {
+    this.statusBar = workspace.createStatusBarItem(10);
+    this.statusBar.text = 'rust-analyzer';
+    this.extCtx.subscriptions.push(this.statusBar);
+  }
 
   registerCommand(name: string, factory: (ctx: Ctx) => Cmd) {
     const fullName = `rust-analyzer.${name}`;
@@ -37,6 +43,11 @@ export class Ctx {
     const client = createClient(bin);
     this.extCtx.subscriptions.push(services.registLanguageClient(client));
     await client.onReady();
+
+    client.onNotification(ra.status, (status) => {
+      this.statusBar.text = `rust-analyzer ${status}`;
+      this.statusBar.show();
+    });
 
     this.client = client;
   }
