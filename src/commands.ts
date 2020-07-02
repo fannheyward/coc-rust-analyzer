@@ -229,9 +229,9 @@ export function expandMacro(ctx: Ctx): Cmd {
   };
 }
 
-export function collectGarbage(ctx: Ctx): Cmd {
+export function reloadWorkspace(ctx: Ctx): Cmd {
   return async () => {
-    await ctx.client.sendRequest(ra.collectGarbage, null);
+    await ctx.client.sendRequest(ra.reloadWorkspace, null);
   };
 }
 
