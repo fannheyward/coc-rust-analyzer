@@ -111,7 +111,7 @@ export class Ctx {
       } catch (e) {
         console.error(e);
         let msg = 'Upgrade rust-analyzer failed, please try again';
-        if (e.code === 'EBUSY' || e.code === 'ETXTBSY') {
+        if (e.code === 'EBUSY' || e.code === 'ETXTBSY' || e.code === 'EPERM') {
           msg = 'Upgrade rust-analyzer failed, other Vim instances might be using it, you should close them and try again';
         }
         workspace.showMessage(msg, 'error');
