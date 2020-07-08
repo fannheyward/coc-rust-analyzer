@@ -44,7 +44,7 @@
     "prettier": "^2.0.3",
     "rimraf": "^3.0.0",
     "shx": "^0.3.2",
-    "ts-loader": "^7.0.5",
+    "ts-loader": "^8.0.0",
     "typescript": "^3.9.5",
     "vscode-languageserver-protocol": "^3.15.3",
     "webpack": "^4.42.1",
