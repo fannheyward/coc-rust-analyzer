@@ -41,6 +41,13 @@ export function analyzerStatus(ctx: Ctx): Cmd {
   };
 }
 
+export function memoryUsage(ctx: Ctx): Cmd {
+  return async () => {
+    const ret = await ctx.client.sendRequest(ra.memoryUsage, null);
+    workspace.echoLines(ret.split('\n'));
+  };
+}
+
 export function matchingBrace(ctx: Ctx): Cmd {
   return async () => {
     const { document, position } = await workspace.getCurrentState();

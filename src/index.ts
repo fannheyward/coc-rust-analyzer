@@ -38,6 +38,7 @@ export async function activate(context: ExtensionContext): Promise<void> {
   activateInlayHints(ctx);
 
   ctx.registerCommand('analyzerStatus', cmds.analyzerStatus);
+  ctx.registerCommand('memoryUsage', cmds.memoryUsage);
   ctx.registerCommand('applySnippetWorkspaceEdit', cmds.applySnippetWorkspaceEditCommand);
   ctx.registerCommand('resolveCodeAction', cmds.resolveCodeAction);
   ctx.registerCommand('reloadWorkspace', cmds.reloadWorkspace);

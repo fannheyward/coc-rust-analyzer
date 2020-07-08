@@ -346,6 +346,11 @@
         "category": "Rust Analyzer"
       },
       {
+        "command": "rust-analyzer.memoryUsage",
+        "title": "Memory Usage (Clears Database)",
+        "category": "Rust Analyzer"
+      },
+      {
         "command": "rust-analyzer.reloadWorkspace",
         "title": "Reload workspace",
         "category": "Rust Analyzer"

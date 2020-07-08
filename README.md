@@ -53,6 +53,7 @@ Settings not specific to `rust-analyzer` can be found at `:help coc-configuratio
 You can use these commands by `:CocCommand XYZ`.
 
 - `rust-analyzer.analyzerStatus`: Show rust-analyzer status
+- `rust-analyzer.memoryUsage`: Memory Usage (Clears Database)
 - `rust-analyzer.reloadWorkspace`: Reload workspace
 - `rust-analyzer.expandMacro`: Expand macro recursively
 - `rust-analyzer.joinLines`: Join lines
