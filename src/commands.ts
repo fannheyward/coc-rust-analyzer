@@ -243,11 +243,11 @@ export function reloadWorkspace(ctx: Ctx): Cmd {
 }
 
 export function showReferences(): Cmd {
-  return (uri: string, position: Position, locations: Location[]) => {
+  return async (uri: string, position: Position, locations: Location[]) => {
     if (!uri) {
       return;
     }
-    commands.executeCommand('editor.action.showReferences', Uri.parse(uri), position, locations);
+    await commands.executeCommand('editor.action.showReferences', Uri.parse(uri), position, locations);
   };
 }
 

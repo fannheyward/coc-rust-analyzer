@@ -44,9 +44,18 @@ export class Ctx {
     this.extCtx.subscriptions.push(services.registLanguageClient(client));
     await client.onReady();
 
-    client.onNotification(ra.status, (status) => {
+    client.onNotification(ra.status, async (status) => {
       this.statusBar.text = `rust-analyzer ${status}`;
       this.statusBar.show();
+
+      if (status === 'ready') {
+        this.statusBar.hide();
+      } else if (status === 'needsReload') {
+        const prompt = await workspace.showPrompt(`rust-analyzer needs to reload project`);
+        if (prompt) {
+          await commands.executeCommand('rust-analyzer.reloadWorkspace');
+        }
+      }
     });
 
     this.client = client;
@@ -122,7 +131,7 @@ export class Ctx {
 
       this.extCtx.globalState.update('release', latest.tag);
     } else if (ret === 1) {
-      commands.executeCommand('vscode.open', 'https://github.com/rust-analyzer/rust-analyzer/releases').catch(() => {});
+      await commands.executeCommand('vscode.open', 'https://github.com/rust-analyzer/rust-analyzer/releases').catch(() => {});
     }
   }
 

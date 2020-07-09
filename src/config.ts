@@ -33,11 +33,10 @@ export class Config {
     if (!requiresReloadOpt) return;
 
     const msg = `Changing "${requiresReloadOpt}" requires a reload`;
-    workspace.showPrompt(`${msg}. Reload Now?`).then((prompt) => {
-      if (prompt) {
-        commands.executeCommand(`workbench.action.reloadWindow`);
-      }
-    });
+    const prompt = await workspace.showPrompt(`${msg}. Reload now?`);
+    if (prompt) {
+      await commands.executeCommand(`workbench.action.reloadWindow`);
+    }
   }
 
   get serverPath() {
