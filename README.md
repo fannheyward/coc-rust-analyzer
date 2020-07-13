@@ -23,9 +23,10 @@ This extension is configured using a jsonc file. You can open this configuration
 - `rust-analyzer.files.watcher`: Controls file watching implementation, default: `client`
 - `rust-analyzer.files.exclude`: Paths to exclude from analysis, default: `[]`
 - `rust-analyzer.notifications.cargoTomlNotFound`: Whether to show `can't find Cargo.toml` error message, default: `true`
-- `rust-analyzer.cargo.noDefaultFeatures`: Do not activate the `default` feature, default: `false`
+- `rust-analyzer.cargo.autoreload`: Automatically refresh project info via `cargo metadata` on Cargo.toml changes, default: `true`
 - `rust-analyzer.cargo.allFeatures`: Activate all available features, default: `true`
 - `rust-analyzer.cargo.features`: List of features to activate, default: `[]`
+- `rust-analyzer.cargo.noDefaultFeatures`: Do not activate the `default` feature, default: `false`
 - `rust-analyzer.cargo.loadOutDirsFromCheck`: Run `cargo check` on startup to get the correct value for package OUT_DIRs, default: `false`
 - `rust-analyzer.procMacro.enable`: Enable Proc macro support, `cargo.loadOutDirsFromCheck` must be enabled, default: `false`
 - `rust-analyzer.rustfmt.extraArgs`: Additional arguments to rustfmt, default: `[]`
