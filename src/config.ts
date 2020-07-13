@@ -51,22 +51,7 @@ export class Config {
     };
   }
 
-  get checkOnSave() {
-    return {
-      command: this.cfg.get<string>('checkOnSave.command')!,
-    };
-  }
-
   get channel() {
     return this.cfg.get<UpdatesChannel>('updates.channel')!;
-  }
-
-  get lens() {
-    return {
-      enable: this.cfg.get<boolean>('lens.enable'),
-      run: this.cfg.get<boolean>('lens.run'),
-      debug: false,
-      implementations: this.cfg.get<boolean>('lens.implementations'),
-    };
   }
 }
