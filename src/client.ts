@@ -41,13 +41,6 @@ export function createClient(bin: string): LanguageClient {
     documentSelector: [{ language: 'rust' }, { pattern: 'Cargo.toml' }],
     initializationOptions: workspace.getConfiguration('rust-analyzer'),
     middleware: {
-      provideSignatureHelp: async (document, position, token, next) => {
-        const character = position.character;
-        position.character = character + 1;
-        const help = await next(document, position, token);
-        position.character = character - 1;
-        return help;
-      },
       async provideCodeActions(document, range, context, token) {
         const params: CodeActionParams = {
           textDocument: { uri: document.uri },
