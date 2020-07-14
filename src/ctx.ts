@@ -51,9 +51,10 @@ export class Ctx {
       if (status === 'ready') {
         this.statusBar.hide();
       } else if (status === 'needsReload') {
-        const prompt = await workspace.showPrompt(`rust-analyzer needs to reload project`);
+        const prompt = this.config.cargo.autoreload || (await workspace.showPrompt(`rust-analyzer needs to reload project`));
         if (prompt) {
           await commands.executeCommand('rust-analyzer.reloadWorkspace');
+          this.statusBar.hide();
         }
       }
     });

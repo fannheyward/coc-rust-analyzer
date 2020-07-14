@@ -1,19 +1,5 @@
 import { commands, ConfigurationChangeEvent, workspace, WorkspaceConfiguration } from 'coc.nvim';
 
-export interface CargoWatchOptions {
-  enable: boolean;
-  arguments: string[];
-  command: string;
-  allTargets: boolean;
-}
-
-export interface CargoFeatures {
-  noDefaultFeatures: boolean;
-  allFeatures: boolean;
-  features: string[];
-  loadOutDirsFromCheck: boolean;
-}
-
 export type UpdatesChannel = 'stable' | 'nightly';
 
 export class Config {
@@ -53,5 +39,11 @@ export class Config {
 
   get channel() {
     return this.cfg.get<UpdatesChannel>('updates.channel')!;
+  }
+
+  get cargo() {
+    return {
+      autoreload: this.cfg.get<boolean>('cargo.autoreload'),
+    };
   }
 }
