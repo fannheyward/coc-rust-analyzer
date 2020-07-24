@@ -317,8 +317,6 @@ export async function applySnippetWorkspaceEdit(edit: WorkspaceEdit) {
     if (current.uri !== change.textDocument.uri) {
       await workspace.loadFile(change.textDocument.uri);
       await workspace.jumpTo(change.textDocument.uri);
-      // FIXME
-      return;
     }
 
     if (selection) {
