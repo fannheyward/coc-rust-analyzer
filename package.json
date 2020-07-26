@@ -79,6 +79,11 @@
           "default": true,
           "markdownDescription": "Whether to show native rust-analyzer diagnostics."
         },
+        "rust-analyzer.diagnostics.enableExperimental": {
+          "type": "boolean",
+          "default": true,
+          "markdownDescription": "Whether to show experimental rust-analyzer diagnostics that might have more false positives than usual."
+        },
         "rust-analyzer.lruCapacity": {
           "type": [
             "null",
