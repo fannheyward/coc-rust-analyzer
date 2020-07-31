@@ -116,12 +116,21 @@ export function ssr(ctx: Ctx): Cmd {
       return;
     }
 
+    const selections: Range[] = [];
+    const mode = await workspace.nvim.call('visualmode');
+    if (mode) {
+      const doc = await workspace.document;
+      const range = await workspace.getSelectedRange(mode, doc);
+      if (range) selections.push(range);
+    }
+
     const { document, position } = await workspace.getCurrentState();
     const param: ra.SsrParams = {
       query: input,
       parseOnly: false,
       textDocument: { uri: document.uri },
       position,
+      selections,
     };
 
     const edit = await ctx.client.sendRequest(ra.ssr, param);
