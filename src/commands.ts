@@ -116,9 +116,12 @@ export function ssr(ctx: Ctx): Cmd {
       return;
     }
 
+    const { document, position } = await workspace.getCurrentState();
     const param: ra.SsrParams = {
       query: input,
       parseOnly: false,
+      textDocument: { uri: document.uri },
+      position,
     };
 
     const edit = await ctx.client.sendRequest(ra.ssr, param);
