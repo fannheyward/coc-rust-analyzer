@@ -44,7 +44,8 @@ export class Ctx {
     this.extCtx.subscriptions.push(services.registLanguageClient(client));
     await client.onReady();
 
-    client.onNotification(ra.status, async (status) => {
+    client.onNotification(ra.status, async (params) => {
+      const status = params.status;
       this.statusBar.text = `rust-analyzer ${status}`;
       this.statusBar.show();
 
