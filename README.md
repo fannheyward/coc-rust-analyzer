@@ -18,6 +18,9 @@ This extension is configured using a jsonc file. You can open this configuration
 - `rust-analyzer.updates.channel`: Use `stable` or `nightly` updates, default: `stable`
 - `rust-analyzer.diagnostics.enable`: Whether to show native rust-analyzer diagnostics, default: `true`
 - `rust-analyzer.diagnostics.enableExperimental`: Whether to show experimental rust-analyzer diagnostics that might have more false positives than usual, default: `true`
+- `rust-analyzer.diagnostics.disabled`: List of rust-analyzer diagnostics to disable, default: `[]`
+- `rust-analyzer.diagnostics.warningsAsInfo`: List of warnings that should be displayed with info severity, default: `[]`
+- `rust-analyzer.diagnostics.warningsAsHint`: List of warnings that should be displayed with hint severity, default: `[]`
 - `rust-analyzer.lruCapacity`: Number of syntax trees rust-analyzer keeps in memory, default: `null`
 - `rust-analyzer.inlayHints.chainingHints`: Whether to show inlay type hints for method chains, **Neovim Only**, default `true`
 - `rust-analyzer.inlayHints.refreshOnInsertMode`: Whether to refresh inlayHints on insert mode, default `false`

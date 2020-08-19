@@ -74,16 +74,6 @@
       "type": "object",
       "title": "coc-rust-analyzer configuration",
       "properties": {
-        "rust-analyzer.diagnostics.enable": {
-          "type": "boolean",
-          "default": true,
-          "markdownDescription": "Whether to show native rust-analyzer diagnostics."
-        },
-        "rust-analyzer.diagnostics.enableExperimental": {
-          "type": "boolean",
-          "default": true,
-          "markdownDescription": "Whether to show experimental rust-analyzer diagnostics that might have more false positives than usual."
-        },
         "rust-analyzer.lruCapacity": {
           "type": [
             "null",
@@ -303,13 +293,32 @@
           },
           "default": null
         },
+        "rust-analyzer.diagnostics.enable": {
+          "type": "boolean",
+          "default": true,
+          "markdownDescription": "Whether to show native rust-analyzer diagnostics."
+        },
+        "rust-analyzer.diagnostics.enableExperimental": {
+          "type": "boolean",
+          "default": true,
+          "markdownDescription": "Whether to show experimental rust-analyzer diagnostics that might have more false positives than usual."
+        },
+        "rust-analyzer.diagnostics.disabled": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {
+            "type": "string"
+          },
+          "description": "List of rust-analyzer diagnostics to disable",
+          "default": []
+        },
         "rust-analyzer.diagnostics.warningsAsInfo": {
           "type": "array",
           "uniqueItems": true,
           "items": {
             "type": "string"
           },
-          "description": "List of warnings that should be displayed with info severity.\nThe warnings will be indicated by a blue squiggly underline in code and a blue icon in the problems panel.",
+          "description": "List of warnings that should be displayed with info severity",
           "default": []
         },
         "rust-analyzer.diagnostics.warningsAsHint": {
@@ -318,7 +327,7 @@
           "items": {
             "type": "string"
           },
-          "description": "List of warnings that should be displayed with hint severity.\nThe warnings will be indicated by faded text or three dots in code and will not show up in the problems panel.",
+          "description": "List of warnings that should be displayed with hint severity",
           "default": []
         },
         "rust-analyzer.trace.server": {
