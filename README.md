@@ -36,6 +36,7 @@ This extension is configured using a jsonc file. You can open this configuration
 - `rust-analyzer.rustfmt.extraArgs`: Additional arguments to rustfmt, default: `[]`
 - `rust-analyzer.rustfmt.overrideCommand`: Advanced option, fully override the command rust-analyzer uses for formatting, default: `null`
 - `rust-analyzer.checkOnSave.enable`: Run specified `cargo check` command for diagnostics on save, default: `true`
+- `rust-analyzer.checkOnSave.target`: Check for a specific target.
 - `rust-analyzer.checkOnSave.extraArgs`: Extra arguments for `cargo check`, default: `[]`
 - `rust-analyzer.checkOnSave.command`: Cargo command to use for `cargo check`, default: `check`
 - `rust-analyzer.checkOnSave.overrideCommand`: Advanced option, fully override the command rust-analyzer uses for checking. The command should include `--message=format=json` or similar option, default: `null`

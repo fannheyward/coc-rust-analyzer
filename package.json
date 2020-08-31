@@ -172,6 +172,14 @@
           "default": true,
           "markdownDescription": "Run specified `cargo check` command for diagnostics on save"
         },
+        "rust-analyzer.checkOnSave.target": {
+          "type": [
+            "null",
+            "string"
+          ],
+          "default": null,
+          "description": "Check for a specific target. Defaults to `rust-analyzer.cargo.target`."
+        },
         "rust-analyzer.checkOnSave.extraArgs": {
           "type": "array",
           "items": {

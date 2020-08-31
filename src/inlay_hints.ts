@@ -99,7 +99,6 @@ class HintsUpdater implements Disposable {
 
   async syncAndRenderHints() {
     const current = await workspace.document;
-    // FIXME: make inlayHints request pass an array of files?
     this.sourceFiles.forEach((file, uri) =>
       this.fetchHints(file).then(async (hints) => {
         if (!hints) return;
