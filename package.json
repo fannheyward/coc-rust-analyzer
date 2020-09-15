@@ -338,6 +338,21 @@
           "description": "List of warnings that should be displayed with hint severity",
           "default": []
         },
+        "rust-analyzer.assist.importMergeBehaviour": {
+          "type": "string",
+          "enum": [
+            "none",
+            "full",
+            "last"
+          ],
+          "enumDescriptions": [
+            "No merging",
+            "Merge all layers of the import trees",
+            "Only merge the last layer of the import trees"
+          ],
+          "default": "full",
+          "description": "The strategy to use when inserting new imports or merging imports."
+        },
         "rust-analyzer.trace.server": {
           "type": "string",
           "scope": "window",
