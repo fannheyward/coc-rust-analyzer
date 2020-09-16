@@ -192,7 +192,11 @@ export function runSingle(): Cmd {
     const { document } = await workspace.getCurrentState();
     if (!runnable || !isRustDocument(document)) return;
 
-    const cmd = `${runnable.kind} ${runnable.args.cargoArgs.join(' ')}`;
+    const args = [...runnable.args.cargoArgs];
+    if (runnable.args.executableArgs.length > 0) {
+      args.push('--', ...runnable.args.executableArgs);
+    }
+    const cmd = `${runnable.kind} ${args.join(' ')}`;
     const opt: TerminalOptions = {
       name: runnable.label,
       cwd: runnable.args.workspaceRoot,
