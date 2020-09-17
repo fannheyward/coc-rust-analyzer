@@ -33,10 +33,6 @@ export async function activate(context: ExtensionContext): Promise<void> {
     }
   }
 
-  await ctx.startServer();
-
-  activateInlayHints(ctx);
-
   ctx.registerCommand('analyzerStatus', cmds.analyzerStatus);
   ctx.registerCommand('memoryUsage', cmds.memoryUsage);
   ctx.registerCommand('applySnippetWorkspaceEdit', cmds.applySnippetWorkspaceEditCommand);
@@ -72,5 +68,7 @@ export async function activate(context: ExtensionContext): Promise<void> {
     };
   });
 
+  await ctx.startServer();
   await ctx.checkUpdate();
+  activateInlayHints(ctx);
 }
