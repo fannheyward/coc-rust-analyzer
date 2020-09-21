@@ -36,14 +36,14 @@ function countLines(text: string): number {
 
 export function analyzerStatus(ctx: Ctx): Cmd {
   return async () => {
-    const ret = await ctx.client.sendRequest(ra.analyzerStatus, null);
+    const ret = await ctx.client.sendRequest(ra.analyzerStatus);
     workspace.echoLines(ret.split('\n'));
   };
 }
 
 export function memoryUsage(ctx: Ctx): Cmd {
   return async () => {
-    const ret = await ctx.client.sendRequest(ra.memoryUsage, null);
+    const ret = await ctx.client.sendRequest(ra.memoryUsage);
     workspace.echoLines(ret.split('\n'));
   };
 }
@@ -254,7 +254,7 @@ export function expandMacro(ctx: Ctx): Cmd {
 
 export function reloadWorkspace(ctx: Ctx): Cmd {
   return async () => {
-    await ctx.client.sendRequest(ra.reloadWorkspace, null);
+    await ctx.client.sendRequest(ra.reloadWorkspace);
   };
 }
 

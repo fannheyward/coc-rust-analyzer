@@ -1,11 +1,11 @@
 /**
- * This file mirrors `crates/rust-analyzer/src/req.rs` declarations.
+ * This file mirrors `crates/rust-analyzer/src/lsp_ext.rs` declarations.
  */
 
 import * as lc from 'vscode-languageserver-protocol';
 
-export const analyzerStatus = new lc.RequestType<null, string, void>('rust-analyzer/analyzerStatus');
-export const memoryUsage = new lc.RequestType<null, string, void>('rust-analyzer/memoryUsage');
+export const analyzerStatus = new lc.RequestType0<string, void>('rust-analyzer/analyzerStatus');
+export const memoryUsage = new lc.RequestType0<string, void>('rust-analyzer/memoryUsage');
 
 export type Status = 'loading' | 'ready' | 'invalid' | 'needsReload';
 export interface StatusParams {
@@ -13,7 +13,7 @@ export interface StatusParams {
 }
 export const status = new lc.NotificationType<StatusParams>('rust-analyzer/status');
 
-export const reloadWorkspace = new lc.RequestType<null, null, void>('rust-analyzer/reloadWorkspace');
+export const reloadWorkspace = new lc.RequestType0<null, void>('rust-analyzer/reloadWorkspace');
 
 export interface SyntaxTreeParams {
   textDocument: lc.TextDocumentIdentifier;
@@ -57,6 +57,7 @@ export interface RunnablesParams {
   textDocument: lc.TextDocumentIdentifier;
   position: lc.Position | null;
 }
+
 export interface Runnable {
   label: string;
   location?: lc.LocationLink;
@@ -65,6 +66,7 @@ export interface Runnable {
     workspaceRoot?: string;
     cargoArgs: string[];
     executableArgs: string[];
+    expectTest?: boolean;
   };
 }
 export const runnables = new lc.RequestType<RunnablesParams, Runnable[], void>('experimental/runnables');
@@ -98,3 +100,15 @@ export interface SsrParams {
   selections: lc.Range[];
 }
 export const ssr = new lc.RequestType<SsrParams, lc.WorkspaceEdit, void>('experimental/ssr');
+
+export interface CommandLink extends lc.Command {
+  /**
+   * A tooltip for the command, when represented in the UI.
+   */
+  tooltip?: string;
+}
+
+export interface CommandLinkGroup {
+  title?: string;
+  commands: CommandLink[];
+}
