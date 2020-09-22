@@ -350,9 +350,8 @@ export function applySnippetWorkspaceEditCommand(): Cmd {
 }
 
 export function resolveCodeAction(ctx: Ctx): Cmd {
-  const client = ctx.client;
   return async (params: ra.ResolveCodeActionParams) => {
-    const edit: WorkspaceEdit = await client.sendRequest(ra.resolveCodeAction, params);
+    const edit: WorkspaceEdit = await ctx.client.sendRequest(ra.resolveCodeAction, params);
     if (!edit) return;
     await applySnippetWorkspaceEdit(edit);
   };
