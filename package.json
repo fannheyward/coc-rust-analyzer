@@ -303,7 +303,7 @@
         "rust-analyzer.hoverActions.linksInHover": {
           "markdownDescription": "Whether to show document links in hover. Only applies when `#rust-analyzer.hoverActions.enable#` is set.",
           "type": "boolean",
-          "default": true
+          "default": false
         },
         "rust-analyzer.linkedProjects": {
           "markdownDescription": "Disable project auto-discovery in favor of explicitly specified set of projects.  \nElements must be paths pointing to Cargo.toml, rust-project.json, or JSON objects in rust-project.json format",

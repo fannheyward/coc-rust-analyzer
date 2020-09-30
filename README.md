@@ -50,6 +50,8 @@ This extension is configured using a jsonc file. You can open this configuration
 - `rust-analyzer.lens.enable`: Whether to show CodeLens in Rust files, default: `true`
 - `rust-analyzer.lens.run`: Whether to show Run lens, default: `true`
 - `rust-analyzer.lens.implementations`: Whether to show Implementations lens, default: `true`
+- `rust-analyzer.lens.methodReferences`: Whether to show `Method References` lens, default: `false`
+- `rust-analyzer.hoverActions.linksInHover`: Whether to show document links in hover, default: `false`
 - `rust-analyzer.callInfo.full`: Show function name and docs in parameter hints, default: `true`
 - `rust-analyzer.trace.server`: Trace requests to server, default: `off`
 
