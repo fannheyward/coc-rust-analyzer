@@ -36,7 +36,12 @@ function countLines(text: string): number {
 
 export function analyzerStatus(ctx: Ctx): Cmd {
   return async () => {
-    const ret = await ctx.client.sendRequest(ra.analyzerStatus);
+    const { document } = await workspace.getCurrentState();
+    if (!isRustDocument(document)) return;
+    const params: ra.AnalyzerStatusParams = {
+      textDocument: { uri: document.uri },
+    };
+    const ret = await ctx.client.sendRequest(ra.analyzerStatus, params);
     workspace.echoLines(ret.split('\n'));
   };
 }
