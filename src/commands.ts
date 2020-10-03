@@ -198,6 +198,7 @@ export function runSingle(): Cmd {
     if (!runnable || !isRustDocument(document)) return;
 
     const args = [...runnable.args.cargoArgs];
+    args.push(...runnable.args.cargoExtraArgs);
     if (runnable.args.executableArgs.length > 0) {
       args.push('--', ...runnable.args.executableArgs);
     }
