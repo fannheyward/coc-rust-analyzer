@@ -22,7 +22,7 @@ class HintsUpdater implements Disposable {
   private sourceFiles = new Map<string, RustSourceFile>(); // map Uri -> RustSourceFile
   private readonly disposables: Disposable[] = [];
   private chainingHintNS = workspace.createNameSpace('rust-chaining-hint');
-  private chainingHintShowing = true;
+  private chainingHintEnabled = true;
 
   constructor(private readonly ctx: Ctx) {
     // Set up initial cache shape
@@ -83,8 +83,8 @@ class HintsUpdater implements Disposable {
   }
 
   async toggle() {
-    if (this.chainingHintShowing) {
-      this.chainingHintShowing = false;
+    if (this.chainingHintEnabled) {
+      this.chainingHintEnabled = false;
       this.dispose();
 
       const doc = await workspace.document;
@@ -92,12 +92,13 @@ class HintsUpdater implements Disposable {
 
       doc.buffer.clearNamespace(this.chainingHintNS);
     } else {
-      this.chainingHintShowing = true;
+      this.chainingHintEnabled = true;
       this.syncAndRenderHints();
     }
   }
 
   async syncAndRenderHints() {
+    if (!this.chainingHintEnabled) return;
     const current = await workspace.document;
     this.sourceFiles.forEach((file, uri) =>
       this.fetchHints(file).then(async (hints) => {
