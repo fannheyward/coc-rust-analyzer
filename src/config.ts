@@ -3,19 +3,19 @@ import { commands, ConfigurationChangeEvent, workspace, WorkspaceConfiguration }
 export type UpdatesChannel = 'stable' | 'nightly';
 
 export class Config {
-  private static readonly rootSection = 'rust-analyzer';
-  private static readonly requiresReloadOpts = ['serverPath', 'cargo', 'procMacro', 'files', 'updates', 'lens', 'hoverActions'].map((opt) => `${Config.rootSection}.${opt}`);
+  private readonly rootSection = 'rust-analyzer';
+  private readonly requiresReloadOpts = ['serverPath', 'cargo', 'procMacro', 'files', 'updates', 'lens', 'hoverActions'].map((opt) => `${this.rootSection}.${opt}`);
   private cfg: WorkspaceConfiguration;
 
   constructor() {
     workspace.onDidChangeConfiguration((event) => this.onConfigChange(event));
-    this.cfg = workspace.getConfiguration(Config.rootSection);
+    this.cfg = workspace.getConfiguration(this.rootSection);
   }
 
   private async onConfigChange(event: ConfigurationChangeEvent) {
-    this.cfg = workspace.getConfiguration(Config.rootSection);
+    this.cfg = workspace.getConfiguration(this.rootSection);
 
-    const requiresReloadOpt = Config.requiresReloadOpts.find((opt) => event.affectsConfiguration(opt));
+    const requiresReloadOpt = this.requiresReloadOpts.find((opt) => event.affectsConfiguration(opt));
     if (!requiresReloadOpt) return;
 
     const msg = `Changing "${requiresReloadOpt}" requires a reload`;
