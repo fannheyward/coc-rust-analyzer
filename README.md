@@ -67,6 +67,7 @@ You can use these commands by `:CocCommand XYZ`.
 - `rust-analyzer.expandMacro`: Expand macro recursively
 - `rust-analyzer.joinLines`: Join lines
 - `rust-analyzer.matchingBrace`: Find matching brace
+- `rust-analyzer.openDocs`: Open docs under cursor
 - `rust-analyzer.parentModule`: Locate parent module
 - `rust-analyzer.reload`: Restart rust-analyzer server
 - `rust-analyzer.run`: List available runnables of current file

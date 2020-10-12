@@ -362,3 +362,19 @@ export function resolveCodeAction(ctx: Ctx): Cmd {
     await applySnippetWorkspaceEdit(edit);
   };
 }
+
+export function openDocs(ctx: Ctx): Cmd {
+  return async () => {
+    const { document, position } = await workspace.getCurrentState();
+    if (!isRustDocument(document)) return;
+
+    const param: TextDocumentPositionParams = {
+      textDocument: { uri: document.uri },
+      position,
+    };
+    const doclink = await ctx.client.sendRequest(ra.openDocs, param);
+    if (doclink) {
+      await commands.executeCommand('vscode.open', Uri.parse(doclink));
+    }
+  };
+}

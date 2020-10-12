@@ -41,6 +41,7 @@ export async function activate(context: ExtensionContext): Promise<void> {
   ctx.registerCommand('expandMacro', cmds.expandMacro);
   ctx.registerCommand('joinLines', cmds.joinLines);
   ctx.registerCommand('matchingBrace', cmds.matchingBrace);
+  ctx.registerCommand('openDocs', cmds.openDocs);
   ctx.registerCommand('parentModule', cmds.parentModule);
   ctx.registerCommand('run', cmds.run);
   ctx.registerCommand('runSingle', cmds.runSingle);

@@ -462,6 +462,11 @@
         "category": "Rust Analyzer"
       },
       {
+        "command": "rust-analyzer.openDocs",
+        "title": "Open docs under cursor",
+        "category": "Rust Analyzer"
+      },
+      {
         "command": "rust-analyzer.parentModule",
         "title": "Locate parent module",
         "category": "Rust Analyzer"

@@ -117,3 +117,5 @@ export interface CommandLinkGroup {
   title?: string;
   commands: CommandLink[];
 }
+
+export const openDocs = new lc.RequestType<lc.TextDocumentPositionParams, string | void, void>('experimental/externalDocs');
