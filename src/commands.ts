@@ -194,85 +194,85 @@ export function run(ctx: Ctx): Cmd {
 }
 
 export function debugSingle(): Cmd {
-    return async (runnable: ra.Runnable) => {
-        const {document} = await workspace.getCurrentState();
-        if (!runnable || !isRustDocument(document)) return;
+  return async (runnable: ra.Runnable) => {
+    const { document } = await workspace.getCurrentState();
+    if (!runnable || !isRustDocument(document)) return;
 
-        const args = [...runnable.args.cargoArgs];
-        if (runnable.args.cargoExtraArgs.length > 0) {
-            args.push(...runnable.args.cargoExtraArgs);
-        }
+    const args = [...runnable.args.cargoArgs];
+    if (runnable.args.cargoExtraArgs.length > 0) {
+      args.push(...runnable.args.cargoExtraArgs);
+    }
 
-        // do not run tests, we will run through gdb
-        if (args[0] === "test") {
-            args.push("--no-run");
-        }
+    // do not run tests, we will run through gdb
+    if (args[0] === 'test') {
+      args.push('--no-run');
+    }
 
-        // output as json
-        args.push("--message-format=json");
-        // remove noise
-        args.push("-q");
+    // output as json
+    args.push('--message-format=json');
+    // remove noise
+    args.push('-q');
 
-        if (runnable.args.executableArgs.length > 0) {
-            args.push('--', ...runnable.args.executableArgs);
-        }
+    if (runnable.args.executableArgs.length > 0) {
+      args.push('--', ...runnable.args.executableArgs);
+    }
 
-        if (args[0] === "run") {
-            args[0] = "build";
-        }
+    if (args[0] === 'run') {
+      args[0] = 'build';
+    }
 
-        console.debug(`${runnable.kind} ${args}`);
+    console.debug(`${runnable.kind} ${args}`);
 
-        const proc = spawn(runnable.kind, args, {shell: true});
+    const proc = spawn(runnable.kind, args, { shell: true });
 
-        const rl = readline.createInterface({
-            input: proc.stdout,
-            crlfDelay: Infinity
-        });
+    const rl = readline.createInterface({
+      input: proc.stdout,
+      crlfDelay: Infinity,
+    });
 
-        let executable = null;
-        for await (const line of rl) {
-            if (!line) {
-                continue;
-            }
+    let executable = null;
+    for await (const line of rl) {
+      if (!line) {
+        continue;
+      }
 
-            let cargoMessage = {};
-            try {
-                cargoMessage = JSON.parse(line);
-            } catch (e) {
-                console.error(e);
-                continue;
-            }
+      let cargoMessage = {};
+      try {
+        cargoMessage = JSON.parse(line);
+      } catch (e) {
+        console.error(e);
+        continue;
+      }
 
-            if (!cargoMessage) {
-                console.debug(`Skipping cargo message: ${cargoMessage}`);
-            }
+      if (!cargoMessage) {
+        console.debug(`Skipping cargo message: ${cargoMessage}`);
+      }
 
-            if (cargoMessage["reason"] !== "compiler-artifact") {
-                console.debug(`Not artifact: ${cargoMessage["reason"]}`);
-                continue;
-            }
+      if (cargoMessage['reason'] !== 'compiler-artifact') {
+        console.debug(`Not artifact: ${cargoMessage['reason']}`);
+        continue;
+      }
 
-            const target = cargoMessage["target"] || {};
-            const targetKind = target["kind"] || [];
-            if (!targetKind.includes("bin")) {
-                console.debug(`Not bin: ${targetKind}`);
-                continue;
-            }
+      const target = cargoMessage['target'] || {};
+      const targetKind = target['kind'] || [];
+      if (!targetKind.includes('bin')) {
+        console.debug(`Not bin: ${targetKind}`);
+        continue;
+      }
 
-            executable = cargoMessage["executable"];
-        }
+      executable = cargoMessage['executable'];
+    }
 
-        if (!executable) {
-            throw new Error("Could not find executable");
-        }
+    if (!executable) {
+      throw new Error('Could not find executable');
+    }
 
-        const executableArgs = runnable.args.executableArgs.join(" ");
+    const executableArgs = runnable.args.executableArgs.join(' ');
 
-        console.info(`Debugging executable: ${executable} ${executableArgs}`);
+    console.info(`Debugging executable: ${executable} ${executableArgs}`);
 
-        await workspace.nvim.command(`TermdebugCommand ${executable} ${executableArgs}`);
-    };
+    await workspace.nvim.command(`TermdebugCommand ${executable} ${executableArgs}`);
+  };
 }
 
 export function runSingle(): Cmd {
