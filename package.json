@@ -482,6 +482,11 @@
         "category": "Rust Analyzer"
       },
       {
+        "command": "rust-analyzer.debugSingle",
+        "title": "Run Single",
+        "category": "Rust Analyzer"
+      },
+      {
         "command": "rust-analyzer.runSingle",
         "title": "Run Single",
         "category": "Rust Analyzer"
