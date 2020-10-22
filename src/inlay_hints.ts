@@ -27,7 +27,7 @@ class HintsUpdater implements Disposable {
   constructor(private readonly ctx: Ctx) {
     // Set up initial cache shape
     workspace.documents.forEach((doc) => {
-      if (isRustDocument(doc.textDocument)) {
+      if (doc && isRustDocument(doc.textDocument)) {
         doc.buffer.clearNamespace(this.chainingHintNS);
         this.sourceFiles.set(doc.uri, { document: doc.textDocument, inlaysRequest: null });
       }
@@ -35,7 +35,7 @@ class HintsUpdater implements Disposable {
 
     events.on('InsertLeave', async (bufnr) => {
       const doc = workspace.getDocument(bufnr);
-      if (isRustDocument(doc.textDocument)) {
+      if (doc && isRustDocument(doc.textDocument)) {
         doc.buffer.clearNamespace(this.chainingHintNS);
         this.syncAndRenderHints();
       }
@@ -44,7 +44,7 @@ class HintsUpdater implements Disposable {
     workspace.onDidChangeTextDocument(
       (e) => {
         const doc = workspace.getDocument(e.bufnr);
-        if (isRustDocument(doc.textDocument)) {
+        if (doc && isRustDocument(doc.textDocument)) {
           doc.buffer.clearNamespace(this.chainingHintNS);
           if (workspace.insertMode && !this.ctx.config.inlayHints.refreshOnInsertMode) {
             return;
@@ -58,7 +58,7 @@ class HintsUpdater implements Disposable {
 
     workspace.onDidOpenTextDocument(
       (e) => {
-        if (isRustDocument(e)) {
+        if (e && isRustDocument(e)) {
           const file = this.sourceFiles.get(e.uri) ?? {
             document: e,
             inlaysRequest: null,
