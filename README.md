@@ -62,14 +62,15 @@ Settings not specific to `rust-analyzer` can be found at `:help coc-configuratio
 You can use these commands by `:CocCommand XYZ`.
 
 - `rust-analyzer.analyzerStatus`: Show rust-analyzer status
-- `rust-analyzer.memoryUsage`: Memory Usage (Clears Database)
-- `rust-analyzer.reloadWorkspace`: Reload workspace
+- `rust-analyzer.debugSingle`: Debug with `termdebug`
 - `rust-analyzer.expandMacro`: Expand macro recursively
 - `rust-analyzer.joinLines`: Join lines
 - `rust-analyzer.matchingBrace`: Find matching brace
+- `rust-analyzer.memoryUsage`: Memory Usage (Clears Database)
 - `rust-analyzer.openDocs`: Open docs under cursor
 - `rust-analyzer.parentModule`: Locate parent module
 - `rust-analyzer.reload`: Restart rust-analyzer server
+- `rust-analyzer.reloadWorkspace`: Reload workspace
 - `rust-analyzer.run`: List available runnables of current file
 - `rust-analyzer.runSingle`: Run runnable at position
 - `rust-analyzer.syntaxTree`: Show syntax tree
