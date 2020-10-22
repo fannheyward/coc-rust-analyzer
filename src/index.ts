@@ -44,6 +44,7 @@ export async function activate(context: ExtensionContext): Promise<void> {
   ctx.registerCommand('openDocs', cmds.openDocs);
   ctx.registerCommand('parentModule', cmds.parentModule);
   ctx.registerCommand('run', cmds.run);
+  ctx.registerCommand('debugSingle', cmds.debugSingle);
   ctx.registerCommand('runSingle', cmds.runSingle);
   ctx.registerCommand('syntaxTree', cmds.syntaxTree);
   ctx.registerCommand('showReferences', cmds.showReferences);
