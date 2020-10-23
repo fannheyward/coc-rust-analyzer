@@ -117,6 +117,10 @@ export class Ctx {
     const msg = `Rust Analyzer has a new release: ${latest.tag}, you're using ${old}. Would you like to download from GitHub`;
     const ret = await workspace.showQuickpick(['Yes, download the latest rust-analyzer', 'Check GitHub releases', 'Cancel'], msg);
     if (ret === 0) {
+      // Stop client before trying to update. This is necessary on Windows to
+      // update the rust analyzer executable, because it's not possible to
+      // delete running executables on Windows.
+      await this.client.stop();
       try {
         await downloadServer(this.extCtx, this.config.channel);
       } catch (e) {
@@ -127,9 +131,9 @@ export class Ctx {
         }
         workspace.showMessage(msg, 'error');
         return;
+      } finally {
+        this.client.start();
       }
-      await this.client.stop();
-      this.client.start();
 
       this.extCtx.globalState.update('release', latest.tag);
     } else if (ret === 1) {
