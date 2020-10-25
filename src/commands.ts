@@ -271,7 +271,21 @@ export function debugSingle(): Cmd {
 
     console.info(`Debugging executable: ${executable} ${executableArgs}`);
 
-    await workspace.nvim.command(`TermdebugCommand ${executable} ${executableArgs}`);
+    const debugConfig = workspace.getConfiguration('rust-analyzer.debug');
+
+    if (debugConfig.get<string>('runtime') == 'termdebug') {
+      await workspace.nvim.command(`TermdebugCommand ${executable} ${executableArgs}`);
+      return;
+    }
+
+    if (debugConfig.get<string>('runtime') == 'vimspector') {
+      const name = workspace.getConfiguration('rust-analyzer.debug.vimspector.configuration').get<string>('name');
+      const configuration = { configuration: name, Executable: executable, Args: executableArgs };
+      await workspace.nvim.call('vimspector#LaunchWithSettings', configuration);
+      return;
+    }
+
+    throw new Error(`Invalid debug runtime: ${debugConfig.get<string>('runtime')}`);
   };
 }
 

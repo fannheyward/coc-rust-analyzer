@@ -54,6 +54,8 @@ This extension is configured using a jsonc file. You can open this configuration
 - `rust-analyzer.hoverActions.linksInHover`: Whether to show document links in hover, default: `false`
 - `rust-analyzer.callInfo.full`: Show function name and docs in parameter hints, default: `true`
 - `rust-analyzer.trace.server`: Trace requests to server, default: `off`
+- `rust-analyzer.debug.runtime`: Which runtime debug to use, default: `termdebug`, options: `vimspector`, `termdebug`
+- `rust-analyzer.debug.vimspector.configuration.name`: The name of the vimspector configuration. The following variables will be passed to the configuration: `Executable` and `Args`. Make sure to add them to the configuration
 
 Settings not specific to `rust-analyzer` can be found at `:help coc-configuration`.
 

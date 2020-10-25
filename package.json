@@ -427,6 +427,21 @@
             "`\"stable\"` updates are shipped weekly, they don't contain cutting-edge features from VSCode proposed APIs but have less bugs in general",
             "`\"nightly\"` updates are shipped daily (extension updates automatically by downloading artifacts directly from GitHub), they contain cutting-edge features and latest bug fixes. These releases help us get your feedback very quickly and speed up rust-analyzer development **drastically**"
           ]
+        },
+        "rust-analyzer.debug.runtime": {
+            "type": "string",
+            "default": "termdebug",
+            "enum": ["termdebug", "vimspector"],
+            "description": "Choose which debug runtime to use",
+            "enumDescriptions": [
+                "`\"termdebug\"` use vim/neovim builtin debugger - gdb",
+                "`\"vimspector\"` use vimspector plugin"
+            ]
+        },
+        "rust-analyzer.debug.vimspector.configuration.name": {
+            "type": "string",
+            "default": "launch",
+            "description": "Specify the name of the vimspector configuration name. The following args will be passed to the configuration: `Executable` and `Args` (both strings)"
         }
       }
     },
