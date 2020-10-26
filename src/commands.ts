@@ -253,7 +253,7 @@ export function debugSingle(): Cmd {
         continue;
       }
 
-      if (!executable) {
+      if (!executable && cargoMessage['executable']) {
         executable = cargoMessage['executable'];
       }
     }
