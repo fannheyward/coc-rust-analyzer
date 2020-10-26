@@ -429,19 +429,22 @@
           ]
         },
         "rust-analyzer.debug.runtime": {
-            "type": "string",
-            "default": "termdebug",
-            "enum": ["termdebug", "vimspector"],
-            "description": "Choose which debug runtime to use",
-            "enumDescriptions": [
-                "`\"termdebug\"` use vim/neovim builtin debugger - gdb",
-                "`\"vimspector\"` use vimspector plugin"
-            ]
+          "type": "string",
+          "default": "termdebug",
+          "enum": [
+            "termdebug",
+            "vimspector"
+          ],
+          "description": "Choose which debug runtime to use",
+          "enumDescriptions": [
+            "`\"termdebug\"` use vim/neovim builtin debugger - gdb",
+            "`\"vimspector\"` use vimspector plugin"
+          ]
         },
         "rust-analyzer.debug.vimspector.configuration.name": {
-            "type": "string",
-            "default": "launch",
-            "description": "Specify the name of the vimspector configuration name. The following args will be passed to the configuration: `Executable` and `Args` (both strings)"
+          "type": "string",
+          "default": "launch",
+          "description": "Specify the name of the vimspector configuration name. The following args will be passed to the configuration: `Executable` and `Args` (both strings)"
         }
       }
     },
