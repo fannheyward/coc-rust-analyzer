@@ -253,14 +253,9 @@ export function debugSingle(): Cmd {
         continue;
       }
 
-      const target = cargoMessage['target'] || {};
-      const targetKind = target['kind'] || [];
-      if (!targetKind.includes('bin')) {
-        console.debug(`Not bin: ${targetKind}`);
-        continue;
+      if (!executable && cargoMessage['executable']) {
+        executable = cargoMessage['executable'];
       }
-
-      executable = cargoMessage['executable'];
     }
 
     if (!executable) {
