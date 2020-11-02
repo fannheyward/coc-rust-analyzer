@@ -33,6 +33,7 @@ export class Config {
     const hasVirtualText = workspace.isNvim && workspace.nvim.hasFunction('nvim_buf_set_virtual_text');
     return {
       chainingHints: hasVirtualText && this.cfg.get<boolean>('inlayHints.chainingHints'),
+      chainingHintsSeparator: this.cfg.get<string>('inlayHints.chainingHintsSeparator'),
       refreshOnInsertMode: hasVirtualText && this.cfg.get<boolean>('inlayHints.refreshOnInsertMode'),
     };
   }

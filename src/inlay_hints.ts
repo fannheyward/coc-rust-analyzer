@@ -114,8 +114,9 @@ class HintsUpdater implements Disposable {
 
   private async renderDecorations(doc: Document, decorations: InlaysDecorations) {
     doc.buffer.clearNamespace(this.chainingHintNS);
+    const sep = this.ctx.config.inlayHints.chainingHintsSeparator;
     for (const item of decorations.chaining) {
-      doc.buffer.setVirtualText(this.chainingHintNS, item.range.end.line, [[item.label, 'CocRustChainingHint']], {}).logError();
+      doc.buffer.setVirtualText(this.chainingHintNS, item.range.end.line, [[`${sep}${item.label}`, 'CocRustChainingHint']], {}).logError();
     }
   }
 

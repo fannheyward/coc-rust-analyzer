@@ -241,6 +241,11 @@
           "default": true,
           "description": "Whether to show inlay type hints for method chains. *Neovim Only*"
         },
+        "rust-analyzer.inlayHints.chainingHintsSeparator": {
+          "type": "string",
+          "default": "‣",
+          "description": "Separator text for chainingHints in virtual text"
+        },
         "rust-analyzer.inlayHints.refreshOnInsertMode": {
           "type": "boolean",
           "default": false,
