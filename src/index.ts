@@ -17,8 +17,14 @@ export async function activate(context: ExtensionContext): Promise<void> {
 
   const bin = ctx.resolveBin();
   if (!bin) {
+    const shouldPrompt = !config.autoUpdate;
+
+    let ret = 0;
     let msg = 'Rust Analyzer is not found, download from GitHub release?';
-    const ret = await workspace.showQuickpick(['Yes', 'Cancel'], msg);
+    if (shouldPrompt) {
+      ret = await workspace.showQuickpick(['Yes', 'Cancel'], msg);
+    }
+
     if (ret === 0) {
       try {
         await downloadServer(context, config.channel);

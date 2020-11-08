@@ -432,6 +432,11 @@
             "`\"nightly\"` updates are shipped daily (extension updates automatically by downloading artifacts directly from GitHub), they contain cutting-edge features and latest bug fixes. These releases help us get your feedback very quickly and speed up rust-analyzer development **drastically**"
           ]
         },
+        "rust-analyzer.updates.auto": {
+            "type": "boolean",
+            "default": false,
+            "description": "Automatically update the server binary if it has not been resolved in path. This does not prompt for downloading the binary."
+        },
         "rust-analyzer.debug.runtime": {
           "type": "string",
           "default": "termdebug",

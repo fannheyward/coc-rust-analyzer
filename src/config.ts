@@ -42,6 +42,10 @@ export class Config {
     return this.cfg.get<UpdatesChannel>('updates.channel')!;
   }
 
+  get autoUpdate() {
+    return this.cfg.get<boolean>('updates.auto')!;
+  }
+
   get cargo() {
     return {
       autoreload: this.cfg.get<boolean>('cargo.autoreload'),
