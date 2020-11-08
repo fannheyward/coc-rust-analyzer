@@ -16,6 +16,7 @@ This extension is configured using a jsonc file. You can open this configuration
 
 - `rust-analyzer.serverPath`: Path to custom `rust-analyzer` executable, default: `''`
 - `rust-analyzer.updates.channel`: Use `stable` or `nightly` updates, default: `stable`
+- `rust-analyzer.updates.auto`: Boolean. Auto update rust-analyzer bin if it's not found. If true, this will not prompt during start. Default: false
 - `rust-analyzer.diagnostics.enable`: Whether to show native rust-analyzer diagnostics, default: `true`
 - `rust-analyzer.diagnostics.enableExperimental`: Whether to show experimental rust-analyzer diagnostics that might have more false positives than usual, default: `true`
 - `rust-analyzer.diagnostics.disabled`: List of rust-analyzer diagnostics to disable, default: `[]`
