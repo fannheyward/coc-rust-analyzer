@@ -38,6 +38,10 @@ export class Config {
     };
   }
 
+  get prompt() {
+    return this.cfg.get<boolean>('updates.prompt');
+  }
+
   get channel() {
     return this.cfg.get<UpdatesChannel>('updates.channel')!;
   }
