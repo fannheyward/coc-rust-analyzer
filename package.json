@@ -166,6 +166,14 @@
           "default": null,
           "markdownDescription": "Advanced option, fully override the command rust-analyzer uses for formatting."
         },
+        "rust-analyzer.rustcSource": {
+          "type": [
+            "null",
+            "string"
+          ],
+          "default": null,
+          "description": "Path to the rust compiler sources, for usage in rustc_private projects."
+        },
         "rust-analyzer.checkOnSave.enable": {
           "type": "boolean",
           "default": true,
