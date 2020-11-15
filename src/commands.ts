@@ -472,3 +472,17 @@ export function openDocs(ctx: Ctx): Cmd {
     }
   };
 }
+
+export function openCargoToml(ctx: Ctx): Cmd {
+  return async () => {
+    const { document } = await workspace.getCurrentState();
+    if (!isRustDocument(document)) return;
+
+    const location = await ctx.client.sendRequest(ra.openCargoToml, {
+      textDocument: { uri: document.uri },
+    });
+    if (!location) return;
+
+    await workspace.jumpTo(location.uri);
+  };
+}
