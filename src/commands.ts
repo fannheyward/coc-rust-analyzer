@@ -5,6 +5,8 @@ import { Location, Position, Range, TextDocumentEdit, TextDocumentPositionParams
 import { Cmd, Ctx, isRustDocument } from './ctx';
 import * as ra from './lsp_ext';
 
+let terminal: Terminal | undefined;
+
 class RunnableQuickPick {
   label: string;
 
@@ -187,9 +189,12 @@ export function run(ctx: Ctx): Cmd {
       name: runnable.label,
       cwd: runnable.args.workspaceRoot,
     };
-    workspace.createTerminal(opt).then((t: Terminal) => {
-      t.sendText(cmd);
-    });
+    if (terminal) {
+      terminal.dispose();
+      terminal = undefined;
+    }
+    terminal = await workspace.createTerminal(opt);
+    terminal.sendText(cmd);
   };
 }
 
@@ -301,9 +306,12 @@ export function runSingle(): Cmd {
       name: runnable.label,
       cwd: runnable.args.workspaceRoot,
     };
-    workspace.createTerminal(opt).then((t: Terminal) => {
-      t.sendText(cmd);
-    });
+    if (terminal) {
+      terminal.dispose();
+      terminal = undefined;
+    }
+    terminal = await workspace.createTerminal(opt);
+    terminal.sendText(cmd);
   };
 }
 
