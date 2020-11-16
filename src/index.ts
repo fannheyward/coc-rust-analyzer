@@ -52,6 +52,7 @@ export async function activate(context: ExtensionContext): Promise<void> {
   ctx.registerCommand('runSingle', cmds.runSingle);
   ctx.registerCommand('syntaxTree', cmds.syntaxTree);
   ctx.registerCommand('showReferences', cmds.showReferences);
+  ctx.registerCommand('explainError', cmds.explainError);
   ctx.registerCommand('upgrade', cmds.upgrade);
   ctx.registerCommand('ssr', cmds.ssr);
   ctx.registerCommand('serverVersion', cmds.serverVersion);
