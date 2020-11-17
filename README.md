@@ -81,6 +81,7 @@ You can use these commands by `:CocCommand XYZ`.
 - `rust-analyzer.ssr`: Structural Search Replace
 - `rust-analyzer.serverVersion`: Show current Rust Analyzer server version
 - `rust-analyzer.toggleInlayHints`: Toggle inlay hints on/off
+- `rust-analyzer.explainError`: Explain the currently hovered error message
 - `rust-analyzer.upgrade`: Download latest `rust-analyzer` from [GitHub release](https://github.com/rust-analyzer/rust-analyzer/releases)
 
 ## Highlight Group

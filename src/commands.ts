@@ -1,6 +1,6 @@
 import { spawnSync, spawn } from 'child_process';
 import readline from 'readline';
-import { commands, Terminal, TerminalOptions, Uri, workspace } from 'coc.nvim';
+import { commands, Documentation, FloatFactory, Terminal, TerminalOptions, Uri, workspace } from 'coc.nvim';
 import { Location, Position, Range, TextDocumentEdit, TextDocumentPositionParams, TextEdit, WorkspaceEdit } from 'vscode-languageserver-protocol';
 import { Cmd, Ctx, isRustDocument } from './ctx';
 import * as ra from './lsp_ext';
@@ -13,6 +13,12 @@ class RunnableQuickPick {
   constructor(public runnable: ra.Runnable) {
     this.label = runnable.label;
   }
+}
+
+function isInRange(range: Range, position: Position): boolean {
+  const lineWithin = range.start.line <= position.line && range.end.line >= position.line;
+  const charWithin = range.start.character <= position.character && range.end.line >= position.character;
+  return lineWithin && charWithin;
 }
 
 function codeFormat(expanded: ra.ExpandedMacro): string {
@@ -357,6 +363,29 @@ export function expandMacro(ctx: Ctx): Cmd {
       const buf = await workspace.nvim.buffer;
       buf.setLines(codeFormat(expanded).split('\n'), { start: 0, end: -1 });
     });
+  };
+}
+
+export function explainError(ctx: Ctx): Cmd {
+  return async () => {
+    const { document, position } = await workspace.getCurrentState();
+    if (!isRustDocument(document)) return;
+
+    const diagnostic = ctx.client.diagnostics?.get(workspace.uri)?.find((diagnostic) => isInRange(diagnostic.range, position));
+
+    if (diagnostic?.code) {
+      const explaination = spawnSync('rustc', ['--explain', `${diagnostic.code}`], { encoding: 'utf-8' }).stdout;
+
+      const docs: Documentation[] = [];
+      let isCode = false;
+      for (const part of explaination.split('```\n')) {
+        docs.push({ content: part, filetype: isCode ? 'rust' : 'markdown' });
+        isCode = !isCode;
+      }
+
+      const factory: FloatFactory = new FloatFactory(workspace.nvim, workspace.env);
+      await factory.create(docs);
+    }
   };
 }
 
