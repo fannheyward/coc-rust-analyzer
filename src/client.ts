@@ -54,7 +54,12 @@ export function createClient(bin: string): LanguageClient {
         for (const item of values) {
           // In our case we expect to get code edits only from diagnostics
           if (CodeAction.is(item)) {
-            result.push(item);
+            const command: Command = {
+              command: 'rust-analyzer.applySnippetWorkspaceEdit',
+              title: item.title,
+              arguments: [item.edit],
+            };
+            result.push(CodeAction.create(item.title, command));
             continue;
           }
 

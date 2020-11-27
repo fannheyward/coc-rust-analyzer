@@ -424,7 +424,7 @@ export function toggleInlayHints(ctx: Ctx) {
 }
 
 export async function applySnippetWorkspaceEdit(edit: WorkspaceEdit) {
-  if (!edit.documentChanges?.length) {
+  if (!edit?.documentChanges?.length) {
     return;
   }
 
