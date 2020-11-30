@@ -265,6 +265,16 @@
           "default": "‣",
           "description": "Separator text for chainingHints in virtual text"
         },
+        "rust-analyzer.inlayHints.maxLength": {
+          "type": [
+            "null",
+            "integer"
+          ],
+          "default": 20,
+          "minimum": 0,
+          "exclusiveMinimum": true,
+          "description": "Maximum length for inlay hints"
+        },
         "rust-analyzer.inlayHints.refreshOnInsertMode": {
           "type": "boolean",
           "default": false,
