@@ -21,14 +21,14 @@ interface RustSourceFile {
 class HintsUpdater implements Disposable {
   private sourceFiles = new Map<string, RustSourceFile>(); // map Uri -> RustSourceFile
   private readonly disposables: Disposable[] = [];
-  private chainingHintNS = workspace.createNameSpace('rust-chaining-hint');
-  private chainingHintEnabled = true;
+  private inlayHintsNS = workspace.createNameSpace('rust-inlay-hint');
+  private inlayHintsEnabled = true;
 
   constructor(private readonly ctx: Ctx) {
     // Set up initial cache shape
     workspace.documents.forEach((doc) => {
       if (doc && isRustDocument(doc.textDocument)) {
-        doc.buffer.clearNamespace(this.chainingHintNS);
+        doc.buffer.clearNamespace(this.inlayHintsNS);
         this.sourceFiles.set(doc.uri, { document: doc.textDocument, inlaysRequest: null });
       }
     });
@@ -36,7 +36,7 @@ class HintsUpdater implements Disposable {
     events.on('InsertLeave', async (bufnr) => {
       const doc = workspace.getDocument(bufnr);
       if (doc && isRustDocument(doc.textDocument)) {
-        doc.buffer.clearNamespace(this.chainingHintNS);
+        doc.buffer.clearNamespace(this.inlayHintsNS);
         this.syncAndRenderHints();
       }
     });
@@ -45,7 +45,7 @@ class HintsUpdater implements Disposable {
       (e) => {
         const doc = workspace.getDocument(e.bufnr);
         if (doc && isRustDocument(doc.textDocument)) {
-          doc.buffer.clearNamespace(this.chainingHintNS);
+          doc.buffer.clearNamespace(this.inlayHintsNS);
           if (workspace.insertMode && !this.ctx.config.inlayHints.refreshOnInsertMode) {
             return;
           }
@@ -66,7 +66,7 @@ class HintsUpdater implements Disposable {
           this.sourceFiles.set(e.uri, file);
 
           const doc = workspace.getDocument(e.uri);
-          doc.buffer.clearNamespace(this.chainingHintNS);
+          doc.buffer.clearNamespace(this.inlayHintsNS);
           this.syncAndRenderHints();
         }
       },
@@ -83,53 +83,64 @@ class HintsUpdater implements Disposable {
   }
 
   async toggle() {
-    if (this.chainingHintEnabled) {
-      this.chainingHintEnabled = false;
+    if (this.inlayHintsEnabled) {
+      this.inlayHintsEnabled = false;
       this.dispose();
 
       const doc = await workspace.document;
       if (!doc) return;
 
-      doc.buffer.clearNamespace(this.chainingHintNS);
+      doc.buffer.clearNamespace(this.inlayHintsNS);
     } else {
-      this.chainingHintEnabled = true;
+      this.inlayHintsEnabled = true;
       this.syncAndRenderHints();
     }
   }
 
   async syncAndRenderHints() {
-    if (!this.chainingHintEnabled) return;
+    if (!this.inlayHintsEnabled) return;
     const current = await workspace.document;
     this.sourceFiles.forEach((file, uri) =>
       this.fetchHints(file).then(async (hints) => {
         if (!hints) return;
 
         if (current && current.uri === uri && isRustDocument(current.textDocument)) {
-          const decorations = this.hintsToDecorations(hints);
-          this.renderDecorations(current, decorations);
+          this.renderHints(current, hints);
         }
       })
     );
   }
 
-  private async renderDecorations(doc: Document, decorations: InlaysDecorations) {
-    doc.buffer.clearNamespace(this.chainingHintNS);
-    const sep = this.ctx.config.inlayHints.chainingHintsSeparator;
-    for (const item of decorations.chaining) {
-      doc.buffer.setVirtualText(this.chainingHintNS, item.range.end.line, [[`${sep}${item.label}`, 'CocRustChainingHint']], {}).logError();
-    }
-  }
-
-  private hintsToDecorations(hints: ra.InlayHint[]): InlaysDecorations {
+  private async renderHints(doc: Document, hints: ra.InlayHint[]) {
     const decorations: InlaysDecorations = { type: [], param: [], chaining: [] };
     for (const hint of hints) {
-      // ChainingHint only now
-      if (hint.kind === ra.InlayHint.Kind.ChainingHint) {
-        decorations.chaining.push(hint);
+      switch (hint.kind) {
+        case ra.InlayHint.Kind.TypeHint:
+          decorations.type.push(hint);
+          break;
+        case ra.InlayHint.Kind.ChainingHint:
+          decorations.chaining.push(hint);
+          break;
+        default:
+          continue;
       }
     }
 
-    return decorations;
+    doc.buffer.clearNamespace(this.inlayHintsNS);
+    if (this.ctx.config.inlayHints.chainingHints) {
+      const sep = this.ctx.config.inlayHints.chainingHintsSeparator;
+      for (const item of decorations.chaining) {
+        const chunks: [[string, string]] = [[`${sep}${item.label}`, 'CocRustChainingHint']];
+        doc.buffer.setVirtualText(this.inlayHintsNS, item.range.end.line, chunks, {}).logError();
+      }
+    }
+    if (this.ctx.config.inlayHints.typeHints) {
+      const sep = this.ctx.config.inlayHints.typeHintsSeparator;
+      for (const item of decorations.type) {
+        const chunks: [[string, string]] = [[`${sep}${item.label}`, 'CocRustTypeHint']];
+        doc.buffer.setVirtualText(this.inlayHintsNS, item.range.end.line, chunks, {}).logError();
+      }
+    }
   }
 
   private async fetchHints(file: RustSourceFile): Promise<null | ra.InlayHint[]> {
@@ -154,12 +165,13 @@ export function activateInlayHints(ctx: Ctx) {
   const maybeUpdater = {
     updater: null as null | HintsUpdater,
     async onConfigChange() {
-      if (!ctx.config.inlayHints.chainingHints) {
+      if (!ctx.config.inlayHints.chainingHints && !ctx.config.inlayHints.typeHints) {
         return this.dispose();
       }
 
       await ctx.sleep(100);
       await workspace.nvim.command('hi default link CocRustChainingHint CocHintSign');
+      await workspace.nvim.command('hi default link CocRustTypeHint CocHintSign');
       if (this.updater) {
         this.updater.syncAndRenderHints();
       } else {

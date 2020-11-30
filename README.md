@@ -23,6 +23,8 @@ This extension is configured using a jsonc file. You can open this configuration
 - `rust-analyzer.diagnostics.warningsAsInfo`: List of warnings that should be displayed with info severity, default: `[]`
 - `rust-analyzer.diagnostics.warningsAsHint`: List of warnings that should be displayed with hint severity, default: `[]`
 - `rust-analyzer.lruCapacity`: Number of syntax trees rust-analyzer keeps in memory, default: `null`
+- `rust-analyzer.inlayHints.typeHints`: Whether to show inlay type hints for variables, **Neovim Only**, default `true`
+- `rust-analyzer.inlayHints.typeHintsSeparator`: Separator text for typeHints in virtual text, default `‣`
 - `rust-analyzer.inlayHints.chainingHints`: Whether to show inlay type hints for method chains, **Neovim Only**, default `true`
 - `rust-analyzer.inlayHints.chainingHintsSeparator`: Separator text for chainingHints in virtual text, default `‣`
 - `rust-analyzer.inlayHints.refreshOnInsertMode`: Whether to refresh inlayHints on insert mode, default `false`
@@ -86,6 +88,7 @@ You can use these commands by `:CocCommand XYZ`.
 
 ## Highlight Group
 
+- `CocRustTypeHint`: highlight name for `typeHints`, default link to `CocHintSign`
 - `CocRustChainingHint`: highlight name for `chainingHints`, default link to `CocHintSign`
 
 ## License

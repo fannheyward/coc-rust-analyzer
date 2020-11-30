@@ -245,6 +245,16 @@
           "default": null,
           "description": "List of features to activate. Defaults to `rust-analyzer.cargo.features`."
         },
+        "rust-analyzer.inlayHints.typeHints": {
+          "type": "boolean",
+          "default": true,
+          "description": "Whether to show inlay type hints for variables. *Neovim Only*"
+        },
+        "rust-analyzer.inlayHints.typeHintsSeparator": {
+          "type": "string",
+          "default": "‣",
+          "description": "Separator text for typeHints in virtual text"
+        },
         "rust-analyzer.inlayHints.chainingHints": {
           "type": "boolean",
           "default": true,
