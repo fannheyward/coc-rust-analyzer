@@ -416,10 +416,7 @@ export function toggleInlayHints(ctx: Ctx) {
       workspace.showMessage(`Inlay hints for method chains is disabled. Toggle action does nothing;`, 'warning');
       return;
     }
-    for (const sub of ctx.subscriptions) {
-      // @ts-ignore
-      if (typeof sub.toggle === 'function') sub.toggle();
-    }
+    await ctx.toggleInlayHints();
   };
 }
 

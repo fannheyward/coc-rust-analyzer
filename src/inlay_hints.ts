@@ -18,7 +18,7 @@ interface RustSourceFile {
   document: RustDocument;
 }
 
-class HintsUpdater implements Disposable {
+export class HintsUpdater implements Disposable {
   private sourceFiles = new Map<string, RustSourceFile>(); // map Uri -> RustSourceFile
   private readonly disposables: Disposable[] = [];
   private inlayHintsNS = workspace.createNameSpace('rust-inlay-hint');
@@ -85,7 +85,6 @@ class HintsUpdater implements Disposable {
   async toggle() {
     if (this.inlayHintsEnabled) {
       this.inlayHintsEnabled = false;
-      this.dispose();
 
       const doc = await workspace.document;
       if (!doc) return;
@@ -159,36 +158,4 @@ class HintsUpdater implements Disposable {
         }
       });
   }
-}
-
-export function activateInlayHints(ctx: Ctx) {
-  const maybeUpdater = {
-    updater: null as null | HintsUpdater,
-    async onConfigChange() {
-      if (!ctx.config.inlayHints.chainingHints && !ctx.config.inlayHints.typeHints) {
-        return this.dispose();
-      }
-
-      await ctx.sleep(100);
-      await workspace.nvim.command('hi default link CocRustChainingHint CocHintSign');
-      await workspace.nvim.command('hi default link CocRustTypeHint CocHintSign');
-      if (this.updater) {
-        this.updater.syncAndRenderHints();
-      } else {
-        this.updater = new HintsUpdater(ctx);
-      }
-    },
-    toggle() {
-      this.updater?.toggle();
-    },
-    dispose() {
-      this.updater?.dispose();
-      this.updater = null;
-    },
-  };
-
-  ctx.pushCleanup(maybeUpdater);
-
-  workspace.onDidChangeConfiguration(maybeUpdater.onConfigChange, maybeUpdater, ctx.subscriptions);
-  maybeUpdater.onConfigChange();
 }

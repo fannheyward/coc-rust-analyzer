@@ -1,14 +1,11 @@
 import { ExtensionContext, workspace } from 'coc.nvim';
 import { existsSync, mkdirSync } from 'fs';
 import * as cmds from './commands';
-import { Config } from './config';
 import { Ctx } from './ctx';
 import { downloadServer } from './downloader';
-import { activateInlayHints } from './inlay_hints';
 
 export async function activate(context: ExtensionContext): Promise<void> {
-  const config = new Config();
-  const ctx = new Ctx(context, config);
+  const ctx = new Ctx(context);
 
   const serverRoot = context.storagePath;
   if (!existsSync(serverRoot)) {
@@ -19,12 +16,12 @@ export async function activate(context: ExtensionContext): Promise<void> {
   if (!bin) {
     let msg = 'Rust Analyzer is not found, download from GitHub release?';
     let ret = 0;
-    if (config.prompt) {
+    if (ctx.config.prompt) {
       ret = await workspace.showQuickpick(['Yes', 'Cancel'], msg);
     }
     if (ret === 0) {
       try {
-        await downloadServer(context, config.channel);
+        await downloadServer(context, ctx.config.channel);
       } catch (e) {
         console.error(e);
         msg = 'Download rust-analyzer failed, you can get it from https://github.com/rust-analyzer/rust-analyzer';
@@ -77,5 +74,5 @@ export async function activate(context: ExtensionContext): Promise<void> {
 
   await ctx.startServer();
   await ctx.checkUpdate();
-  activateInlayHints(ctx);
+  await ctx.activateInlayHints();
 }

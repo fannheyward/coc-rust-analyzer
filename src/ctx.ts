@@ -9,6 +9,7 @@ import which from 'which';
 import { createClient } from './client';
 import { Config } from './config';
 import { downloadServer, getLatestRelease } from './downloader';
+import { HintsUpdater } from './inlay_hints';
 import * as ra from './lsp_ext';
 
 export type RustDocument = TextDocument & { languageId: 'rust' };
@@ -21,11 +22,16 @@ export type Cmd = (...args: any[]) => unknown;
 export class Ctx {
   client!: LanguageClient;
   private statusBar: StatusBarItem;
+  private updater: HintsUpdater;
+  public readonly config = new Config();
 
-  constructor(private readonly extCtx: ExtensionContext, readonly config: Config) {
+  constructor(private readonly extCtx: ExtensionContext) {
     this.statusBar = workspace.createStatusBarItem(10);
     this.statusBar.text = 'rust-analyzer';
     this.extCtx.subscriptions.push(this.statusBar);
+
+    this.updater = new HintsUpdater(this);
+    this.extCtx.subscriptions.push(this.updater);
   }
 
   registerCommand(name: string, factory: (ctx: Ctx) => Cmd) {
@@ -167,5 +173,21 @@ export class Ctx {
       }
     }
     throw 'unreachable';
+  }
+
+  async activateInlayHints() {
+    if (!this.config.inlayHints.chainingHints && !this.config.inlayHints.typeHints) {
+      return;
+    }
+
+    await this.sleep(100);
+    await workspace.nvim.command('hi default link CocRustChainingHint CocHintSign');
+    await workspace.nvim.command('hi default link CocRustTypeHint CocHintSign');
+
+    this.updater.syncAndRenderHints();
+  }
+
+  async toggleInlayHints() {
+    await this.updater.toggle();
   }
 }

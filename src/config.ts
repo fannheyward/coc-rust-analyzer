@@ -4,7 +4,7 @@ export type UpdatesChannel = 'stable' | 'nightly';
 
 export class Config {
   private readonly rootSection = 'rust-analyzer';
-  private readonly requiresReloadOpts = ['serverPath', 'cargo', 'procMacro', 'files', 'updates', 'lens', 'hoverActions'].map((opt) => `${this.rootSection}.${opt}`);
+  private readonly requiresReloadOpts = ['serverPath', 'cargo', 'procMacro', 'files', 'updates', 'lens', 'hoverActions', 'inlayHints'].map((opt) => `${this.rootSection}.${opt}`);
   private cfg: WorkspaceConfiguration;
 
   constructor() {
