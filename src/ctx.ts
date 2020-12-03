@@ -74,10 +74,6 @@ export class Ctx {
     return this.extCtx.subscriptions;
   }
 
-  pushCleanup(d: Disposable) {
-    this.extCtx.subscriptions.push(d);
-  }
-
   resolveBin(): string | undefined {
     // 1. from config, custom server path
     // 2. bundled
