@@ -2,7 +2,7 @@ import { ExtensionContext, workspace } from 'coc.nvim';
 import { existsSync, mkdirSync } from 'fs';
 import * as cmds from './commands';
 import { Ctx } from './ctx';
-import { downloadServer } from './downloader';
+import { downloadServer, getLatestRelease } from './downloader';
 
 export async function activate(context: ExtensionContext): Promise<void> {
   const ctx = new Ctx(context);
@@ -21,7 +21,9 @@ export async function activate(context: ExtensionContext): Promise<void> {
     }
     if (ret === 0) {
       try {
-        await downloadServer(context, ctx.config.channel);
+        const latest = await getLatestRelease(ctx.config.channel);
+        if (!latest) throw new Error('Failed to get latest release');
+        await downloadServer(context, latest);
       } catch (e) {
         console.error(e);
         msg = 'Download rust-analyzer failed, you can get it from https://github.com/rust-analyzer/rust-analyzer';
@@ -73,6 +75,6 @@ export async function activate(context: ExtensionContext): Promise<void> {
   });
 
   await ctx.startServer();
-  await ctx.checkUpdate();
+  if (bin) await ctx.checkUpdate();
   await ctx.activateInlayHints();
 }

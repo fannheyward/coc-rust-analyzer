@@ -74,19 +74,10 @@ export async function getLatestRelease(updatesChannel: UpdatesChannel): Promise<
     });
 }
 
-export async function downloadServer(context: ExtensionContext, updatesChannel: UpdatesChannel): Promise<void> {
+export async function downloadServer(context: ExtensionContext, release: ReleaseTag): Promise<void> {
   const statusItem = workspace.createStatusBarItem(0, { progress: true });
-  statusItem.text = 'Getting the latest version...';
+  statusItem.text = `Downloading rust-analyzer ${release.tag}`;
   statusItem.show();
-
-  const latest = await getLatestRelease(updatesChannel);
-  if (!latest) {
-    statusItem.hide();
-    workspace.showMessage(`Can't get latest rust-analyzer release`);
-    return;
-  }
-
-  statusItem.text = `Downloading rust-analyzer ${latest.tag}`;
 
   // @ts-ignore
   const resp = await fetch(latest.url, { agent });
@@ -101,12 +92,12 @@ export async function downloadServer(context: ExtensionContext, updatesChannel: 
   resp.body.on('data', (chunk: Buffer) => {
     cur += chunk.length;
     const p = ((cur / len) * 100).toFixed(2);
-    statusItem.text = `${p}% Downloading rust-analyzer ${latest.tag}`;
+    statusItem.text = `${p}% Downloading rust-analyzer ${release.tag}`;
   });
 
-  const _path = path.join(context.storagePath, latest.name);
+  const _path = path.join(context.storagePath, release.name);
   const randomHex = randomBytes(5).toString('hex');
-  const tempFile = path.join(context.storagePath, `${latest.name}${randomHex}`);
+  const tempFile = path.join(context.storagePath, `${release.name}${randomHex}`);
 
   const destFileStream = createWriteStream(tempFile, { mode: 0o755 });
   await pipeline(resp.body, destFileStream);
@@ -121,7 +112,7 @@ export async function downloadServer(context: ExtensionContext, updatesChannel: 
   });
   await fs.rename(tempFile, _path);
 
-  await context.globalState.update('release', latest.tag);
+  await context.globalState.update('release', release.tag);
 
   try {
     if (await fs.stat('/etc/nixos')) {
