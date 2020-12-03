@@ -80,7 +80,7 @@ export async function downloadServer(context: ExtensionContext, release: Release
   statusItem.show();
 
   // @ts-ignore
-  const resp = await fetch(latest.url, { agent });
+  const resp = await fetch(release.url, { agent });
   // const resp = await fetch('http://devd.io/rust-analyzer');
   if (!resp.ok) {
     statusItem.hide();
