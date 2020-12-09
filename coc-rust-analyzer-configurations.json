@@ -1,0 +1,82 @@
+{
+  "rust-analyzer.debug.runtime": {
+    "type": "string",
+    "default": "termdebug",
+    "enum": [
+      "termdebug",
+      "vimspector"
+    ],
+    "description": "Choose which debug runtime to use",
+    "enumDescriptions": [
+      "`\"termdebug\"` use vim/neovim builtin debugger - gdb",
+      "`\"vimspector\"` use vimspector plugin"
+    ]
+  },
+  "rust-analyzer.debug.vimspector.configuration.name": {
+    "type": "string",
+    "default": "launch",
+    "description": "Specify the name of the vimspector configuration name. The following args will be passed to the configuration: `Executable` and `Args` (both strings)"
+  },
+  "rust-analyzer.inlayHints.enable": {
+    "type": "boolean",
+    "default": true,
+    "description": "Whether to show inlay hints"
+  },
+  "rust-analyzer.inlayHints.typeHintsSeparator": {
+    "type": "string",
+    "default": "‣",
+    "description": "Separator text for typeHints in virtual text"
+  },
+  "rust-analyzer.inlayHints.chainingHintsSeparator": {
+    "type": "string",
+    "default": "‣",
+    "description": "Separator text for chainingHints in virtual text"
+  },
+  "rust-analyzer.inlayHints.refreshOnInsertMode": {
+    "type": "boolean",
+    "default": false,
+    "description": "Whether to refresh inlayHints on insert mode"
+  },
+  "rust-analyzer.serverPath": {
+    "type": [
+      "null",
+      "string"
+    ],
+    "default": null,
+    "description": "Path to rust-analyzer executable (points to bundled binary by default). If this is set, then \"rust-analyzer.updates.channel\" setting is not used"
+  },
+  "rust-analyzer.trace.server": {
+    "type": "string",
+    "scope": "window",
+    "enum": [
+      "off",
+      "messages",
+      "verbose"
+    ],
+    "enumDescriptions": [
+      "No traces",
+      "Error only",
+      "Full log"
+    ],
+    "default": "off",
+    "description": "Trace requests to the rust-analyzer"
+  },
+  "rust-analyzer.updates.prompt": {
+    "type": "boolean",
+    "default": true,
+    "description": "Prompt the user before downloading rust-analyzer"
+  },
+  "rust-analyzer.updates.channel": {
+    "type": "string",
+    "default": "stable",
+    "enum": [
+      "stable",
+      "nightly"
+    ],
+    "description": "Choose `\"nightly\"` updates to get the latest features and bug fixes every day. While `\"stable\"` releases occur weekly and don't contain cutting-edge features from VSCode proposed APIs",
+    "enumDescriptions": [
+      "`\"stable\"` updates are shipped weekly, they don't contain cutting-edge features from VSCode proposed APIs but have less bugs in general",
+      "`\"nightly\"` updates are shipped daily (extension updates automatically by downloading artifacts directly from GitHub), they contain cutting-edge features and latest bug fixes. These releases help us get your feedback very quickly and speed up rust-analyzer development **drastically**"
+    ]
+  }
+}

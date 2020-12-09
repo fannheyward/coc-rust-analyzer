@@ -5,6 +5,8 @@ tsconfig.json
 .tags
 .DS_Store
 webpack.config.js
+coc-rust-analyzer-configurations.json
+generate-config-schema.js
 yarn.lock
 yarn-error.log
 .eslintrc.js
