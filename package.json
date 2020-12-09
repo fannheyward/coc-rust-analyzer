@@ -75,6 +75,10 @@
       "type": "object",
       "title": "coc-rust-analyzer configuration",
       "properties": {
+        "rust-analyzer.enable": {
+          "type": "boolean",
+          "default": true
+        },
         "rust-analyzer.debug.runtime": {
           "type": "string",
           "default": "termdebug",

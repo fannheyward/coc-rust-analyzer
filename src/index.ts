@@ -6,6 +6,9 @@ import { downloadServer, getLatestRelease } from './downloader';
 
 export async function activate(context: ExtensionContext): Promise<void> {
   const ctx = new Ctx(context);
+  if (!ctx.config.enable) {
+    return;
+  }
 
   const serverRoot = context.storagePath;
   if (!existsSync(serverRoot)) {

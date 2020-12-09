@@ -54,4 +54,8 @@ export class Config {
       autoreload: this.cfg.get<boolean>('cargo.autoreload'),
     };
   }
+
+  get enable() {
+    return this.cfg.get<boolean>('enable');
+  }
 }
