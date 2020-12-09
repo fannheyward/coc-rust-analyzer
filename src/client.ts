@@ -1,5 +1,5 @@
 import { Executable, LanguageClient, LanguageClientOptions, ServerOptions, StaticFeature, Uri, workspace } from 'coc.nvim';
-import { ClientCapabilities, CodeAction, CodeActionParams, CodeActionRequest, Command } from 'vscode-languageserver-protocol';
+import { ClientCapabilities, CodeAction, CodeActionParams, CodeActionRequest, Command, InsertTextFormat, TextDocumentEdit } from 'vscode-languageserver-protocol';
 import * as ra from './lsp_ext';
 
 class ExperimentalFeatures implements StaticFeature {
@@ -11,6 +11,17 @@ class ExperimentalFeatures implements StaticFeature {
     capabilities.experimental = caps;
   }
   initialize(): void {}
+}
+
+function isSnippetEdit(action: CodeAction): boolean {
+  for (const edit of action.edit?.documentChanges ?? []) {
+    if (TextDocumentEdit.is(edit)) {
+      if (edit.edits.some((indel) => (indel as any).insertTextFormat === InsertTextFormat.Snippet)) {
+        return true;
+      }
+    }
+  }
+  return false;
 }
 
 function isCodeActionWithoutEditsAndCommands(value: any): boolean {
@@ -54,17 +65,20 @@ export function createClient(bin: string): LanguageClient {
         for (const item of values) {
           // In our case we expect to get code edits only from diagnostics
           if (CodeAction.is(item)) {
-            const command: Command = {
-              command: 'rust-analyzer.applySnippetWorkspaceEdit',
-              title: item.title,
-              arguments: [item.edit],
-            };
-            result.push(CodeAction.create(item.title, command));
+            if (isSnippetEdit(item)) {
+              item.command = {
+                command: 'rust-analyzer.applySnippetWorkspaceEdit',
+                title: item.title,
+                arguments: [item.edit],
+              };
+              item.edit = undefined;
+            }
+            result.push(item);
             continue;
           }
 
           if (!isCodeActionWithoutEditsAndCommands(item)) {
-            console.error('isCodeActionWithoutEditsAndCommands:', item.title);
+            console.error('isCodeActionWithoutEditsAndCommands:', JSON.stringify(item));
             continue;
           }
 
