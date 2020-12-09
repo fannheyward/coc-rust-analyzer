@@ -32,6 +32,7 @@ export class Config {
   get inlayHints() {
     const hasVirtualText = workspace.isNvim && workspace.nvim.hasFunction('nvim_buf_set_virtual_text');
     return {
+      enable: hasVirtualText && this.cfg.get<boolean>('enable'),
       typeHints: hasVirtualText && this.cfg.get<boolean>('inlayHints.typeHints'),
       typeHintsSeparator: this.cfg.get<string>('inlayHints.typeHintsSeparator'),
       chainingHints: hasVirtualText && this.cfg.get<boolean>('inlayHints.chainingHints'),

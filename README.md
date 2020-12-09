@@ -23,6 +23,7 @@ This extension is configured using a jsonc file. You can open this configuration
 - `rust-analyzer.diagnostics.warningsAsInfo`: List of warnings that should be displayed with info severity, default: `[]`
 - `rust-analyzer.diagnostics.warningsAsHint`: List of warnings that should be displayed with hint severity, default: `[]`
 - `rust-analyzer.lruCapacity`: Number of syntax trees rust-analyzer keeps in memory, default: `null`
+- `rust-analyzer.inlayHints.enable`: Whether to show inlay hints, default `true`
 - `rust-analyzer.inlayHints.typeHints`: Whether to show inlay type hints for variables, **Neovim Only**, default `true`
 - `rust-analyzer.inlayHints.typeHintsSeparator`: Separator text for typeHints in virtual text, default `‣`
 - `rust-analyzer.inlayHints.chainingHints`: Whether to show inlay type hints for method chains, **Neovim Only**, default `true`

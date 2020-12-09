@@ -172,6 +172,9 @@ export class Ctx {
   }
 
   async activateInlayHints() {
+    if (!this.config.inlayHints.enable) {
+      return;
+    }
     if (!this.config.inlayHints.chainingHints && !this.config.inlayHints.typeHints) {
       return;
     }
