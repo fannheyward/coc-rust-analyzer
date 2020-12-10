@@ -120,7 +120,7 @@ export function parentModule(ctx: Ctx): Cmd {
 
 export function ssr(ctx: Ctx): Cmd {
   return async () => {
-    const input = await workspace.callAsync<string>('input', ['Enter request like this: foo($a:expr, $b:expr) ==>> bar($a, foo($b)): ']);
+    const input = await workspace.callAsync<string>('input', ['Enter request like this: foo($a, $b) ==>> ($a).foo($b): ']);
     workspace.nvim.command('normal! :<C-u>', true);
     if (!input) {
       return;
