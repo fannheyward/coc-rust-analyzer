@@ -23,7 +23,6 @@ export class HintsUpdater implements Disposable {
   private readonly disposables: Disposable[] = [];
   private inlayHintsNS = workspace.createNameSpace('rust-inlay-hint');
   private inlayHintsEnabled = true;
-  private split: [string, string] = [' ', 'Normal'];
 
   constructor(private readonly ctx: Ctx) {
     // Set up initial cache shape
@@ -128,28 +127,28 @@ export class HintsUpdater implements Disposable {
 
     doc.buffer.clearNamespace(this.inlayHintsNS);
     const chaining_hints = {};
+    const split: [string, string] = [' ', 'Normal'];
     if (this.ctx.config.inlayHints.typeHints) {
       const sep = this.ctx.config.inlayHints.typeHintsSeparator;
       for (const item of decorations.type) {
         const chunks: [[string, string]] = [[`${sep}${item.label}`, 'CocRustTypeHint']];
-        if (chaining_hints[item.range.end.line] == undefined) {
+        if (chaining_hints[item.range.end.line] === undefined) {
           chaining_hints[item.range.end.line] = chunks;
         } else {
-          chaining_hints[item.range.end.line].push(this.split);
+          chaining_hints[item.range.end.line].push(split);
           chaining_hints[item.range.end.line].push(chunks[0]);
         }
         doc.buffer.setVirtualText(this.inlayHintsNS, item.range.end.line, chaining_hints[item.range.end.line], {}).logError();
-        //console.info(`Inlay Hint: ${item.range.end.line}: ${chaining_hints[item.range.end.line]}`);
       }
     }
     if (this.ctx.config.inlayHints.chainingHints) {
       const sep = this.ctx.config.inlayHints.chainingHintsSeparator;
       for (const item of decorations.chaining) {
         const chunks: [[string, string]] = [[`${sep}${item.label}`, 'CocRustChainingHint']];
-        if (chaining_hints[item.range.end.line] == undefined) {
+        if (chaining_hints[item.range.end.line] === undefined) {
           chaining_hints[item.range.end.line] = chunks;
         } else {
-          chaining_hints[item.range.end.line].push(this.split);
+          chaining_hints[item.range.end.line].push(split);
           chaining_hints[item.range.end.line].push(chunks[0]);
         }
         doc.buffer.setVirtualText(this.inlayHintsNS, item.range.end.line, chaining_hints[item.range.end.line], {}).logError();
