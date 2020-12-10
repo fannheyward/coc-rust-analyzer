@@ -113,7 +113,7 @@ export function parentModule(ctx: Ctx): Cmd {
       const uri = response[0].targetUri;
       const range = response[0].targetRange;
 
-      workspace.jumpTo(uri, range.start);
+      workspace.jumpTo(uri, range?.start);
     }
   };
 }
