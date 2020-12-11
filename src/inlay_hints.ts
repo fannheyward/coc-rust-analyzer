@@ -124,6 +124,8 @@ export class HintsUpdater implements Disposable {
           continue;
       }
     }
+    console.info(JSON.stringify(decorations));
+    console.info(doc);
 
     doc.buffer.clearNamespace(this.inlayHintsNS);
     const chaining_hints = {};
@@ -131,7 +133,11 @@ export class HintsUpdater implements Disposable {
     if (this.ctx.config.inlayHints.typeHints) {
       const sep = this.ctx.config.inlayHints.typeHintsSeparator;
       for (const item of decorations.type) {
-        const chunks: [[string, string]] = [[`${sep}${item.label}`, 'CocRustTypeHint']];
+        let sn_start = item.range.start.character;
+        let sn_end = item.range.end.character;
+        let line = doc.getline(item.range.start.line);
+        let symbol_name = line.substring(sn_start, sn_end);
+        const chunks: [[string, string]] = [[`${sep}${symbol_name}: ${item.label}`, 'CocRustTypeHint']];
         if (chaining_hints[item.range.end.line] === undefined) {
           chaining_hints[item.range.end.line] = chunks;
         } else {
@@ -144,7 +150,7 @@ export class HintsUpdater implements Disposable {
     if (this.ctx.config.inlayHints.chainingHints) {
       const sep = this.ctx.config.inlayHints.chainingHintsSeparator;
       for (const item of decorations.chaining) {
-        const chunks: [[string, string]] = [[`${sep}${item.label}`, 'CocRustChainingHint']];
+        const chunks: [[string, string]] = [[`${sep} ${item.label}`, 'CocRustChainingHint']];
         if (chaining_hints[item.range.end.line] === undefined) {
           chaining_hints[item.range.end.line] = chunks;
         } else {
