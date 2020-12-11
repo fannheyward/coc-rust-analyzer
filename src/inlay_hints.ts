@@ -133,10 +133,10 @@ export class HintsUpdater implements Disposable {
     if (this.ctx.config.inlayHints.typeHints) {
       const sep = this.ctx.config.inlayHints.typeHintsSeparator;
       for (const item of decorations.type) {
-        let sn_start = item.range.start.character;
-        let sn_end = item.range.end.character;
-        let line = doc.getline(item.range.start.line);
-        let symbol_name = line.substring(sn_start, sn_end);
+        const sn_start = item.range.start.character;
+        const sn_end = item.range.end.character;
+        const line = doc.getline(item.range.start.line);
+        const symbol_name = line.substring(sn_start, sn_end);
         const chunks: [[string, string]] = [[`${sep}${symbol_name}: ${item.label}`, 'CocRustTypeHint']];
         if (chaining_hints[item.range.end.line] === undefined) {
           chaining_hints[item.range.end.line] = chunks;
