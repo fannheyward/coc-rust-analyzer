@@ -124,8 +124,6 @@ export class HintsUpdater implements Disposable {
           continue;
       }
     }
-    console.info(JSON.stringify(decorations));
-    console.info(doc);
 
     doc.buffer.clearNamespace(this.inlayHintsNS);
     const chaining_hints = {};
