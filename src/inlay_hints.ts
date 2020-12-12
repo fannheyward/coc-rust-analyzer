@@ -148,7 +148,7 @@ export class HintsUpdater implements Disposable {
     if (this.ctx.config.inlayHints.chainingHints) {
       const sep = this.ctx.config.inlayHints.chainingHintsSeparator;
       for (const item of decorations.chaining) {
-        const chunks: [[string, string]] = [[`${sep} ${item.label}`, 'CocRustChainingHint']];
+        const chunks: [[string, string]] = [[`${sep}${item.label}`, 'CocRustChainingHint']];
         if (chaining_hints[item.range.end.line] === undefined) {
           chaining_hints[item.range.end.line] = chunks;
         } else {
