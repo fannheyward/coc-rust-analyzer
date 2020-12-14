@@ -1,7 +1,7 @@
 import { spawnSync, spawn } from 'child_process';
 import readline from 'readline';
 import { commands, Documentation, FloatFactory, Terminal, TerminalOptions, Uri, workspace } from 'coc.nvim';
-import { Location, Position, Range, TextDocumentEdit, TextDocumentPositionParams, TextEdit, WorkspaceEdit } from 'vscode-languageserver-protocol';
+import { Location, LocationLink, Position, Range, TextDocumentEdit, TextDocumentPositionParams, TextEdit, WorkspaceEdit } from 'vscode-languageserver-protocol';
 import { Cmd, Ctx, isRustDocument } from './ctx';
 import * as ra from './lsp_ext';
 
@@ -109,11 +109,25 @@ export function parentModule(ctx: Ctx): Cmd {
     };
 
     const response = await ctx.client.sendRequest(ra.parentModule, param);
-    if (response.length > 0) {
-      const uri = response[0].targetUri;
-      const range = response[0].targetRange;
+    if (!response) return;
 
-      workspace.jumpTo(uri, range?.start);
+    let uri = '';
+    let pos: Position | undefined = undefined;
+    if (Array.isArray(response)) {
+      const location = response[0];
+      if (Location.is(location)) {
+        uri = location.uri;
+        pos = location.range?.start;
+      } else if (LocationLink.is(location)) {
+        uri = location.targetUri;
+        pos = location.targetSelectionRange?.start;
+      }
+    } else if (Location.is(response)) {
+      uri = response.uri;
+      pos = response.range.start;
+    }
+    if (uri) {
+      workspace.jumpTo(uri, pos);
     }
   };
 }
