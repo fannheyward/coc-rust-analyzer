@@ -1,4 +1,13 @@
 {
+  "rust-analyzer.enable": {
+    "type": "boolean",
+    "default": true
+  },
+  "rust-analyzer.terminal.startinsert": {
+    "type": "boolean",
+    "default": false,
+    "description": "Enter insert mode after terminal displayed"
+  },
   "rust-analyzer.debug.runtime": {
     "type": "string",
     "default": "termdebug",
