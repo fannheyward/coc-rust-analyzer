@@ -215,6 +215,9 @@ export function run(ctx: Ctx): Cmd {
     }
     terminal = await workspace.createTerminal(opt);
     terminal.sendText(cmd);
+    if (ctx.config.terminal.startinsert) {
+      await workspace.nvim.command('startinsert');
+    }
   };
 }
 
@@ -309,7 +312,7 @@ export function debugSingle(): Cmd {
   };
 }
 
-export function runSingle(): Cmd {
+export function runSingle(ctx: Ctx): Cmd {
   return async (runnable: ra.Runnable) => {
     const { document } = await workspace.getCurrentState();
     if (!runnable || !isRustDocument(document)) return;
@@ -332,6 +335,9 @@ export function runSingle(): Cmd {
     }
     terminal = await workspace.createTerminal(opt);
     terminal.sendText(cmd);
+    if (ctx.config.terminal.startinsert) {
+      await workspace.nvim.command('startinsert');
+    }
   };
 }
 

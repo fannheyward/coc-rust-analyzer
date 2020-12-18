@@ -55,6 +55,12 @@ export class Config {
     };
   }
 
+  get terminal() {
+    return {
+      startinsert: this.cfg.get<boolean>('terminal.startinsert'),
+    };
+  }
+
   get enable() {
     return this.cfg.get<boolean>('enable');
   }
