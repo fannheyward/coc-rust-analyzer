@@ -84,10 +84,14 @@ export function joinLines(ctx: Ctx): Cmd {
     const doc = await workspace.document;
     if (!isRustDocument(doc.textDocument)) return;
 
-    const mode = await workspace.nvim.call('visualmode');
-    const range = await workspace.getSelectedRange(mode, doc);
+    let range: Range | null = null;
+    const mode = (await workspace.nvim.call('visualmode')) as string;
+    if (mode) {
+      range = await workspace.getSelectedRange(mode, doc);
+    }
     if (!range) {
-      return;
+      const state = await workspace.getCurrentState();
+      range = Range.create(state.position, state.position);
     }
     const param: ra.JoinLinesParams = {
       textDocument: { uri: doc.uri },
