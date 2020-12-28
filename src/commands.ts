@@ -165,8 +165,13 @@ export function ssr(ctx: Ctx): Cmd {
       selections,
     };
 
-    const edit = await ctx.client.sendRequest(ra.ssr, param);
-    await workspace.applyEdit(edit);
+    window.withProgress({ title: 'Structured search replacing...', cancellable: false }, () => {
+      return new Promise<void>(async (resolve) => {
+        const edit = await ctx.client.sendRequest(ra.ssr, param);
+        await workspace.applyEdit(edit);
+        resolve();
+      });
+    });
   };
 }
 
