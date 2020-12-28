@@ -13,7 +13,7 @@
     "url": "https://github.com/fannheyward/coc-rust-analyzer.git"
   },
   "engines": {
-    "coc": "^0.0.76"
+    "coc": "^0.0.80"
   },
   "activationEvents": [
     "onLanguage:rust",
@@ -33,7 +33,7 @@
     "@types/which": "^2.0.0",
     "@typescript-eslint/eslint-plugin": "^4.1.1",
     "@typescript-eslint/parser": "^4.1.1",
-    "coc.nvim": "^0.0.79",
+    "coc.nvim": "^0.0.80",
     "eslint": "^7.3.0",
     "eslint-config-prettier": "^7.0.0",
     "eslint-plugin-prettier": "^3.1.4",

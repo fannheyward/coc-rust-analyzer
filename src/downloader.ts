@@ -1,5 +1,5 @@
 import { exec } from 'child_process';
-import { ExtensionContext, workspace } from 'coc.nvim';
+import { ExtensionContext, window } from 'coc.nvim';
 import { randomBytes } from 'crypto';
 import { createWriteStream, PathLike, promises as fs } from 'fs';
 import { HttpsProxyAgent } from 'https-proxy-agent';
@@ -75,7 +75,7 @@ export async function getLatestRelease(updatesChannel: UpdatesChannel): Promise<
 }
 
 export async function downloadServer(context: ExtensionContext, release: ReleaseTag): Promise<void> {
-  const statusItem = workspace.createStatusBarItem(0, { progress: true });
+  const statusItem = window.createStatusBarItem(0, { progress: true });
   statusItem.text = `Downloading rust-analyzer ${release.tag}`;
   statusItem.show();
 

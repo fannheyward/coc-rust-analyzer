@@ -1,4 +1,4 @@
-import { commands, ExtensionContext, LanguageClient, services, StatusBarItem, workspace } from 'coc.nvim';
+import { commands, ExtensionContext, LanguageClient, services, StatusBarItem, window, workspace } from 'coc.nvim';
 import executable from 'executable';
 import { existsSync } from 'fs';
 import { homedir } from 'os';
@@ -26,7 +26,7 @@ export class Ctx {
   public readonly config = new Config();
 
   constructor(private readonly extCtx: ExtensionContext) {
-    this.statusBar = workspace.createStatusBarItem(10);
+    this.statusBar = window.createStatusBarItem(10);
     this.statusBar.text = 'rust-analyzer';
     this.extCtx.subscriptions.push(this.statusBar);
 
@@ -59,7 +59,7 @@ export class Ctx {
       if (status === 'ready') {
         this.statusBar.hide();
       } else if (status === 'needsReload') {
-        const prompt = this.config.cargo.autoreload || (await workspace.showPrompt(`rust-analyzer needs to reload project`));
+        const prompt = this.config.cargo.autoreload || (await window.showPrompt(`rust-analyzer needs to reload project`));
         if (prompt) {
           await commands.executeCommand('rust-analyzer.reloadWorkspace');
           this.statusBar.hide();
@@ -91,7 +91,7 @@ export class Ctx {
     }
 
     if (!executable.sync(bin)) {
-      workspace.showMessage(`${bin} is not executable`, 'error');
+      window.showMessage(`${bin} is not executable`, 'error');
       return;
     }
 
@@ -112,7 +112,7 @@ export class Ctx {
     const old = this.extCtx.globalState.get('release') || 'unknown release';
     if (old === latest.tag) {
       if (!auto) {
-        workspace.showMessage(`Your Rust Analyzer release is updated`);
+        window.showMessage(`Your Rust Analyzer release is updated`);
       }
       return;
     }
@@ -120,7 +120,7 @@ export class Ctx {
     const msg = `Rust Analyzer has a new release: ${latest.tag}, you're using ${old}. Would you like to download from GitHub`;
     let ret = 0;
     if (this.config.prompt) {
-      ret = await workspace.showQuickpick(['Yes, download the latest rust-analyzer', 'Check GitHub releases', 'Cancel'], msg);
+      ret = await window.showQuickpick(['Yes, download the latest rust-analyzer', 'Check GitHub releases', 'Cancel'], msg);
     }
     if (ret === 0) {
       if (process.platform === 'win32') {
@@ -134,7 +134,7 @@ export class Ctx {
         if (e.code === 'EBUSY' || e.code === 'ETXTBSY' || e.code === 'EPERM') {
           msg = 'Upgrade rust-analyzer failed, other Vim instances might be using it, you should close them and try again';
         }
-        workspace.showMessage(msg, 'error');
+        window.showMessage(msg, 'error');
         return;
       }
       await this.client.stop();

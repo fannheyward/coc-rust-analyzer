@@ -1,4 +1,4 @@
-import { Executable, LanguageClient, LanguageClientOptions, ServerOptions, StaticFeature, Uri, workspace } from 'coc.nvim';
+import { Executable, LanguageClient, LanguageClientOptions, ServerOptions, StaticFeature, Uri, window, workspace } from 'coc.nvim';
 import { ClientCapabilities, CodeAction, CodeActionParams, CodeActionRequest, Command, InsertTextFormat, TextDocumentEdit } from 'vscode-languageserver-protocol';
 import * as ra from './lsp_ext';
 
@@ -20,6 +20,7 @@ class ExperimentalFeatures implements StaticFeature {
     capabilities.textDocument?.rename?.prepareSupportDefaultBehavior = 1;
   }
   initialize(): void {}
+  dispose(): void {}
 }
 
 function isSnippetEdit(action: CodeAction): boolean {
@@ -46,7 +47,7 @@ function isCodeActionWithoutEditsAndCommands(value: any): boolean {
 
 export function createClient(bin: string): LanguageClient {
   let folder = '.';
-  if (workspace.workspaceFolder?.uri.length > 0) {
+  if (workspace.workspaceFolder?.uri.length) {
     folder = Uri.parse(workspace.workspaceFolder.uri).fsPath;
   }
 
@@ -56,7 +57,7 @@ export function createClient(bin: string): LanguageClient {
   };
 
   const serverOptions: ServerOptions = run;
-  const outputChannel = workspace.createOutputChannel('Rust Analyzer Language Server Trace');
+  const outputChannel = window.createOutputChannel('Rust Analyzer Language Server Trace');
   const clientOptions: LanguageClientOptions = {
     documentSelector: [{ language: 'rust' }, { pattern: 'Cargo.toml' }],
     initializationOptions: workspace.getConfiguration('rust-analyzer'),
@@ -130,7 +131,6 @@ export function createClient(bin: string): LanguageClient {
       }
     },
   };
-  client.registerProposedFeatures();
   client.registerFeature(new ExperimentalFeatures());
 
   return client;

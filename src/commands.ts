@@ -1,6 +1,6 @@
-import { spawnSync, spawn } from 'child_process';
+import { spawn, spawnSync } from 'child_process';
+import { commands, Documentation, FloatFactory, Terminal, TerminalOptions, Uri, window, workspace } from 'coc.nvim';
 import readline from 'readline';
-import { commands, Documentation, FloatFactory, Terminal, TerminalOptions, Uri, workspace } from 'coc.nvim';
 import { Location, LocationLink, Position, Range, TextDocumentEdit, TextDocumentPositionParams, TextEdit, WorkspaceEdit } from 'vscode-languageserver-protocol';
 import { Cmd, Ctx, isRustDocument } from './ctx';
 import * as ra from './lsp_ext';
@@ -51,14 +51,14 @@ export function analyzerStatus(ctx: Ctx): Cmd {
       textDocument: { uri: document.uri },
     };
     const ret = await ctx.client.sendRequest(ra.analyzerStatus, params);
-    workspace.echoLines(ret.split('\n'));
+    window.echoLines(ret.split('\n'));
   };
 }
 
 export function memoryUsage(ctx: Ctx): Cmd {
   return async () => {
     const ret = await ctx.client.sendRequest(ra.memoryUsage);
-    workspace.echoLines(ret.split('\n'));
+    window.echoLines(ret.split('\n'));
   };
 }
 
@@ -175,12 +175,12 @@ export function serverVersion(ctx: Ctx): Cmd {
     const bin = ctx.resolveBin();
     if (!bin) {
       const msg = `Rust Analyzer is not found`;
-      workspace.showMessage(msg, 'error');
+      window.showMessage(msg, 'error');
       return;
     }
 
     const version = spawnSync(bin, ['--version'], { encoding: 'utf-8' }).stdout;
-    workspace.showMessage(version);
+    window.showMessage(version);
   };
 }
 
@@ -189,7 +189,7 @@ export function run(ctx: Ctx): Cmd {
     const { document, position } = await workspace.getCurrentState();
     if (!isRustDocument(document)) return;
 
-    workspace.showMessage(`Fetching runnable...`);
+    window.showMessage(`Fetching runnable...`);
 
     const params: ra.RunnablesParams = {
       textDocument: { uri: document.uri },
@@ -202,7 +202,7 @@ export function run(ctx: Ctx): Cmd {
       items.push(new RunnableQuickPick(r));
     }
 
-    const idx = await workspace.showQuickpick(items.map((o) => o.label));
+    const idx = await window.showQuickpick(items.map((o) => o.label));
     if (idx === -1) {
       return;
     }
@@ -395,8 +395,7 @@ export function explainError(ctx: Ctx): Cmd {
     const { document, position } = await workspace.getCurrentState();
     if (!isRustDocument(document)) return;
 
-    const diagnostic = ctx.client.diagnostics?.get(workspace.uri)?.find((diagnostic) => isInRange(diagnostic.range, position));
-
+    const diagnostic = ctx.client.diagnostics?.get(document.uri)?.find((diagnostic) => isInRange(diagnostic.range, position));
     if (diagnostic?.code) {
       const explaination = spawnSync('rustc', ['--explain', `${diagnostic.code}`], { encoding: 'utf-8' }).stdout;
 
@@ -407,8 +406,8 @@ export function explainError(ctx: Ctx): Cmd {
         isCode = !isCode;
       }
 
-      const factory: FloatFactory = new FloatFactory(workspace.nvim, workspace.env);
-      await factory.create(docs);
+      const factory = new FloatFactory(workspace.nvim);
+      await factory.show(docs);
     }
   };
 }
@@ -437,7 +436,7 @@ export function upgrade(ctx: Ctx) {
 export function toggleInlayHints(ctx: Ctx) {
   return async () => {
     if (!ctx.config.inlayHints.chainingHints) {
-      workspace.showMessage(`Inlay hints for method chains is disabled. Toggle action does nothing;`, 'warning');
+      window.showMessage(`Inlay hints for method chains is disabled. Toggle action does nothing;`, 'warning');
       return;
     }
     await ctx.toggleInlayHints();
@@ -496,7 +495,7 @@ export async function applySnippetWorkspaceEdit(edit: WorkspaceEdit) {
     if (selection) {
       await workspace.selectRange(selection);
     } else if (position) {
-      await workspace.moveTo(position);
+      await window.moveTo(position);
     }
   }
 }

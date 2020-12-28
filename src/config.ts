@@ -1,4 +1,4 @@
-import { commands, ConfigurationChangeEvent, workspace, WorkspaceConfiguration } from 'coc.nvim';
+import { commands, ConfigurationChangeEvent, window, workspace, WorkspaceConfiguration } from 'coc.nvim';
 
 export type UpdatesChannel = 'stable' | 'nightly';
 
@@ -19,7 +19,7 @@ export class Config {
     if (!requiresReloadOpt) return;
 
     const msg = `Changing "${requiresReloadOpt}" requires a reload`;
-    const prompt = await workspace.showPrompt(`${msg}. Reload now?`);
+    const prompt = await window.showPrompt(`${msg}. Reload now?`);
     if (prompt) {
       await commands.executeCommand(`workbench.action.reloadWindow`);
     }

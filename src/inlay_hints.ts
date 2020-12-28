@@ -138,7 +138,7 @@ export class HintsUpdater implements Disposable {
           chaining_hints[item.range.end.line].push(split);
           chaining_hints[item.range.end.line].push(chunks[0]);
         }
-        doc.buffer.setVirtualText(this.inlayHintsNS, item.range.end.line, chaining_hints[item.range.end.line], {}).logError();
+        doc.buffer.setVirtualText(this.inlayHintsNS, item.range.end.line, chaining_hints[item.range.end.line], {});
       }
     }
     if (this.ctx.config.inlayHints.chainingHints) {
@@ -151,7 +151,7 @@ export class HintsUpdater implements Disposable {
           chaining_hints[item.range.end.line].push(split);
           chaining_hints[item.range.end.line].push(chunks[0]);
         }
-        doc.buffer.setVirtualText(this.inlayHintsNS, item.range.end.line, chaining_hints[item.range.end.line], {}).logError();
+        doc.buffer.setVirtualText(this.inlayHintsNS, item.range.end.line, chaining_hints[item.range.end.line], {});
       }
     }
   }

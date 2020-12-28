@@ -1,4 +1,4 @@
-import { ExtensionContext, workspace } from 'coc.nvim';
+import { ExtensionContext, window } from 'coc.nvim';
 import { existsSync, mkdirSync } from 'fs';
 import * as cmds from './commands';
 import { Ctx } from './ctx';
@@ -20,7 +20,7 @@ export async function activate(context: ExtensionContext): Promise<void> {
     let msg = 'Rust Analyzer is not found, download from GitHub release?';
     let ret = 0;
     if (ctx.config.prompt) {
-      ret = await workspace.showQuickpick(['Yes', 'Cancel'], msg);
+      ret = await window.showQuickpick(['Yes', 'Cancel'], msg);
     }
     if (ret === 0) {
       try {
@@ -30,7 +30,7 @@ export async function activate(context: ExtensionContext): Promise<void> {
       } catch (e) {
         console.error(e);
         msg = 'Download rust-analyzer failed, you can get it from https://github.com/rust-analyzer/rust-analyzer';
-        workspace.showMessage(msg, 'error');
+        window.showMessage(msg, 'error');
         return;
       }
     } else {
@@ -61,7 +61,7 @@ export async function activate(context: ExtensionContext): Promise<void> {
   ctx.registerCommand('toggleInlayHints', cmds.toggleInlayHints);
   ctx.registerCommand('reload', (ctx) => {
     return async () => {
-      workspace.showMessage(`Reloading rust-analyzer...`);
+      window.showMessage(`Reloading rust-analyzer...`);
 
       for (const sub of ctx.subscriptions) {
         try {
@@ -73,7 +73,7 @@ export async function activate(context: ExtensionContext): Promise<void> {
 
       await activate(context);
 
-      workspace.showMessage(`Reloaded rust-analyzer`);
+      window.showMessage(`Reloaded rust-analyzer`);
     };
   });
 
