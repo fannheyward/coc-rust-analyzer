@@ -4,7 +4,7 @@ import { randomBytes } from 'crypto';
 import { createWriteStream, PathLike, promises as fs } from 'fs';
 import { HttpsProxyAgent } from 'https-proxy-agent';
 import fetch from 'node-fetch';
-import os from 'os';
+import * as zlib from 'zlib';
 import path from 'path';
 import stream from 'stream';
 import util from 'util';
@@ -45,33 +45,64 @@ async function patchelf(dest: PathLike): Promise<void> {
   await fs.unlink(origFile);
 }
 
+interface Asset {
+  name: string;
+  browser_download_url: string;
+}
+
+interface GithubRelease {
+  tag_name: string;
+  published_at: string;
+  assets: Array<Asset>;
+}
+
 export interface ReleaseTag {
   tag: string;
   url: string;
   name: string;
+  asset?: Asset;
+}
+
+function getPlatform(): string | undefined {
+  let platform: string | undefined;
+  if ((process.arch === 'x64' || process.arch === 'ia32') && process.platform === 'win32') {
+    platform = 'x86_64-pc-windows-msvc';
+  } else if (process.arch === 'x64' && process.platform === 'linux') {
+    platform = 'x86_64-unknown-linux-gnu';
+  } else if (process.arch === 'x64' && process.platform === 'darwin') {
+    platform = 'x86_64-apple-darwin';
+  } else if (process.arch === 'arm64' && process.platform === 'darwin') {
+    platform = 'aarch64-apple-darwin';
+  }
+
+  return platform;
 }
 
 export async function getLatestRelease(updatesChannel: UpdatesChannel): Promise<ReleaseTag | undefined> {
-  const fix = { win32: '-windows', darwin: '-mac' }[os.platform()] || '-linux';
   let releaseURL = 'https://api.github.com/repos/rust-analyzer/rust-analyzer/releases/latest';
   if (updatesChannel === 'nightly') {
     releaseURL = 'https://api.github.com/repos/rust-analyzer/rust-analyzer/releases/tags/nightly';
   }
   // @ts-ignore
-  return fetch(releaseURL, { agent })
-    .then((resp) => resp.json())
-    .then((resp) => {
-      const asset = (resp.assets as any[]).find((val) => val.browser_download_url.includes(fix));
-      const name = (asset.name as string).replace(fix, '');
-      let tag = resp.tag_name;
-      if (updatesChannel === 'nightly') {
-        tag = `${resp.tag_name} ${resp.published_at.slice(0, 10)}`;
-      }
-      return { tag, url: asset.browser_download_url, name };
-    })
-    .catch(() => {
-      return undefined;
-    });
+  const response = await fetch(releaseURL, { agent });
+  if (!response.ok) {
+    console.error(await response.text());
+    return;
+  }
+
+  const release: GithubRelease = await response.json();
+  const platform = getPlatform();
+  const asset = release.assets.find((val) => val.browser_download_url.endsWith(`${platform}.gz`));
+  if (!asset) {
+    console.error(`getLatestRelease failed: ${release}`);
+    return;
+  }
+
+  let tag = release.tag_name;
+  if (updatesChannel === 'nightly') tag = `${release.tag_name} ${release.published_at.slice(0, 10)}`;
+  const name = process.platform === 'win32' ? 'rust-analyzer.exe' : 'rust-analyzer';
+
+  return { asset, tag, url: asset.browser_download_url, name: name };
 }
 
 export async function downloadServer(context: ExtensionContext, release: ReleaseTag): Promise<void> {
@@ -100,7 +131,7 @@ export async function downloadServer(context: ExtensionContext, release: Release
   const tempFile = path.join(context.storagePath, `${release.name}${randomHex}`);
 
   const destFileStream = createWriteStream(tempFile, { mode: 0o755 });
-  await pipeline(resp.body, destFileStream);
+  await pipeline(resp.body.pipe(zlib.createGunzip()), destFileStream);
   await new Promise<void>((resolve) => {
     destFileStream.on('close', resolve);
     destFileStream.destroy();
