@@ -2,9 +2,15 @@ import { commands, ConfigurationChangeEvent, window, workspace, WorkspaceConfigu
 
 export type UpdatesChannel = 'stable' | 'nightly';
 
+export interface Env {
+  [name: string]: string;
+}
+
 export class Config {
   private readonly rootSection = 'rust-analyzer';
-  private readonly requiresReloadOpts = ['serverPath', 'cargo', 'procMacro', 'files', 'updates', 'lens', 'hoverActions', 'inlayHints'].map((opt) => `${this.rootSection}.${opt}`);
+  private readonly requiresReloadOpts = ['server', 'serverPath', 'cargo', 'procMacro', 'files', 'updates', 'lens', 'hoverActions', 'inlayHints'].map(
+    (opt) => `${this.rootSection}.${opt}`
+  );
   private cfg: WorkspaceConfiguration;
 
   constructor() {
@@ -27,6 +33,10 @@ export class Config {
 
   get serverPath() {
     return this.cfg.get<null | string>('serverPath')!;
+  }
+
+  get serverExtraEnv() {
+    return this.cfg.get<Env>('server.extraEnv') ?? {};
   }
 
   get inlayHints() {

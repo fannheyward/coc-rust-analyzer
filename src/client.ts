@@ -1,5 +1,6 @@
 import { Executable, LanguageClient, LanguageClientOptions, ServerOptions, StaticFeature, Uri, window, workspace } from 'coc.nvim';
 import { ClientCapabilities, CodeAction, CodeActionParams, CodeActionRequest, Command, InsertTextFormat, TextDocumentEdit } from 'vscode-languageserver-protocol';
+import { Env } from './config';
 import * as ra from './lsp_ext';
 
 class ExperimentalFeatures implements StaticFeature {
@@ -45,15 +46,16 @@ function isCodeActionWithoutEditsAndCommands(value: any): boolean {
   );
 }
 
-export function createClient(bin: string): LanguageClient {
+export function createClient(bin: string, extra: Env): LanguageClient {
   let folder = '.';
   if (workspace.workspaceFolder?.uri.length) {
     folder = Uri.parse(workspace.workspaceFolder.uri).fsPath;
   }
 
+  const env = Object.assign(Object.assign({}, process.env), extra);
   const run: Executable = {
     command: bin,
-    options: { cwd: folder },
+    options: { env, cwd: folder },
   };
 
   const serverOptions: ServerOptions = run;

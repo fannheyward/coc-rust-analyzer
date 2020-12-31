@@ -47,7 +47,7 @@ export class Ctx {
       return;
     }
 
-    const client = createClient(bin);
+    const client = createClient(bin, this.config.serverExtraEnv);
     this.extCtx.subscriptions.push(services.registLanguageClient(client));
     await client.onReady();
 
