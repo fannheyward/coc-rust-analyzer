@@ -19,25 +19,24 @@ interface RustSourceFile {
 }
 
 export class HintsUpdater implements Disposable {
-  private sourceFiles = new Map<string, RustSourceFile>(); // map Uri -> RustSourceFile
   private readonly disposables: Disposable[] = [];
   private inlayHintsNS = workspace.createNameSpace('rust-inlay-hint');
-  private inlayHintsEnabled = true;
+  private inlayHintsEnabled: boolean;
 
   constructor(private readonly ctx: Ctx) {
-    // Set up initial cache shape
-    workspace.documents.forEach((doc) => {
-      if (doc && isRustDocument(doc.textDocument)) {
-        doc.buffer.clearNamespace(this.inlayHintsNS);
-        this.sourceFiles.set(doc.uri, { document: doc.textDocument, inlaysRequest: null });
-      }
-    });
+    this.inlayHintsEnabled = !!this.ctx.config.inlayHints.enable;
+  }
 
+  dispose() {
+    this.disposables.forEach((d) => d.dispose());
+  }
+
+  async activate() {
     events.on('InsertLeave', async (bufnr) => {
       const doc = workspace.getDocument(bufnr);
       if (doc && isRustDocument(doc.textDocument)) {
         doc.buffer.clearNamespace(this.inlayHintsNS);
-        this.syncAndRenderHints();
+        this.syncAndRenderHints(doc);
       }
     });
 
@@ -49,7 +48,7 @@ export class HintsUpdater implements Disposable {
           if (workspace.insertMode && !this.ctx.config.inlayHints.refreshOnInsertMode) {
             return;
           }
-          this.syncAndRenderHints();
+          this.syncAndRenderHints(doc);
         }
       },
       this,
@@ -59,27 +58,20 @@ export class HintsUpdater implements Disposable {
     workspace.onDidOpenTextDocument(
       (e) => {
         if (e && isRustDocument(e)) {
-          const file = this.sourceFiles.get(e.uri) ?? {
-            document: e,
-            inlaysRequest: null,
-          };
-          this.sourceFiles.set(e.uri, file);
-
           const doc = workspace.getDocument(e.uri);
           doc.buffer.clearNamespace(this.inlayHintsNS);
-          this.syncAndRenderHints();
+          this.syncAndRenderHints(doc);
         }
       },
       this,
       this.disposables
     );
 
-    this.syncAndRenderHints();
-  }
-
-  dispose() {
-    this.sourceFiles.forEach((file) => file.inlaysRequest?.cancel());
-    this.disposables.forEach((d) => d.dispose());
+    const current = await workspace.document;
+    if (isRustDocument(current.textDocument)) {
+      current.buffer.clearNamespace(this.inlayHintsNS);
+      this.syncAndRenderHints(current);
+    }
   }
 
   async toggle() {
@@ -92,22 +84,20 @@ export class HintsUpdater implements Disposable {
       doc.buffer.clearNamespace(this.inlayHintsNS);
     } else {
       this.inlayHintsEnabled = true;
-      this.syncAndRenderHints();
+      await this.activate();
     }
   }
 
-  async syncAndRenderHints() {
+  async syncAndRenderHints(doc: Document) {
     if (!this.inlayHintsEnabled) return;
-    const current = await workspace.document;
-    this.sourceFiles.forEach((file, uri) =>
+    if (doc && isRustDocument(doc.textDocument)) {
+      const file: RustSourceFile = { document: doc.textDocument, inlaysRequest: null };
       this.fetchHints(file).then(async (hints) => {
         if (!hints) return;
 
-        if (current && current.uri === uri && isRustDocument(current.textDocument)) {
-          this.renderHints(current, hints);
-        }
-      })
-    );
+        this.renderHints(doc, hints);
+      });
+    }
   }
 
   private async renderHints(doc: Document, hints: ra.InlayHint[]) {

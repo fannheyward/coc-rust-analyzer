@@ -22,7 +22,7 @@ export type Cmd = (...args: any[]) => unknown;
 export class Ctx {
   client!: LanguageClient;
   private statusBar: StatusBarItem;
-  private updater: HintsUpdater | undefined;
+  private updater: HintsUpdater;
   public readonly config = new Config();
 
   constructor(private readonly extCtx: ExtensionContext) {
@@ -30,10 +30,8 @@ export class Ctx {
     this.statusBar.text = 'rust-analyzer';
     this.extCtx.subscriptions.push(this.statusBar);
 
-    if (this.config.inlayHints.enable) {
-      this.updater = new HintsUpdater(this);
-      this.extCtx.subscriptions.push(this.updater);
-    }
+    this.updater = new HintsUpdater(this);
+    this.extCtx.subscriptions.push(this.updater);
   }
 
   registerCommand(name: string, factory: (ctx: Ctx) => Cmd) {
@@ -174,6 +172,9 @@ export class Ctx {
   }
 
   async activateInlayHints() {
+    await workspace.nvim.command('hi default link CocRustChainingHint CocHintSign');
+    await workspace.nvim.command('hi default link CocRustTypeHint CocHintSign');
+
     if (!this.config.inlayHints.enable) {
       return;
     }
@@ -181,14 +182,10 @@ export class Ctx {
       return;
     }
 
-    await this.sleep(100);
-    await workspace.nvim.command('hi default link CocRustChainingHint CocHintSign');
-    await workspace.nvim.command('hi default link CocRustTypeHint CocHintSign');
-
-    this.updater?.syncAndRenderHints();
+    this.updater.activate();
   }
 
   async toggleInlayHints() {
-    await this.updater?.toggle();
+    await this.updater.toggle();
   }
 }
