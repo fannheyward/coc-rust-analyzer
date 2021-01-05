@@ -64,18 +64,16 @@ export interface ReleaseTag {
 }
 
 function getPlatform(): string | undefined {
-  let platform: string | undefined;
-  if ((process.arch === 'x64' || process.arch === 'ia32') && process.platform === 'win32') {
-    platform = 'x86_64-pc-windows-msvc';
-  } else if (process.arch === 'x64' && process.platform === 'linux') {
-    platform = 'x86_64-unknown-linux-gnu';
-  } else if (process.arch === 'x64' && process.platform === 'darwin') {
-    platform = 'x86_64-apple-darwin';
-  } else if (process.arch === 'arm64' && process.platform === 'darwin') {
-    platform = 'aarch64-apple-darwin';
-  }
+  const platforms: { [key: string]: string } = {
+    'ia32 win32': 'x86_64-pc-windows-msvc',
+    'x64 win32': 'x86_64-pc-windows-msvc',
+    'x64 linux': 'x86_64-unknown-linux-gnu',
+    'x64 darwin': 'x86_64-apple-darwin',
+    'arm64 win32': 'aarch64-pc-windows-msvc',
+    'arm64 darwin': 'aarch64-apple-darwin',
+  };
 
-  return platform;
+  return platforms[`${process.arch} ${process.platform}`];
 }
 
 export async function getLatestRelease(updatesChannel: UpdatesChannel): Promise<ReleaseTag | undefined> {
@@ -92,6 +90,10 @@ export async function getLatestRelease(updatesChannel: UpdatesChannel): Promise<
 
   const release: GithubRelease = await response.json();
   const platform = getPlatform();
+  if (!platform) {
+    console.error(`Unfortunately we don't ship binaries for your platform yet.`);
+    return;
+  }
   const asset = release.assets.find((val) => val.browser_download_url.endsWith(`${platform}.gz`));
   if (!asset) {
     console.error(`getLatestRelease failed: ${release}`);
