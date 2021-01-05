@@ -15,7 +15,7 @@
 This extension is configured using a jsonc file. You can open this configuration file using the command `:CocConfig`, and it is typically located at `$HOME/.config/nvim/coc-settings.json`.
 
 - `rust-analyzer.enable`: Enable coc-rust-analyzer extension, default `true`
-- `rust-analyzer.serverPath`: Path to custom `rust-analyzer` executable, default: `''`
+- `rust-analyzer.server.path`: Path to custom `rust-analyzer` executable, default: `''`
 - `rust-analyzer.updates.prompt`: Prompt the user before downloading, default: `true`
 - `rust-analyzer.updates.channel`: Use `stable` or `nightly` updates, default: `stable`
 - `rust-analyzer.diagnostics.enable`: Whether to show native rust-analyzer diagnostics, default: `true`

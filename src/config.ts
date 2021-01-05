@@ -8,9 +8,7 @@ export interface Env {
 
 export class Config {
   private readonly rootSection = 'rust-analyzer';
-  private readonly requiresReloadOpts = ['server', 'serverPath', 'cargo', 'procMacro', 'files', 'updates', 'lens', 'hoverActions', 'inlayHints'].map(
-    (opt) => `${this.rootSection}.${opt}`
-  );
+  private readonly requiresReloadOpts = ['server', 'cargo', 'procMacro', 'files', 'updates', 'lens', 'hoverActions', 'inlayHints'].map((opt) => `${this.rootSection}.${opt}`);
   private cfg: WorkspaceConfiguration;
 
   constructor() {
@@ -32,7 +30,7 @@ export class Config {
   }
 
   get serverPath() {
-    return this.cfg.get<null | string>('serverPath')!;
+    return this.cfg.get<null | string>('server.path') ?? this.cfg.get<null | string>('serverPath');
   }
 
   get serverExtraEnv() {
