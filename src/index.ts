@@ -57,6 +57,7 @@ export async function activate(context: ExtensionContext): Promise<void> {
   ctx.registerCommand('explainError', cmds.explainError);
   ctx.registerCommand('upgrade', cmds.upgrade);
   ctx.registerCommand('ssr', cmds.ssr);
+  ctx.registerCommand('viewHir', cmds.viewHir);
   ctx.registerCommand('serverVersion', cmds.serverVersion);
   ctx.registerCommand('toggleInlayHints', cmds.toggleInlayHints);
   ctx.registerCommand('reload', (ctx) => {

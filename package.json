@@ -598,6 +598,11 @@
         "category": "Rust Analyzer"
       },
       {
+        "command": "rust-analyzer.viewHir",
+        "title": "View Hir",
+        "category": "Rust Analyzer"
+      },
+      {
         "command": "rust-analyzer.explainError",
         "title": "Explain the currently hovered diagnostic",
         "category": "Rust Analyzer"

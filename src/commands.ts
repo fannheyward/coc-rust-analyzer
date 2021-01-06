@@ -548,3 +548,20 @@ export function openCargoToml(ctx: Ctx): Cmd {
     await workspace.jumpTo(location.uri);
   };
 }
+
+export function viewHir(ctx: Ctx): Cmd {
+  return async () => {
+    const { document, position } = await workspace.getCurrentState();
+    if (!isRustDocument(document)) return;
+
+    const param: TextDocumentPositionParams = {
+      textDocument: { uri: document.uri },
+      position,
+    };
+    const ret = await ctx.client.sendRequest(ra.viewHir, param);
+    await workspace.nvim.command('tabnew').then(async () => {
+      const buf = await workspace.nvim.buffer;
+      buf.setLines(ret.split('\n'), { start: 0, end: -1 });
+    });
+  };
+}
