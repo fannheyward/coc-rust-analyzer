@@ -172,7 +172,7 @@
             "`\"nightly\"` updates are shipped daily (extension updates automatically by downloading artifacts directly from GitHub), they contain cutting-edge features and latest bug fixes. These releases help us get your feedback very quickly and speed up rust-analyzer development **drastically**"
           ]
         },
-        "rust-analyzer.assist.importMergeBehaviour": {
+        "rust-analyzer.assist.importMergeBehavior": {
           "markdownDescription": "The strategy to use when inserting new imports or merging imports.",
           "default": "full",
           "type": "string",
@@ -455,6 +455,14 @@
           "markdownDescription": "Enable Proc macro support, `#rust-analyzer.cargo.loadOutDirsFromCheck#` must be enabled.",
           "default": false,
           "type": "boolean"
+        },
+        "rust-analyzer.procMacro.server": {
+          "markdownDescription": "Internal config, path to proc-macro server executable (typically, this is rust-analyzer itself, but we override this in tests).",
+          "default": null,
+          "type": [
+            "null",
+            "string"
+          ]
         },
         "rust-analyzer.runnables.overrideCargo": {
           "markdownDescription": "Command to be executed instead of 'cargo' for runnables.",
