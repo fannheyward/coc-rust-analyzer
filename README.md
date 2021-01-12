@@ -94,6 +94,13 @@ You can use these commands by `:CocCommand XYZ`.
 - `CocRustTypeHint`: highlight name for `typeHints`, default link to `CocHintSign`
 - `CocRustChainingHint`: highlight name for `chainingHints`, default link to `CocHintSign`
 
+## Supporting
+
+If this extension is helpful to you, please support me via Patreon or PayPal:
+
+<a href="https://patreon.com/fannheyward"><img src="https://c5.patreon.com/external/logo/become_a_patron_button.png" alt="Patreon donate button" /> </a>
+<a href="https://paypal.me/fannheyward"><img src="https://user-images.githubusercontent.com/345274/104303610-41149f00-5505-11eb-88b2-5a95c53187b4.png" alt="PayPal donate button" /> </a>
+
 ## License
 
 MIT
