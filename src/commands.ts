@@ -230,7 +230,7 @@ export function run(ctx: Ctx): Cmd {
   };
 }
 
-export function debugSingle(): Cmd {
+export function debugSingle(ctx: Ctx): Cmd {
   return async (runnable: ra.Runnable) => {
     const { document } = await workspace.getCurrentState();
     if (!runnable || !isRustDocument(document)) return;
@@ -303,21 +303,20 @@ export function debugSingle(): Cmd {
 
     console.info(`Debugging executable: ${executable} ${executableArgs}`);
 
-    const debugConfig = workspace.getConfiguration('rust-analyzer.debug');
-
-    if (debugConfig.get<string>('runtime') == 'termdebug') {
+    const runtime = ctx.config.debug.runtime;
+    if (runtime === 'termdebug') {
       await workspace.nvim.command(`TermdebugCommand ${executable} ${executableArgs}`);
       return;
     }
 
-    if (debugConfig.get<string>('runtime') == 'vimspector') {
-      const name = workspace.getConfiguration('rust-analyzer.debug.vimspector.configuration').get<string>('name');
+    if (runtime === 'vimspector') {
+      const name = ctx.config.debug.vimspectorConfiguration.name;
       const configuration = { configuration: name, Executable: executable, Args: executableArgs };
       await workspace.nvim.call('vimspector#LaunchWithSettings', configuration);
       return;
     }
 
-    throw new Error(`Invalid debug runtime: ${debugConfig.get<string>('runtime')}`);
+    throw new Error(`Invalid debug runtime: ${runtime}`);
   };
 }
 

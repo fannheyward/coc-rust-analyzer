@@ -49,6 +49,15 @@ export class Config {
     };
   }
 
+  get debug() {
+    return {
+      runtime: this.cfg.get<string>('debug.runtime'),
+      vimspectorConfiguration: {
+        name: this.cfg.get<string>('debug.vimspector.configuration.name'),
+      },
+    };
+  }
+
   get prompt() {
     return this.cfg.get<boolean>('updates.prompt');
   }
