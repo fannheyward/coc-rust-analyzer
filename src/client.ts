@@ -1,7 +1,6 @@
 import { Executable, LanguageClient, LanguageClientOptions, ServerOptions, StaticFeature, Uri, window, workspace } from 'coc.nvim';
 import { ClientCapabilities, CodeAction, CodeActionParams, CodeActionRequest, Command, InsertTextFormat, TextDocumentEdit } from 'vscode-languageserver-protocol';
 import { Env } from './config';
-import * as ra from './lsp_ext';
 
 class ExperimentalFeatures implements StaticFeature {
   fillClientCapabilities(capabilities: ClientCapabilities): void {
@@ -94,14 +93,10 @@ export function createClient(bin: string, extra: Env): LanguageClient {
             continue;
           }
 
-          const resolveParams: ra.ResolveCodeActionParams = {
-            id: (item as any).id,
-            codeActionParams: params,
-          };
           const command: Command = {
             command: 'rust-analyzer.resolveCodeAction',
             title: item.title,
-            arguments: [resolveParams],
+            arguments: [item],
           };
           result.push(CodeAction.create(item.title, command));
         }

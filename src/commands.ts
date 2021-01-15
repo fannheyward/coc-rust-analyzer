@@ -1,7 +1,7 @@
 import { spawn, spawnSync } from 'child_process';
 import { commands, Documentation, FloatFactory, Terminal, TerminalOptions, Uri, window, workspace } from 'coc.nvim';
 import readline from 'readline';
-import { Location, LocationLink, Position, Range, TextDocumentEdit, TextDocumentPositionParams, TextEdit, WorkspaceEdit } from 'vscode-languageserver-protocol';
+import { CodeAction, Location, LocationLink, Position, Range, TextDocumentEdit, TextDocumentPositionParams, TextEdit, WorkspaceEdit } from 'vscode-languageserver-protocol';
 import { Cmd, Ctx, isRustDocument } from './ctx';
 import * as ra from './lsp_ext';
 
@@ -512,10 +512,12 @@ export function applySnippetWorkspaceEditCommand(): Cmd {
 }
 
 export function resolveCodeAction(ctx: Ctx): Cmd {
-  return async (params: ra.ResolveCodeActionParams) => {
-    const edit: WorkspaceEdit = await ctx.client.sendRequest(ra.resolveCodeAction, params);
-    if (!edit) return;
-    await applySnippetWorkspaceEdit(edit);
+  return async (params: CodeAction) => {
+    // TODO: use CodeActionResolveRequest after coc supports 3.16
+    const item = (await ctx.client.sendRequest('codeAction/resolve', params)) as CodeAction;
+    if (!item?.edit) return;
+
+    await applySnippetWorkspaceEdit(item.edit);
   };
 }
 
