@@ -70,7 +70,6 @@ Settings not specific to `rust-analyzer` can be found at `:help coc-configuratio
 You can use these commands by `:CocCommand XYZ`.
 
 - `rust-analyzer.analyzerStatus`: Show rust-analyzer status
-- `rust-analyzer.debugSingle`: Debug with `termdebug`
 - `rust-analyzer.expandMacro`: Expand macro recursively
 - `rust-analyzer.joinLines`: Join lines
 - `rust-analyzer.matchingBrace`: Find matching brace
@@ -80,7 +79,6 @@ You can use these commands by `:CocCommand XYZ`.
 - `rust-analyzer.reload`: Restart rust-analyzer server
 - `rust-analyzer.reloadWorkspace`: Reload workspace
 - `rust-analyzer.run`: List available runnables of current file
-- `rust-analyzer.runSingle`: Run runnable at position
 - `rust-analyzer.syntaxTree`: Show syntax tree
 - `rust-analyzer.ssr`: Structural Search Replace
 - `rust-analyzer.serverVersion`: Show current Rust Analyzer server version

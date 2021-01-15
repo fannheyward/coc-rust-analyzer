@@ -516,11 +516,6 @@
         "category": "Rust Analyzer"
       },
       {
-        "command": "rust-analyzer.applySnippetWorkspaceEdit",
-        "title": "Apply workspace edit",
-        "category": "Rust Analyzer"
-      },
-      {
         "command": "rust-analyzer.memoryUsage",
         "title": "Memory Usage (Clears Database)",
         "category": "Rust Analyzer"
@@ -563,16 +558,6 @@
       {
         "command": "rust-analyzer.run",
         "title": "Run",
-        "category": "Rust Analyzer"
-      },
-      {
-        "command": "rust-analyzer.debugSingle",
-        "title": "Debug Single",
-        "category": "Rust Analyzer"
-      },
-      {
-        "command": "rust-analyzer.runSingle",
-        "title": "Run Single",
         "category": "Rust Analyzer"
       },
       {

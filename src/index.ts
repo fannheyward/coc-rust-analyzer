@@ -38,27 +38,30 @@ export async function activate(context: ExtensionContext): Promise<void> {
     }
   }
 
-  ctx.registerCommand('analyzerStatus', cmds.analyzerStatus);
-  ctx.registerCommand('memoryUsage', cmds.memoryUsage);
-  ctx.registerCommand('applySnippetWorkspaceEdit', cmds.applySnippetWorkspaceEditCommand);
-  ctx.registerCommand('resolveCodeAction', cmds.resolveCodeAction);
-  ctx.registerCommand('reloadWorkspace', cmds.reloadWorkspace);
-  ctx.registerCommand('expandMacro', cmds.expandMacro);
-  ctx.registerCommand('joinLines', cmds.joinLines);
-  ctx.registerCommand('matchingBrace', cmds.matchingBrace);
-  ctx.registerCommand('openDocs', cmds.openDocs);
-  ctx.registerCommand('openCargoToml', cmds.openCargoToml);
-  ctx.registerCommand('parentModule', cmds.parentModule);
+  // internal commands that are invoked by server
+  ctx.registerCommand('runSingle', cmds.runSingle, true);
+  ctx.registerCommand('debugSingle', cmds.debugSingle, true);
+  ctx.registerCommand('showReferences', cmds.showReferences, true);
+  ctx.registerCommand('resolveCodeAction', cmds.resolveCodeAction, true);
+  ctx.registerCommand('applySnippetWorkspaceEdit', cmds.applySnippetWorkspaceEditCommand, true);
+
+  // common commands
   ctx.registerCommand('run', cmds.run);
-  ctx.registerCommand('debugSingle', cmds.debugSingle);
-  ctx.registerCommand('runSingle', cmds.runSingle);
-  ctx.registerCommand('syntaxTree', cmds.syntaxTree);
-  ctx.registerCommand('showReferences', cmds.showReferences);
-  ctx.registerCommand('explainError', cmds.explainError);
-  ctx.registerCommand('upgrade', cmds.upgrade);
   ctx.registerCommand('ssr', cmds.ssr);
+  ctx.registerCommand('upgrade', cmds.upgrade);
   ctx.registerCommand('viewHir', cmds.viewHir);
+  ctx.registerCommand('openDocs', cmds.openDocs);
+  ctx.registerCommand('joinLines', cmds.joinLines);
+  ctx.registerCommand('syntaxTree', cmds.syntaxTree);
+  ctx.registerCommand('memoryUsage', cmds.memoryUsage);
+  ctx.registerCommand('expandMacro', cmds.expandMacro);
+  ctx.registerCommand('explainError', cmds.explainError);
+  ctx.registerCommand('parentModule', cmds.parentModule);
+  ctx.registerCommand('matchingBrace', cmds.matchingBrace);
+  ctx.registerCommand('openCargoToml', cmds.openCargoToml);
   ctx.registerCommand('serverVersion', cmds.serverVersion);
+  ctx.registerCommand('analyzerStatus', cmds.analyzerStatus);
+  ctx.registerCommand('reloadWorkspace', cmds.reloadWorkspace);
   ctx.registerCommand('toggleInlayHints', cmds.toggleInlayHints);
   ctx.registerCommand('reload', (ctx) => {
     return async () => {

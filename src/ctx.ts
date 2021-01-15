@@ -34,10 +34,10 @@ export class Ctx {
     this.extCtx.subscriptions.push(this.updater);
   }
 
-  registerCommand(name: string, factory: (ctx: Ctx) => Cmd) {
+  registerCommand(name: string, factory: (ctx: Ctx) => Cmd, internal = false) {
     const fullName = `rust-analyzer.${name}`;
     const cmd = factory(this);
-    const d = commands.registerCommand(fullName, cmd);
+    const d = commands.registerCommand(fullName, cmd, null, internal);
     this.extCtx.subscriptions.push(d);
   }
 
