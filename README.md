@@ -31,7 +31,6 @@ This extension is configured using a jsonc file. You can open this configuration
 - `rust-analyzer.inlayHints.chainingHintsSeparator`: Separator text for chainingHints in virtual text, default `‣`
 - `rust-analyzer.inlayHints.refreshOnInsertMode`: Whether to refresh inlayHints on insert mode, default `false`
 - `rust-analyzer.files.watcher`: Controls file watching implementation, default: `client`
-- `rust-analyzer.files.exclude`: Paths to exclude from analysis, default: `[]`
 - `rust-analyzer.notifications.cargoTomlNotFound`: Whether to show `can't find Cargo.toml` error message, default: `true`
 - `rust-analyzer.cargo.autoreload`: Automatically refresh project info via `cargo metadata` on Cargo.toml changes, default: `true`
 - `rust-analyzer.cargo.allFeatures`: Activate all available features, default: `false`
