@@ -70,6 +70,7 @@ function getPlatform(): string | undefined {
     'x64 linux': 'x86_64-unknown-linux-gnu',
     'x64 darwin': 'x86_64-apple-darwin',
     'arm64 win32': 'aarch64-pc-windows-msvc',
+    'arm64 linux': 'aarch64-unknown-linux-gnu',
     'arm64 darwin': 'aarch64-apple-darwin',
   };
 
