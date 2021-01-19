@@ -27,6 +27,7 @@
     "prepare": "npm-run-all clean build"
   },
   "devDependencies": {
+    "@types/node": "10.12.0",
     "@types/node-fetch": "^2.5.7",
     "@types/which": "^2.0.0",
     "@typescript-eslint/eslint-plugin": "^4.1.1",
