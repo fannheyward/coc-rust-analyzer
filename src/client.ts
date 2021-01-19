@@ -9,15 +9,6 @@ class ExperimentalFeatures implements StaticFeature {
     caps.resolveCodeAction = true;
     caps.statusNotification = true;
     capabilities.experimental = caps;
-    // TODO: remove follows after coc supports 3.16
-    // @ts-ignore
-    capabilities.workspace?.workspaceEdit?.normalizesLineEndings = true;
-    // @ts-ignore
-    capabilities.workspace?.workspaceEdit?.changeAnnotationSupport = {
-      groupsOnLabel: true,
-    };
-    // @ts-ignore
-    capabilities.textDocument?.rename?.prepareSupportDefaultBehavior = 1;
   }
   initialize(): void {}
   dispose(): void {}
