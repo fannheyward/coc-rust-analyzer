@@ -27,7 +27,7 @@
     "prepare": "npm-run-all clean build"
   },
   "devDependencies": {
-    "@types/node": "10.12.0",
+    "@types/node": "^14.14.22",
     "@types/node-fetch": "^2.5.7",
     "@types/which": "^2.0.0",
     "@typescript-eslint/eslint-plugin": "^4.1.1",
@@ -45,7 +45,7 @@
     "prettier": "^2.1.0",
     "rimraf": "^3.0.0",
     "typescript": "^4.0.2",
-    "vscode-languageserver-protocol": "^3.15.3",
+    "vscode-languageserver-protocol": "3.15.3",
     "vscode-languageserver-textdocument": "^1.0.1",
     "which": "^2.0.2"
   },

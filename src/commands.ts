@@ -184,7 +184,7 @@ export function serverVersion(ctx: Ctx): Cmd {
       return;
     }
 
-    const version = spawnSync(bin, ['--version'], { encoding: 'utf-8' }).stdout;
+    const version = spawnSync(bin, ['--version'], { encoding: 'utf-8' }).stdout.toString();
     window.showMessage(version);
   };
 }
@@ -401,7 +401,7 @@ export function explainError(ctx: Ctx): Cmd {
 
     const diagnostic = ctx.client.diagnostics?.get(document.uri)?.find((diagnostic) => isInRange(diagnostic.range, position));
     if (diagnostic?.code) {
-      const explaination = spawnSync('rustc', ['--explain', `${diagnostic.code}`], { encoding: 'utf-8' }).stdout;
+      const explaination = spawnSync('rustc', ['--explain', `${diagnostic.code}`], { encoding: 'utf-8' }).stdout.toString();
 
       const docs: Documentation[] = [];
       let isCode = false;
