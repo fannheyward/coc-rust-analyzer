@@ -1,9 +1,15 @@
 import { Executable, LanguageClient, LanguageClientOptions, ServerOptions, StaticFeature, Uri, window, workspace } from 'coc.nvim';
-import { ClientCapabilities, CodeAction, CodeActionParams, CodeActionRequest, Command, InsertTextFormat, TextDocumentEdit } from 'vscode-languageserver-protocol';
+import { CodeAction, CodeActionParams, CodeActionRequest, Command, InsertTextFormat, TextDocumentEdit } from 'vscode-languageserver-protocol';
 import { Env } from './config';
 
 class ExperimentalFeatures implements StaticFeature {
-  fillClientCapabilities(capabilities: ClientCapabilities): void {
+  fillClientCapabilities(capabilities: any): void {
+    // TODO: remove completion.capabilities after coc supports LSP 3.16
+    const completionCaps = capabilities.textDocument.completion;
+    completionCaps.completionItem.resolveSupport = {
+      properties: ['documentation', 'detail', 'additionalTextEdits'],
+    };
+
     const caps: any = capabilities.experimental ?? {};
     caps.snippetTextEdit = true;
     caps.resolveCodeAction = true;
