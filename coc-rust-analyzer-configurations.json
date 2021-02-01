@@ -36,6 +36,11 @@
     "default": "‣",
     "description": "Separator text for typeHints in virtual text"
   },
+  "rust-analyzer.inlayHints.typeHintsWithVariable": {
+    "type": "boolean",
+    "default": true,
+    "description": "Show typeHints with variables name"
+  },
   "rust-analyzer.inlayHints.chainingHintsSeparator": {
     "type": "string",
     "default": "‣",

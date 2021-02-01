@@ -43,6 +43,7 @@ export class Config {
       enable: hasVirtualText && this.cfg.get<boolean>('inlayHints.enable'),
       typeHints: hasVirtualText && this.cfg.get<boolean>('inlayHints.typeHints'),
       typeHintsSeparator: this.cfg.get<string>('inlayHints.typeHintsSeparator'),
+      typeHintsWithVariable: this.cfg.get<boolean>('inlayHints.typeHintsWithVariable'),
       chainingHints: hasVirtualText && this.cfg.get<boolean>('inlayHints.chainingHints'),
       chainingHintsSeparator: this.cfg.get<string>('inlayHints.chainingHintsSeparator'),
       refreshOnInsertMode: hasVirtualText && this.cfg.get<boolean>('inlayHints.refreshOnInsertMode'),

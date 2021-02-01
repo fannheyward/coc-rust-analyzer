@@ -101,6 +101,7 @@ export class HintsUpdater implements Disposable {
   }
 
   private async renderHints(doc: Document, hints: ra.InlayHint[]) {
+    console.error(hints);
     const decorations: InlaysDecorations = { type: [], param: [], chaining: [] };
     for (const hint of hints) {
       switch (hint.kind) {
@@ -120,12 +121,13 @@ export class HintsUpdater implements Disposable {
     const split: [string, string] = [' ', 'Normal'];
     if (this.ctx.config.inlayHints.typeHints) {
       const sep = this.ctx.config.inlayHints.typeHintsSeparator;
+      const showSymbol = this.ctx.config.inlayHints.typeHintsWithVariable;
       for (const item of decorations.type) {
         const sn_start = item.range.start.character;
         const sn_end = item.range.end.character;
         const line = doc.getline(item.range.start.line);
-        const symbol_name = line.substring(sn_start, sn_end);
-        const chunks: [[string, string]] = [[`${sep}${symbol_name}: ${item.label}`, 'CocRustTypeHint']];
+        const symbol_name = showSymbol ? `${line.substring(sn_start, sn_end)}: ` : '';
+        const chunks: [[string, string]] = [[`${sep}${symbol_name}${item.label}`, 'CocRustTypeHint']];
         if (chaining_hints[item.range.end.line] === undefined) {
           chaining_hints[item.range.end.line] = chunks;
         } else {
