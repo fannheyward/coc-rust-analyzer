@@ -24,7 +24,8 @@
     "lint": "eslint src --ext ts",
     "schema": "node ./generate-config-schema.js",
     "build": "node esbuild.js",
-    "prepare": "npm-run-all clean build"
+    "watch": "node esbuild.js --watch",
+    "prepare": "yarn clean && yarn build"
   },
   "devDependencies": {
     "@types/node": "^14.14.22",
@@ -33,7 +34,7 @@
     "@typescript-eslint/eslint-plugin": "^4.1.1",
     "@typescript-eslint/parser": "^4.1.1",
     "coc.nvim": "^0.0.80",
-    "esbuild": "^0.8.33",
+    "esbuild": "^0.8.39",
     "eslint": "^7.3.0",
     "eslint-config-prettier": "^7.0.0",
     "eslint-plugin-prettier": "^3.1.4",
@@ -41,7 +42,6 @@
     "https-proxy-agent": "^5.0.0",
     "husky": "^4.2.1",
     "node-fetch": "^2.6.0",
-    "npm-run-all": "^4.1.5",
     "prettier": "^2.1.0",
     "rimraf": "^3.0.0",
     "typescript": "^4.0.2",
