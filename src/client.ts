@@ -60,6 +60,16 @@ export function createClient(bin: string, extra: Env): LanguageClient {
     documentSelector: [{ language: 'rust' }, { pattern: 'Cargo.toml' }],
     initializationOptions: workspace.getConfiguration('rust-analyzer'),
     middleware: {
+      async resolveCompletionItem(item, token, next) {
+        if (item.data && !item.data.position) {
+          // TODO: remove this if coc undefined item.data
+          // coc will set item.data to {} if undefined
+          // but RA will check item.data.position to resolve
+          // this hacks to delete item.data
+          delete item.data;
+        }
+        return await next(item, token);
+      },
       async provideCodeActions(document, range, context, token) {
         const params: CodeActionParams = {
           textDocument: { uri: document.uri },
