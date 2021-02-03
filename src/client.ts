@@ -1,5 +1,5 @@
 import { Executable, LanguageClient, LanguageClientOptions, ServerOptions, StaticFeature, Uri, window, workspace } from 'coc.nvim';
-import { CodeAction, CodeActionParams, CodeActionRequest, Command, InsertTextFormat, TextDocumentEdit } from 'vscode-languageserver-protocol';
+import { CodeAction, CodeActionKind, CodeActionParams, CodeActionRequest, Command } from 'vscode-languageserver-protocol';
 import { Env } from './config';
 
 class ExperimentalFeatures implements StaticFeature {
@@ -18,17 +18,6 @@ class ExperimentalFeatures implements StaticFeature {
   }
   initialize(): void {}
   dispose(): void {}
-}
-
-function isSnippetEdit(action: CodeAction): boolean {
-  for (const edit of action.edit?.documentChanges ?? []) {
-    if (TextDocumentEdit.is(edit)) {
-      if (edit.edits.some((indel) => (indel as any).insertTextFormat === InsertTextFormat.Snippet)) {
-        return true;
-      }
-    }
-  }
-  return false;
 }
 
 function isCodeActionWithoutEditsAndCommands(value: any): boolean {
@@ -76,21 +65,11 @@ export function createClient(bin: string, extra: Env): LanguageClient {
           range,
           context,
         };
-        // eslint-disable-next-line @typescript-eslint/no-use-before-define
         const values = await client.sendRequest(CodeActionRequest.type, params, token);
         if (values === null) return undefined;
         const result: (CodeAction | Command)[] = [];
         for (const item of values) {
-          // In our case we expect to get code edits only from diagnostics
           if (CodeAction.is(item)) {
-            if (isSnippetEdit(item)) {
-              item.command = {
-                command: 'rust-analyzer.applySnippetWorkspaceEdit',
-                title: item.title,
-                arguments: [item.edit],
-              };
-              item.edit = undefined;
-            }
             result.push(item);
             continue;
           }
@@ -105,7 +84,8 @@ export function createClient(bin: string, extra: Env): LanguageClient {
             title: item.title,
             arguments: [item],
           };
-          result.push(CodeAction.create(item.title, command));
+          const kind: CodeActionKind = (item as any).kind;
+          result.push(CodeAction.create(item.title, command, kind));
         }
         return result;
       },
