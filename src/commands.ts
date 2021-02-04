@@ -483,18 +483,18 @@ export async function applySnippetWorkspaceEdit(edit: WorkspaceEdit) {
       newEdits.push(TextEdit.replace(indel.range, newText));
     }
 
+    const current = await workspace.document;
+    if (current.uri !== change.textDocument.uri) {
+      await workspace.loadFile(change.textDocument.uri);
+      await workspace.jumpTo(change.textDocument.uri);
+    }
+
     const wsEdit: WorkspaceEdit = {
       changes: {
         [change.textDocument.uri]: newEdits,
       },
     };
     await workspace.applyEdit(wsEdit);
-
-    const current = await workspace.document;
-    if (current.uri !== change.textDocument.uri) {
-      await workspace.loadFile(change.textDocument.uri);
-      await workspace.jumpTo(change.textDocument.uri);
-    }
 
     if (selection) {
       await workspace.selectRange(selection);
