@@ -516,7 +516,11 @@ export function resolveCodeAction(ctx: Ctx): Cmd {
     const item = (await ctx.client.sendRequest('codeAction/resolve', params)) as CodeAction;
     if (!item?.edit) return;
 
+    const wsEditWithoutTextEdits: WorkspaceEdit = {
+      documentChanges: item.edit.documentChanges?.filter((change) => 'kind' in change),
+    };
     await applySnippetWorkspaceEdit(item.edit);
+    await workspace.applyEdit(wsEditWithoutTextEdits);
   };
 }
 
