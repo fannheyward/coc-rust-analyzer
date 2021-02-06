@@ -519,8 +519,8 @@ export function resolveCodeAction(ctx: Ctx): Cmd {
     const wsEditWithoutTextEdits: WorkspaceEdit = {
       documentChanges: item.edit.documentChanges?.filter((change) => 'kind' in change),
     };
-    await applySnippetWorkspaceEdit(item.edit);
     await workspace.applyEdit(wsEditWithoutTextEdits);
+    await applySnippetWorkspaceEdit(item.edit);
   };
 }
 
