@@ -25,7 +25,7 @@
     "schema": "node ./generate-config-schema.js",
     "build": "node esbuild.js",
     "watch": "node esbuild.js --watch",
-    "prepare": "yarn clean && yarn build"
+    "prepare": "node esbuild.js"
   },
   "devDependencies": {
     "@types/node": "^14.14.22",
