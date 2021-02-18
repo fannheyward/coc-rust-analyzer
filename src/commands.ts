@@ -189,30 +189,36 @@ export function serverVersion(ctx: Ctx): Cmd {
   };
 }
 
+async function fetchRunnable(ctx: Ctx): Promise<ra.Runnable | undefined> {
+  const { document, position } = await workspace.getCurrentState();
+  if (!isRustDocument(document)) return;
+
+  window.showMessage(`Fetching runnable...`);
+
+  const params: ra.RunnablesParams = {
+    textDocument: { uri: document.uri },
+    position,
+  };
+  const runnables = await ctx.client.sendRequest(ra.runnables, params);
+
+  const items: RunnableQuickPick[] = [];
+  for (const r of runnables) {
+    items.push(new RunnableQuickPick(r));
+  }
+
+  const idx = await window.showQuickpick(items.map((o) => o.label));
+  if (idx === -1) {
+    return;
+  }
+
+  return items[idx].runnable;
+}
+
 export function run(ctx: Ctx): Cmd {
   return async () => {
-    const { document, position } = await workspace.getCurrentState();
-    if (!isRustDocument(document)) return;
+    const runnable = await fetchRunnable(ctx);
+    if (!runnable) return;
 
-    window.showMessage(`Fetching runnable...`);
-
-    const params: ra.RunnablesParams = {
-      textDocument: { uri: document.uri },
-      position,
-    };
-    const runnables = await ctx.client.sendRequest(ra.runnables, params);
-
-    const items: RunnableQuickPick[] = [];
-    for (const r of runnables) {
-      items.push(new RunnableQuickPick(r));
-    }
-
-    const idx = await window.showQuickpick(items.map((o) => o.label));
-    if (idx === -1) {
-      return;
-    }
-
-    const runnable = items[idx].runnable;
     const cmd = `${runnable.kind} ${runnable.args.cargoArgs.join(' ')}`;
     const opt: TerminalOptions = {
       name: runnable.label,
@@ -568,5 +574,21 @@ export function viewHir(ctx: Ctx): Cmd {
       const buf = await workspace.nvim.buffer;
       buf.setLines(ret.split('\n'), { start: 0, end: -1 });
     });
+  };
+}
+
+export function echoRunCommandLine(ctx: Ctx) {
+  return async () => {
+    const runnable = await fetchRunnable(ctx);
+    if (!runnable) return;
+    const args = [...runnable.args.cargoArgs];
+    if (runnable.args.cargoExtraArgs) {
+      args.push(...runnable.args.cargoExtraArgs);
+    }
+    if (runnable.args.executableArgs.length > 0) {
+      args.push('--', ...runnable.args.executableArgs);
+    }
+    const commandLine = ['cargo', ...args].join(' ');
+    window.showMessage(commandLine);
   };
 }

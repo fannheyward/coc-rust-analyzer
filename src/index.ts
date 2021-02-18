@@ -63,6 +63,7 @@ export async function activate(context: ExtensionContext): Promise<void> {
   ctx.registerCommand('analyzerStatus', cmds.analyzerStatus);
   ctx.registerCommand('reloadWorkspace', cmds.reloadWorkspace);
   ctx.registerCommand('toggleInlayHints', cmds.toggleInlayHints);
+  ctx.registerCommand('echoRunCommandLine', cmds.echoRunCommandLine);
   ctx.registerCommand('reload', (ctx) => {
     return async () => {
       window.showMessage(`Reloading rust-analyzer...`);
