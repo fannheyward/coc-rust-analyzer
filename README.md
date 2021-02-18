@@ -2,6 +2,7 @@
 
 [rust-analyzer](https://github.com/rust-analyzer/rust-analyzer) for Vim/Neovim, works as an extension with coc.nvim.
 
+<!-- markdownlint-disable-next-line -->
 <img width="567" alt="10" src="https://user-images.githubusercontent.com/345274/67060118-34808a00-f18e-11e9-9d76-22fff11b5802.png">
 
 ## Install
@@ -95,7 +96,9 @@ You can use these commands by `:CocCommand XYZ`.
 
 If this extension is helpful to you, please support me via Patreon or PayPal:
 
+<!-- markdownlint-disable-next-line -->
 <a href="https://patreon.com/fannheyward"><img src="https://c5.patreon.com/external/logo/become_a_patron_button.png" alt="Patreon donate button" /> </a>
+<!-- markdownlint-disable-next-line -->
 <a href="https://paypal.me/fannheyward"><img src="https://user-images.githubusercontent.com/345274/104303610-41149f00-5505-11eb-88b2-5a95c53187b4.png" alt="PayPal donate button" /> </a>
 
 ## License
