@@ -4,10 +4,14 @@ import { Env } from './config';
 
 class ExperimentalFeatures implements StaticFeature {
   fillClientCapabilities(capabilities: any): void {
-    // TODO: remove completion.capabilities after coc supports LSP 3.16
+    // TODO: remove completionCaps/codeActionCaps after coc supports LSP 3.16
     const completionCaps = capabilities.textDocument.completion;
     completionCaps.completionItem.resolveSupport = {
       properties: ['documentation', 'detail', 'additionalTextEdits'],
+    };
+    const codeActionCaps = capabilities.textDocument.codeAction;
+    codeActionCaps.resolveSupport = {
+      properties: ['edit'],
     };
 
     const caps: any = capabilities.experimental ?? {};
