@@ -53,11 +53,6 @@
     "printWidth": 180,
     "semi": true
   },
-  "husky": {
-    "hooks": {
-      "pre-push": "yarn lint"
-    }
-  },
   "contributes": {
     "rootPatterns": [
       {
