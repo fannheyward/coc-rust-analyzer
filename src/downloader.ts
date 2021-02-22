@@ -1,4 +1,4 @@
-import { exec } from 'child_process';
+import { exec, spawnSync } from 'child_process';
 import { ExtensionContext, window } from 'coc.nvim';
 import { randomBytes } from 'crypto';
 import { createWriteStream, PathLike, promises as fs } from 'fs';
@@ -63,6 +63,13 @@ export interface ReleaseTag {
   asset?: Asset;
 }
 
+function isMusl(): boolean {
+  // We can detect Alpine by checking `/etc/os-release` but not Void Linux musl.
+  // Instead, we run `ldd` since it advertises the libc which it belongs to.
+  const res = spawnSync('ldd', ['--version']);
+  return res.stderr != null && res.stderr.indexOf('musl libc') >= 0;
+}
+
 function getPlatform(): string | undefined {
   const platforms: { [key: string]: string } = {
     'ia32 win32': 'x86_64-pc-windows-msvc',
@@ -74,7 +81,11 @@ function getPlatform(): string | undefined {
     'arm64 darwin': 'aarch64-apple-darwin',
   };
 
-  return platforms[`${process.arch} ${process.platform}`];
+  let platform = platforms[`${process.arch} ${process.platform}`];
+  if (platform === 'x86_64-unknown-linux-gnu' && isMusl()) {
+    platform = 'x86_64-unknown-linux-musl';
+  }
+  return platform;
 }
 
 export async function getLatestRelease(updatesChannel: UpdatesChannel): Promise<ReleaseTag | undefined> {
@@ -102,7 +113,9 @@ export async function getLatestRelease(updatesChannel: UpdatesChannel): Promise<
   }
 
   let tag = release.tag_name;
-  if (updatesChannel === 'nightly') tag = `${release.tag_name} ${release.published_at.slice(0, 10)}`;
+  if (updatesChannel === 'nightly') {
+    tag = `${release.tag_name} ${release.published_at.slice(0, 10)}`;
+  }
   const name = process.platform === 'win32' ? 'rust-analyzer.exe' : 'rust-analyzer';
 
   return { asset, tag, url: asset.browser_download_url, name: name };
