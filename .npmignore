@@ -4,6 +4,7 @@ tsconfig.json
 *.map
 .tags
 .DS_Store
+esbuild.js
 webpack.config.js
 coc-rust-analyzer-configurations.json
 generate-config-schema.js
