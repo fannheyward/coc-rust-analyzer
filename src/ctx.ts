@@ -49,6 +49,9 @@ export class Ctx {
 
     const client = createClient(bin, this.config.serverExtraEnv);
     this.extCtx.subscriptions.push(services.registLanguageClient(client));
+    const watcher = workspace.createFileSystemWatcher('**/Cargo.toml');
+    this.extCtx.subscriptions.push(watcher);
+    watcher.onDidChange(async () => await commands.executeCommand('rust-analyzer.reloadWorkspace'));
     await client.onReady();
 
     client.onNotification(ra.status, async (params) => {
