@@ -35,7 +35,6 @@ export class HintsUpdater implements Disposable {
     events.on('InsertLeave', async (bufnr) => {
       const doc = workspace.getDocument(bufnr);
       if (doc && isRustDocument(doc.textDocument)) {
-        doc.buffer.clearNamespace(this.inlayHintsNS);
         this.syncAndRenderHints(doc);
       }
     });
@@ -44,7 +43,6 @@ export class HintsUpdater implements Disposable {
       (e) => {
         const doc = workspace.getDocument(e.bufnr);
         if (doc && isRustDocument(doc.textDocument)) {
-          doc.buffer.clearNamespace(this.inlayHintsNS);
           if (workspace.insertMode && !this.ctx.config.inlayHints.refreshOnInsertMode) {
             return;
           }
@@ -59,7 +57,6 @@ export class HintsUpdater implements Disposable {
       (e) => {
         if (e && isRustDocument(e)) {
           const doc = workspace.getDocument(e.uri);
-          doc.buffer.clearNamespace(this.inlayHintsNS);
           this.syncAndRenderHints(doc);
         }
       },
@@ -69,7 +66,6 @@ export class HintsUpdater implements Disposable {
 
     const current = await workspace.document;
     if (isRustDocument(current.textDocument)) {
-      current.buffer.clearNamespace(this.inlayHintsNS);
       this.syncAndRenderHints(current);
     }
   }
@@ -88,10 +84,13 @@ export class HintsUpdater implements Disposable {
     }
   }
 
-  async syncAndRenderHints(doc: Document) {
+  private async syncAndRenderHints(doc: Document) {
     if (!this.inlayHintsEnabled) return;
     if (doc && isRustDocument(doc.textDocument)) {
-      const file: RustSourceFile = { document: doc.textDocument, inlaysRequest: null };
+      const file: RustSourceFile = {
+        document: doc.textDocument,
+        inlaysRequest: null,
+      };
       this.fetchHints(file).then(async (hints) => {
         if (!hints) return;
 
@@ -101,8 +100,11 @@ export class HintsUpdater implements Disposable {
   }
 
   private async renderHints(doc: Document, hints: ra.InlayHint[]) {
-    console.error(hints);
-    const decorations: InlaysDecorations = { type: [], param: [], chaining: [] };
+    const decorations: InlaysDecorations = {
+      type: [],
+      param: [],
+      chaining: [],
+    };
     for (const hint of hints) {
       switch (hint.kind) {
         case ra.InlayHint.Kind.TypeHint:
@@ -134,7 +136,6 @@ export class HintsUpdater implements Disposable {
           chaining_hints[item.range.end.line].push(split);
           chaining_hints[item.range.end.line].push(chunks[0]);
         }
-        doc.buffer.setVirtualText(this.inlayHintsNS, item.range.end.line, chaining_hints[item.range.end.line], {});
       }
     }
     if (this.ctx.config.inlayHints.chainingHints) {
@@ -147,9 +148,11 @@ export class HintsUpdater implements Disposable {
           chaining_hints[item.range.end.line].push(split);
           chaining_hints[item.range.end.line].push(chunks[0]);
         }
-        doc.buffer.setVirtualText(this.inlayHintsNS, item.range.end.line, chaining_hints[item.range.end.line], {});
       }
     }
+    Object.keys(chaining_hints).forEach((line) => {
+      doc.buffer.setVirtualText(this.inlayHintsNS, Number(line), chaining_hints[line], {});
+    });
   }
 
   private async fetchHints(file: RustSourceFile): Promise<null | ra.InlayHint[]> {
