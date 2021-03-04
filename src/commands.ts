@@ -424,7 +424,7 @@ export function explainError(ctx: Ctx): Cmd {
 
 export function reloadWorkspace(ctx: Ctx): Cmd {
   return async () => {
-    await ctx.client.sendRequest(ra.reloadWorkspace);
+    await ctx.client?.sendRequest(ra.reloadWorkspace);
   };
 }
 

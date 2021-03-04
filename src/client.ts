@@ -50,7 +50,7 @@ export function createClient(bin: string, extra: Env): LanguageClient {
   const serverOptions: ServerOptions = run;
   const outputChannel = window.createOutputChannel('Rust Analyzer Language Server Trace');
   const clientOptions: LanguageClientOptions = {
-    documentSelector: [{ language: 'rust' }, { pattern: 'Cargo.toml' }],
+    documentSelector: [{ language: 'rust' }],
     initializationOptions: workspace.getConfiguration('rust-analyzer'),
     middleware: {
       async resolveCompletionItem(item, token, next) {
