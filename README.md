@@ -37,8 +37,8 @@ This extension is configured using a jsonc file. You can open this configuration
 - `rust-analyzer.cargo.allFeatures`: Activate all available features, default: `false`
 - `rust-analyzer.cargo.features`: List of features to activate, default: `[]`
 - `rust-analyzer.cargo.noDefaultFeatures`: Do not activate the `default` feature, default: `false`
-- `rust-analyzer.cargo.loadOutDirsFromCheck`: Run `cargo check` on startup to get the correct value for package OUT_DIRs, default: `false`
-- `rust-analyzer.procMacro.enable`: Enable Proc macro support, `cargo.loadOutDirsFromCheck` must be enabled, default: `false`
+- `rust-analyzer.cargo.loadOutDirsFromCheck`: Run build scripts (`build.rs`) for more precise code analysis, default: `false`
+- `rust-analyzer.procMacro.enable`: Enable support for procedural macros, implies `#rust-analyzer.cargo.runBuildScripts#`, default: `false`
 - `rust-analyzer.rustfmt.extraArgs`: Additional arguments to rustfmt, default: `[]`
 - `rust-analyzer.rustfmt.overrideCommand`: Advanced option, fully override the command rust-analyzer uses for formatting, default: `null`
 - `rust-analyzer.checkOnSave.enable`: Run specified `cargo check` command for diagnostics on save, default: `true`
@@ -58,6 +58,9 @@ This extension is configured using a jsonc file. You can open this configuration
 - `rust-analyzer.lens.implementations`: Whether to show Implementations lens, default: `true`
 - `rust-analyzer.lens.methodReferences`: Whether to show `Method References` lens, default: `false`
 - `rust-analyzer.hoverActions.linksInHover`: Whether to show document links in hover, default: `false`
+- `rust-analyzer.assist.importMergeBehavior`: The strategy to use when inserting new imports or merging imports, default: `full`
+- `rust-analyzer.assist.importPrefix`: The path structure for newly inserted paths to use, default: `plain`
+- `rust-analyzer.assist.importGroup`: Group inserted imports by the [following order](https://rust-analyzer.github.io/manual.html#auto-import). Groups are separated by newlines. default: `true`
 - `rust-analyzer.callInfo.full`: Show function name and docs in parameter hints, default: `true`
 - `rust-analyzer.trace.server`: Trace requests to server, default: `off`
 - `rust-analyzer.debug.runtime`: Which runtime debug to use, default: `termdebug`, options: `vimspector`, `termdebug`

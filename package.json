@@ -198,6 +198,11 @@
             "Force import paths to be absolute by always starting them with `crate` or the crate name they refer to."
           ]
         },
+        "rust-analyzer.assist.importGroup": {
+          "markdownDescription": "Group inserted imports by the [following order](https://rust-analyzer.github.io/manual.html#auto-import). Groups are separated by newlines.",
+          "default": true,
+          "type": "boolean"
+        },
         "rust-analyzer.callInfo.full": {
           "markdownDescription": "Show function name and docs in parameter hints.",
           "default": true,
@@ -221,8 +226,8 @@
             "type": "string"
           }
         },
-        "rust-analyzer.cargo.loadOutDirsFromCheck": {
-          "markdownDescription": "Run `cargo check` on startup to get the correct value for package OUT_DIRs.",
+        "rust-analyzer.cargo.runBuildScripts": {
+          "markdownDescription": "Run build scripts (`build.rs`) for more precise code analysis.",
           "default": false,
           "type": "boolean"
         },
@@ -461,7 +466,7 @@
           "type": "boolean"
         },
         "rust-analyzer.procMacro.enable": {
-          "markdownDescription": "Enable Proc macro support, `#rust-analyzer.cargo.loadOutDirsFromCheck#` must be enabled.",
+          "markdownDescription": "Enable support for procedural macros, implies `#rust-analyzer.cargo.runBuildScripts#`.",
           "default": false,
           "type": "boolean"
         },
