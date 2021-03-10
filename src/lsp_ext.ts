@@ -2,7 +2,7 @@
  * This file mirrors `crates/rust-analyzer/src/lsp_ext.rs` declarations.
  */
 
-import * as lc from 'vscode-languageserver-protocol';
+import * as lc from 'coc.nvim';
 
 export interface AnalyzerStatusParams {
   textDocument?: lc.TextDocumentIdentifier;

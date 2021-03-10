@@ -1,5 +1,5 @@
-import { Executable, LanguageClient, LanguageClientOptions, ServerOptions, StaticFeature, Uri, window, workspace } from 'coc.nvim';
-import { CodeAction, CodeActionKind, CodeActionParams, CodeActionRequest, Command } from 'vscode-languageserver-protocol';
+import { CodeActionKind, Command, Executable, LanguageClient, LanguageClientOptions, ServerOptions, StaticFeature, Uri, window, workspace } from 'coc.nvim';
+import { CodeAction, CodeActionParams, CodeActionRequest } from 'vscode-languageserver-protocol';
 import { Env } from './config';
 
 class ExperimentalFeatures implements StaticFeature {
@@ -69,10 +69,11 @@ export function createClient(bin: string, extra: Env): LanguageClient {
           range,
           context,
         };
-        const values = await client.sendRequest(CodeActionRequest.type, params, token);
+        // TODO
+        const values = await client.sendRequest(CodeActionRequest.type.method, params, token);
         if (values === null) return undefined;
         const result: (CodeAction | Command)[] = [];
-        for (const item of values) {
+        for (const item of values as (Command | CodeAction)[]) {
           if (CodeAction.is(item)) {
             result.push(item);
             continue;

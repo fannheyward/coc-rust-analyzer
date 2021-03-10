@@ -1,5 +1,4 @@
-import { Disposable, Document, events, workspace } from 'coc.nvim';
-import { CancellationTokenSource } from 'vscode-languageserver-protocol';
+import { CancellationTokenSource, Disposable, Document, events, workspace } from 'coc.nvim';
 import { Ctx, isRustDocument, RustDocument } from './ctx';
 import * as ra from './lsp_ext';
 

@@ -1,7 +1,24 @@
 import { spawn, spawnSync } from 'child_process';
-import { commands, Documentation, FloatFactory, Terminal, TerminalOptions, Uri, window, workspace } from 'coc.nvim';
+import {
+  CodeAction,
+  commands,
+  Documentation,
+  FloatFactory,
+  Location,
+  LocationLink,
+  Position,
+  Range,
+  Terminal,
+  TerminalOptions,
+  TextDocumentPositionParams,
+  TextEdit,
+  Uri,
+  window,
+  workspace,
+  WorkspaceEdit,
+} from 'coc.nvim';
 import readline from 'readline';
-import { CodeAction, Location, LocationLink, Position, Range, TextDocumentEdit, TextDocumentPositionParams, TextEdit, WorkspaceEdit } from 'vscode-languageserver-protocol';
+import { TextDocumentEdit } from 'vscode-languageserver-protocol';
 import { Cmd, Ctx, isRustDocument } from './ctx';
 import * as ra from './lsp_ext';
 

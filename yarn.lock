@@ -280,10 +280,10 @@ chalk@^4.0.0:
     ansi-styles "^4.1.0"
     supports-color "^7.1.0"
 
-coc.nvim@^0.0.80:
-  version "0.0.80"
-  resolved "https://registry.yarnpkg.com/coc.nvim/-/coc.nvim-0.0.80.tgz#785145c382660db03f517f9b497900d95cbd0e4f"
-  integrity sha512-/3vTcnofoAYMrdENrlQmADTzfXX4+PZ0fiM10a39UA37dTR2dpIGi9O469kcIksuunLjToqWG8S45AGx/9wV7g==
+coc.nvim@^0.0.81-next.3:
+  version "0.0.81-next.3"
+  resolved "https://registry.yarnpkg.com/coc.nvim/-/coc.nvim-0.0.81-next.3.tgz#d71cc13a8a4c6d98133047b799ab7c78ba3a0bf7"
+  integrity sha512-eKOxzfBhOZ8t7/zpgmDcC1aS8hkTGz8pe/t4ntN/J2G64I0l9j27/P+8HIbPmGS2WgHv9HmNLFqnquC391Xmbw==
 
 color-convert@^1.9.0:
   version "1.9.3"
@@ -1058,18 +1058,13 @@ vscode-jsonrpc@6.0.0:
   resolved "https://registry.yarnpkg.com/vscode-jsonrpc/-/vscode-jsonrpc-6.0.0.tgz#108bdb09b4400705176b957ceca9e0880e9b6d4e"
   integrity sha512-wnJA4BnEjOSyFMvjZdpiOwhSq9uDoK8e/kpRJDTaMYzwlkrhG1fwDIZI94CLsLzlCK5cIbMMtFlJlfR57Lavmg==
 
-vscode-languageserver-protocol@3.16.0:
+vscode-languageserver-protocol@^3.16.0:
   version "3.16.0"
   resolved "https://registry.yarnpkg.com/vscode-languageserver-protocol/-/vscode-languageserver-protocol-3.16.0.tgz#34135b61a9091db972188a07d337406a3cdbe821"
   integrity sha512-sdeUoAawceQdgIfTI+sdcwkiK2KU+2cbEYA0agzM2uqaUy2UpnnGHtWTHVEtS0ES4zHU0eMFRGN+oQgDxlD66A==
   dependencies:
     vscode-jsonrpc "6.0.0"
     vscode-languageserver-types "3.16.0"
-
-vscode-languageserver-textdocument@^1.0.1:
-  version "1.0.1"
-  resolved "https://registry.yarnpkg.com/vscode-languageserver-textdocument/-/vscode-languageserver-textdocument-1.0.1.tgz#178168e87efad6171b372add1dea34f53e5d330f"
-  integrity sha512-UIcJDjX7IFkck7cSkNNyzIz5FyvpQfY7sdzVy+wkKN/BLaD4DQ0ppXQrKePomCxTS7RrolK1I0pey0bG9eh8dA==
 
 vscode-languageserver-types@3.16.0:
   version "3.16.0"

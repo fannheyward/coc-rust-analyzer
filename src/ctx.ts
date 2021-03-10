@@ -1,10 +1,8 @@
-import { commands, ExtensionContext, LanguageClient, services, StatusBarItem, window, workspace } from 'coc.nvim';
+import { CancellationToken, commands, Disposable, ExtensionContext, LanguageClient, RequestType, services, StatusBarItem, TextDocument, window, workspace } from 'coc.nvim';
 import executable from 'executable';
 import { existsSync } from 'fs';
 import { homedir } from 'os';
 import { join } from 'path';
-import { CancellationToken, Disposable, ErrorCodes, RequestType } from 'vscode-languageserver-protocol';
-import { TextDocument } from 'vscode-languageserver-textdocument';
 import which from 'which';
 import { createClient } from './client';
 import { Config } from './config';
@@ -160,11 +158,14 @@ export class Ctx {
           throw error;
         }
 
-        if (error.code === ErrorCodes.RequestCancelled) {
+        // TODO
+        // ErrorCodes.RequestCancelled = -32800;¬
+        if (error.code === -32800) {
           throw error;
         }
 
-        if (error.code !== ErrorCodes.ContentModified) {
+        // ErrorCodes.ContentModified = -32801;
+        if (error.code !== -32801) {
           throw error;
         }
 
