@@ -614,6 +614,11 @@
         "category": "Rust Analyzer"
       },
       {
+        "command": "rust-analyzer.peekTests",
+        "title": "Peek related tests",
+        "category": "Rust Analyzer"
+      },
+      {
         "command": "rust-analyzer.explainError",
         "title": "Explain the currently hovered diagnostic",
         "category": "Rust Analyzer"

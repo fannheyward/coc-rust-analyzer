@@ -609,3 +609,17 @@ export function echoRunCommandLine(ctx: Ctx) {
     window.showMessage(commandLine);
   };
 }
+
+export function peekTests(ctx: Ctx): Cmd {
+  return async () => {
+    const { document, position } = await workspace.getCurrentState();
+    if (!isRustDocument(document)) return;
+
+    const tests = await ctx.client.sendRequest(ra.relatedTests, {
+      textDocument: { uri: document.uri },
+      position,
+    });
+    const locations: Location[] = tests.map((it) => Location.create(it.runnable.location!.targetUri, it.runnable.location!.targetSelectionRange));
+    await commands.executeCommand('editor.action.showReferences', Uri.parse(document.uri), position, locations);
+  };
+}
