@@ -388,10 +388,14 @@ export function syntaxTree(ctx: Ctx): Cmd {
     };
 
     const ret = await ctx.client.sendRequest(ra.syntaxTree, param);
-    await workspace.nvim.command('tabnew').then(async () => {
-      const buf = await workspace.nvim.buffer;
-      buf.setLines(ret.split('\n'), { start: 0, end: -1 });
-    });
+    if (!ret) return;
+    const nvim = workspace.nvim;
+    nvim.pauseNotification();
+    nvim.command(`edit +setl\\ buftype=nofile [SyntaxTree]`, true);
+    nvim.command('setl nobuflisted bufhidden=wipe', true);
+    nvim.call('append', [0, ret.split('\n')], true);
+    nvim.command(`exe 1`, true);
+    await nvim.resumeNotification();
   };
 }
 
@@ -406,14 +410,16 @@ export function expandMacro(ctx: Ctx): Cmd {
     };
 
     const expanded = await ctx.client.sendRequest(ra.expandMacro, param);
-    if (!expanded) {
-      return;
-    }
+    if (!expanded) return;
 
-    await workspace.nvim.command('tabnew').then(async () => {
-      const buf = await workspace.nvim.buffer;
-      buf.setLines(codeFormat(expanded).split('\n'), { start: 0, end: -1 });
-    });
+    const lines = codeFormat(expanded).split('\n');
+    const nvim = workspace.nvim;
+    nvim.pauseNotification();
+    nvim.command(`edit +setl\\ buftype=nofile [Macro]`, true);
+    nvim.command('setl nobuflisted bufhidden=wipe', true);
+    nvim.call('append', [0, lines], true);
+    nvim.command(`exe 1`, true);
+    await nvim.resumeNotification();
   };
 }
 
@@ -587,10 +593,14 @@ export function viewHir(ctx: Ctx): Cmd {
       position,
     };
     const ret = await ctx.client.sendRequest(ra.viewHir, param);
-    await workspace.nvim.command('tabnew').then(async () => {
-      const buf = await workspace.nvim.buffer;
-      buf.setLines(ret.split('\n'), { start: 0, end: -1 });
-    });
+    if (!ret) return;
+    const nvim = workspace.nvim;
+    nvim.pauseNotification();
+    nvim.command(`edit +setl\\ buftype=nofile [HIR]`, true);
+    nvim.command('setl nobuflisted bufhidden=wipe', true);
+    nvim.call('append', [0, ret.split('\n')], true);
+    nvim.command(`exe 1`, true);
+    await nvim.resumeNotification();
   };
 }
 
