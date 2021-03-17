@@ -48,10 +48,10 @@ export function createClient(bin: string, extra: Env): LanguageClient {
   };
 
   const serverOptions: ServerOptions = run;
-  const outputChannel = window.createOutputChannel('Rust Analyzer Language Server Trace');
   const clientOptions: LanguageClientOptions = {
     documentSelector: [{ language: 'rust' }],
     initializationOptions: workspace.getConfiguration('rust-analyzer'),
+    outputChannelName: 'rust-analyzer',
     middleware: {
       async resolveCompletionItem(item, token, next) {
         if (item.data && !item.data.position) {
@@ -95,7 +95,6 @@ export function createClient(bin: string, extra: Env): LanguageClient {
         return result;
       },
     },
-    outputChannel,
   };
 
   const client = new LanguageClient('rust-analyzer', 'Rust Analyzer Language Server', serverOptions, clientOptions);
