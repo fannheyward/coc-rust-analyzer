@@ -1,4 +1,4 @@
-import { CodeActionKind, Command, Executable, LanguageClient, LanguageClientOptions, ServerOptions, StaticFeature, Uri, window, workspace } from 'coc.nvim';
+import { CodeActionKind, Command, Executable, LanguageClient, LanguageClientOptions, ServerOptions, StaticFeature, Uri, workspace } from 'coc.nvim';
 import { CodeAction, CodeActionParams, CodeActionRequest } from 'vscode-languageserver-protocol';
 import { Env } from './config';
 
@@ -51,7 +51,6 @@ export function createClient(bin: string, extra: Env): LanguageClient {
   const clientOptions: LanguageClientOptions = {
     documentSelector: [{ language: 'rust' }],
     initializationOptions: workspace.getConfiguration('rust-analyzer'),
-    outputChannelName: 'rust-analyzer',
     middleware: {
       async resolveCompletionItem(item, token, next) {
         if (item.data && !item.data.position) {
