@@ -55,6 +55,7 @@ This extension is configured using a jsonc file. You can open this configuration
 | `rust-analyzer.completion.addCallParenthesis` | Whether to add parenthesis when completing functions | `true` |
 | `rust-analyzer.completion.addCallArgumentSnippets` | Whether to add argument snippets when completing functions | `true` |
 | `rust-analyzer.completion.postfix.enable` | Whether to show postfix snippets like `dbg`, `if`, `not`, etc | `true` |
+| `rust-analyzer.completion.autoimport.enable` | Whether to enable additional completions that automatically add imports when completed | `true` |
 | `rust-analyzer.lens.enable` | Whether to show CodeLens in Rust files | `true` |
 | `rust-analyzer.lens.run` | Whether to show Run lens | `true` |
 | `rust-analyzer.lens.implementations` | Whether to show Implementations lens | `true` |
