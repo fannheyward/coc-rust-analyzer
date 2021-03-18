@@ -185,9 +185,6 @@ export function ssr(ctx: Ctx): Cmd {
     window.withProgress({ title: 'Structured search replacing...', cancellable: false }, async () => {
       const edit = await ctx.client.sendRequest(ra.ssr, param);
       await workspace.applyEdit(edit);
-      return new Promise<void>((resolve) => {
-        resolve();
-      });
     });
   };
 }
