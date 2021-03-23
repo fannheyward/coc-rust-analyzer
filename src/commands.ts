@@ -624,3 +624,35 @@ export function peekTests(ctx: Ctx): Cmd {
     await commands.executeCommand('editor.action.showReferences', Uri.parse(document.uri), position, locations);
   };
 }
+
+function moveItem(ctx: Ctx, direction: ra.Direction): Cmd {
+  return async () => {
+    const { document, position } = await workspace.getCurrentState();
+    if (!isRustDocument(document)) return;
+
+    let range: Range | null = null;
+    const mode = (await workspace.nvim.call('visualmode')) as string;
+    if (mode) {
+      range = await workspace.getSelectedRange(mode, workspace.getDocument(document.uri));
+    }
+    if (!range) range = Range.create(position, position);
+    const params: ra.MoveItemParams = {
+      direction,
+      textDocument: { uri: document.uri},
+      range,
+    };
+    const edit = await ctx.client.sendRequest(ra.moveItem, params);
+    if (!edit) return;
+
+    await workspace.applyEdit({documentChanges: [edit]});
+  };
+}
+
+export function moveItemUp(ctx: Ctx): Cmd {
+  return moveItem(ctx, ra.Direction.Up);
+}
+
+export function moveItemDown(ctx: Ctx): Cmd {
+  return moveItem(ctx, ra.Direction.Down);
+}
+

@@ -83,6 +83,8 @@ You can use these commands by `:CocCommand XYZ`.
 | rust-analyzer.joinLines | Join lines |
 | rust-analyzer.matchingBrace | Find matching brace |
 | rust-analyzer.memoryUsage | Memory Usage (Clears Database) |
+| rust-analyzer.moveItemUp | Move item up |
+| rust-analyzer.moveItemDown | Move item down |
 | rust-analyzer.openDocs | Open docs under cursor |
 | rust-analyzer.parentModule | Locate parent module |
 | rust-analyzer.peekTests | Peek related tests |
