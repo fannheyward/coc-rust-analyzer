@@ -5,7 +5,6 @@ import {
   Documentation,
   FloatFactory,
   Location,
-  LocationLink,
   Position,
   Range,
   Terminal,
@@ -129,26 +128,21 @@ export function parentModule(ctx: Ctx): Cmd {
       position,
     };
 
-    const response = await ctx.client.sendRequest(ra.parentModule, param);
-    if (!response) return;
+    const locations = await ctx.client.sendRequest(ra.parentModule, param);
+    if (!locations.length) return;
 
-    let uri = '';
-    let pos: Position | undefined = undefined;
-    if (Array.isArray(response)) {
-      const location = response[0];
-      if (Location.is(location)) {
-        uri = location.uri;
-        pos = location.range?.start;
-      } else if (LocationLink.is(location)) {
-        uri = location.targetUri;
-        pos = location.targetSelectionRange?.start;
-      }
-    } else if (Location.is(response)) {
-      uri = response.uri;
-      pos = response.range.start;
-    }
-    if (uri) {
+    if (locations.length === 1) {
+      const loc = locations[0];
+      const uri = Location.is(loc) ? loc.uri : loc.targetUri;
+      const pos = Location.is(loc) ? loc.range?.start : loc.targetRange?.start;
       workspace.jumpTo(uri, pos);
+    } else {
+      const uri = document.uri;
+      const refs: Location[] = [];
+      for (const l of locations) {
+        refs.push(Location.is(l) ? l : Location.create(l.targetUri, l.targetRange));
+      }
+      await commands.executeCommand('editor.action.showReferences', Uri.parse(uri), position, refs);
     }
   };
 }
