@@ -54,6 +54,7 @@ export class Ctx {
 
     client.onNotification(ra.serverStatus, async (status) => {
       this.statusBar.text = `rust-analyzer ${status.message ?? 'Ready'}`;
+      this.statusBar.isProgress = status.quiescent;
       this.statusBar.show();
 
       if (status.health === 'ok') {
