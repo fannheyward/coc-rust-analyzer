@@ -52,14 +52,13 @@ export class Ctx {
     watcher.onDidChange(async () => await commands.executeCommand('rust-analyzer.reloadWorkspace'));
     await client.onReady();
 
-    client.onNotification(ra.status, async (params) => {
-      const status = params.status;
-      this.statusBar.text = `rust-analyzer ${status}`;
+    client.onNotification(ra.serverStatus, async (status) => {
+      this.statusBar.text = `rust-analyzer ${status.message ?? 'Ready'}`;
       this.statusBar.show();
 
-      if (status === 'ready') {
+      if (status.health === 'ok') {
         this.statusBar.hide();
-      } else if (status === 'needsReload') {
+      } else {
         const prompt = this.config.cargo.autoreload || (await window.showPrompt(`rust-analyzer needs to reload project`));
         if (prompt) {
           await commands.executeCommand('rust-analyzer.reloadWorkspace');

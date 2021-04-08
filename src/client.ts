@@ -17,7 +17,7 @@ class ExperimentalFeatures implements StaticFeature {
     const caps: any = capabilities.experimental ?? {};
     caps.snippetTextEdit = true;
     caps.resolveCodeAction = true;
-    caps.statusNotification = true;
+    caps.serverStatusNotification = true;
     capabilities.experimental = caps;
   }
   initialize(): void {}
