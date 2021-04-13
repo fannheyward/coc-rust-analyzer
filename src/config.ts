@@ -67,12 +67,6 @@ export class Config {
     return this.cfg.get<UpdatesChannel>('updates.channel')!;
   }
 
-  get cargo() {
-    return {
-      autoreload: this.cfg.get<boolean>('cargo.autoreload'),
-    };
-  }
-
   get terminal() {
     return {
       startinsert: this.cfg.get<boolean>('terminal.startinsert'),
