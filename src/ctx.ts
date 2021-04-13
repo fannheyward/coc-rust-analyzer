@@ -1,8 +1,9 @@
-import { CancellationToken, commands, Disposable, ExtensionContext, LanguageClient, RequestType, services, StatusBarItem, TextDocument, window, workspace } from 'coc.nvim';
+import { CancellationToken, commands, Disposable, ExtensionContext, LanguageClient, RequestType, services, TextDocument, window, workspace } from 'coc.nvim';
 import executable from 'executable';
 import { existsSync } from 'fs';
 import { homedir } from 'os';
 import { join } from 'path';
+import { ShowMessageNotification } from 'vscode-languageserver-protocol';
 import which from 'which';
 import { createClient } from './client';
 import { Config } from './config';
@@ -19,15 +20,10 @@ export type Cmd = (...args: any[]) => unknown;
 
 export class Ctx {
   client!: LanguageClient;
-  private statusBar: StatusBarItem;
   private updater: HintsUpdater;
   public readonly config = new Config();
 
   constructor(private readonly extCtx: ExtensionContext) {
-    this.statusBar = window.createStatusBarItem(10);
-    this.statusBar.text = 'rust-analyzer';
-    this.extCtx.subscriptions.push(this.statusBar);
-
     this.updater = new HintsUpdater(this);
     this.extCtx.subscriptions.push(this.updater);
   }
@@ -52,19 +48,13 @@ export class Ctx {
     watcher.onDidChange(async () => await commands.executeCommand('rust-analyzer.reloadWorkspace'));
     await client.onReady();
 
+    client.onNotification(ShowMessageNotification.type.method, (msg) => {
+      console.error(msg);
+    });
     client.onNotification(ra.serverStatus, async (status) => {
-      this.statusBar.text = `rust-analyzer ${status.message ?? 'Ready'}`;
-      this.statusBar.isProgress = !status.quiescent;
-      this.statusBar.show();
-
-      if (status.health === 'ok') {
-        this.statusBar.hide();
-      } else {
-        const prompt = this.config.cargo.autoreload || (await window.showPrompt(`rust-analyzer needs to reload project`));
-        if (prompt) {
-          await commands.executeCommand('rust-analyzer.reloadWorkspace');
-          this.statusBar.hide();
-        }
+      if (status.health !== 'ok' && status.message?.length) {
+        window.showNotification({ content: status.message, timeout: 5000});
+        window.showMessage(`rust-analyzer failed to start, run ':CocCommand rust-analyzer.reloadWorkspace' to reload`);
       }
     });
 
