@@ -641,10 +641,13 @@ function moveItem(ctx: Ctx, direction: ra.Direction): Cmd {
       textDocument: { uri: document.uri},
       range,
     };
-    const edit = await ctx.client.sendRequest(ra.moveItem, params);
-    if (!edit) return;
+    const edits = await ctx.client.sendRequest(ra.moveItem, params);
+    if (!edits?.length) return;
 
-    await workspace.applyEdit({documentChanges: [edit]});
+    const wsEdit: WorkspaceEdit = {
+      documentChanges: [{ textDocument: { uri: document.uri, version: document.version }, edits }],
+    };
+    await applySnippetWorkspaceEdit(wsEdit);
   };
 }
 
