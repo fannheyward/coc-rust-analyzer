@@ -1,4 +1,4 @@
-import { execFile, spawnSync } from 'child_process';
+import { exec, spawnSync } from 'child_process';
 import { ExtensionContext, window } from 'coc.nvim';
 import { randomBytes } from 'crypto';
 import { createWriteStream, PathLike, promises as fs } from 'fs';
@@ -31,7 +31,7 @@ async function patchelf(dest: PathLike): Promise<void> {
   await fs.rename(dest, origFile);
 
   await new Promise((resolve, reject) => {
-    const handle = execFile(`nix-build`, ['-E', '-', '--arg', 'src', origFile, '-o', dest.toString()], (err, stdout, stderr) => {
+    const handle = exec(`nix-build -E - --arg src '${origFile}' -o ${dest}`, (err, stdout, stderr) => {
       if (err != null) {
         reject(Error(stderr));
       } else {
