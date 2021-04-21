@@ -31,7 +31,7 @@ async function patchelf(dest: PathLike): Promise<void> {
   await fs.rename(dest, origFile);
 
   await new Promise((resolve, reject) => {
-    const handle = exec(`nix-build -E - --arg src '${origFile}' -o ${dest}`, (err, stdout, stderr) => {
+    const handle = exec(`nix-build -E - --arg src '${origFile}' -o ${dest}`, (err, stdout, stderr) => { // lgtm[js/shell-command-constructed-from-input]
       if (err != null) {
         reject(Error(stderr));
       } else {
@@ -142,7 +142,7 @@ export async function downloadServer(context: ExtensionContext, release: Release
     statusItem.text = `${p}% Downloading rust-analyzer ${release.tag}`;
   });
 
-  const _path = path.join(context.storagePath, release.name);
+  const _path = path.join(context.storagePath, release.name); // lgtm[js/shell-command-constructed-from-input]
   const randomHex = randomBytes(5).toString('hex');
   const tempFile = path.join(context.storagePath, `${release.name}${randomHex}`);
 
