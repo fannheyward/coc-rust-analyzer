@@ -581,6 +581,11 @@
         "category": "Rust Analyzer"
       },
       {
+        "command": "rust-analyzer.debug",
+        "title": "Debug",
+        "category": "Rust Analyzer"
+      },
+      {
         "command": "rust-analyzer.ssr",
         "title": "Structural Search Replace",
         "category": "Rust Analyzer"
