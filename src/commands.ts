@@ -236,7 +236,7 @@ export function debug(ctx: Ctx): Cmd {
     const runnable = await fetchRunnable(ctx);
     if (!runnable) return;
 
-    await (debugSingle(ctx)(runnable))
+    await (debugSingle(ctx)(runnable));
   };
 }
 
