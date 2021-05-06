@@ -78,6 +78,7 @@ You can use these commands by `:CocCommand XYZ`.
 | Command | Description |
 | -- | -- |
 | rust-analyzer.analyzerStatus | Show rust-analyzer status |
+| rust-analyzer.debug | List available runnables of current file and debug the selected one |
 | rust-analyzer.expandMacro | Expand macro recursively |
 | rust-analyzer.explainError | Explain the currently hovered error message |
 | rust-analyzer.joinLines | Join lines |
@@ -90,7 +91,7 @@ You can use these commands by `:CocCommand XYZ`.
 | rust-analyzer.peekTests | Peek related tests |
 | rust-analyzer.reload | Restart rust-analyzer server |
 | rust-analyzer.reloadWorkspace | Reload workspace |
-| rust-analyzer.run | List available runnables of current file |
+| rust-analyzer.run | List available runnables of current file and run the selected one |
 | rust-analyzer.serverVersion | Show current Rust Analyzer server version |
 | rust-analyzer.ssr | Structural Search Replace |
 | rust-analyzer.syntaxTree | Show syntax tree |

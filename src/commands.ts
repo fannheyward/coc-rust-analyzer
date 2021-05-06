@@ -227,20 +227,16 @@ export function run(ctx: Ctx): Cmd {
     const runnable = await fetchRunnable(ctx);
     if (!runnable) return;
 
-    const cmd = `${runnable.kind} ${runnable.args.cargoArgs.join(' ')}`;
-    const opt: TerminalOptions = {
-      name: runnable.label,
-      cwd: runnable.args.workspaceRoot,
-    };
-    if (terminal) {
-      terminal.dispose();
-      terminal = undefined;
-    }
-    terminal = await workspace.createTerminal(opt);
-    terminal.sendText(cmd);
-    if (ctx.config.terminal.startinsert) {
-      await workspace.nvim.command('startinsert');
-    }
+    await (runSingle(ctx)(runnable));
+  };
+}
+
+export function debug(ctx: Ctx): Cmd {
+  return async () => {
+    const runnable = await fetchRunnable(ctx);
+    if (!runnable) return;
+
+    await (debugSingle(ctx)(runnable))
   };
 }
 

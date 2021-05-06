@@ -47,6 +47,7 @@ export async function activate(context: ExtensionContext): Promise<void> {
 
   // common commands
   ctx.registerCommand('run', cmds.run);
+  ctx.registerCommand('debug', cmds.debug);
   ctx.registerCommand('ssr', cmds.ssr);
   ctx.registerCommand('upgrade', cmds.upgrade);
   ctx.registerCommand('viewHir', cmds.viewHir);
