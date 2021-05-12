@@ -227,7 +227,7 @@ export function run(ctx: Ctx): Cmd {
     const runnable = await fetchRunnable(ctx);
     if (!runnable) return;
 
-    await (runSingle(ctx)(runnable));
+    await runSingle(ctx)(runnable);
   };
 }
 
@@ -236,7 +236,7 @@ export function debug(ctx: Ctx): Cmd {
     const runnable = await fetchRunnable(ctx);
     if (!runnable) return;
 
-    await (debugSingle(ctx)(runnable));
+    await debugSingle(ctx)(runnable);
   };
 }
 
@@ -634,7 +634,7 @@ function moveItem(ctx: Ctx, direction: ra.Direction): Cmd {
     if (!range) range = Range.create(position, position);
     const params: ra.MoveItemParams = {
       direction,
-      textDocument: { uri: document.uri},
+      textDocument: { uri: document.uri },
       range,
     };
     const edits = await ctx.client.sendRequest(ra.moveItem, params);
@@ -655,3 +655,9 @@ export function moveItemDown(ctx: Ctx): Cmd {
   return moveItem(ctx, ra.Direction.Down);
 }
 
+export function viewCrateGraph(ctx: Ctx): Cmd {
+  return async () => {
+    const svg = await ctx.client.sendRequest(ra.viewCrateGraph);
+    window.echoLines([svg]);
+  };
+}

@@ -65,6 +65,7 @@ export async function activate(context: ExtensionContext): Promise<void> {
   ctx.registerCommand('openCargoToml', cmds.openCargoToml);
   ctx.registerCommand('serverVersion', cmds.serverVersion);
   ctx.registerCommand('analyzerStatus', cmds.analyzerStatus);
+  ctx.registerCommand('viewCrateGraph', cmds.viewCrateGraph);
   ctx.registerCommand('reloadWorkspace', cmds.reloadWorkspace);
   ctx.registerCommand('toggleInlayHints', cmds.toggleInlayHints);
   ctx.registerCommand('echoRunCommandLine', cmds.echoRunCommandLine);
