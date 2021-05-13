@@ -422,7 +422,7 @@
           "type": "boolean"
         },
         "rust-analyzer.lens.enable": {
-          "markdownDescription": "Whether to show CodeLens in Rust files.",
+          "markdownDescription": "Whether to show CodeLens in Rust files. You also need to enable `codeLens.enable` in coc-settings.json.",
           "default": true,
           "type": "boolean"
         },
