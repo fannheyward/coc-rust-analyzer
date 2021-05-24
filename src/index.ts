@@ -59,6 +59,7 @@ export async function activate(context: ExtensionContext): Promise<void> {
   ctx.registerCommand('expandMacro', cmds.expandMacro);
   ctx.registerCommand('moveItemUp', cmds.moveItemUp);
   ctx.registerCommand('moveItemDown', cmds.moveItemDown);
+  ctx.registerCommand('viewItemTree', cmds.viewItemTree);
   ctx.registerCommand('explainError', cmds.explainError);
   ctx.registerCommand('parentModule', cmds.parentModule);
   ctx.registerCommand('matchingBrace', cmds.matchingBrace);

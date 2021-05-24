@@ -661,3 +661,23 @@ export function viewCrateGraph(ctx: Ctx): Cmd {
     window.echoLines([svg]);
   };
 }
+
+export function viewItemTree(ctx: Ctx): Cmd {
+  return async () => {
+    const { document } = await workspace.getCurrentState();
+    if (!isRustDocument(document)) return;
+
+    const param: ra.ViewItemTreeParams = {
+      textDocument: { uri: document.uri },
+    };
+    const ret = await ctx.client.sendRequest(ra.viewItemTree, param);
+    if (!ret) return;
+    const nvim = workspace.nvim;
+    nvim.pauseNotification();
+    nvim.command(`edit +setl\\ buftype=nofile [ItemTree]`, true);
+    nvim.command('setl nobuflisted bufhidden=wipe', true);
+    nvim.call('append', [0, ret.split('\n')], true);
+    nvim.command(`exe 1`, true);
+    await nvim.resumeNotification();
+  };
+}
