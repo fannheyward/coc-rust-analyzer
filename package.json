@@ -164,20 +164,27 @@
             "`\"nightly\"` updates are shipped daily (extension updates automatically by downloading artifacts directly from GitHub), they contain cutting-edge features and latest bug fixes. These releases help us get your feedback very quickly and speed up rust-analyzer development **drastically**"
           ]
         },
-        "rust-analyzer.assist.importMergeBehavior": {
-          "markdownDescription": "The strategy to use when inserting new imports or merging imports.",
+        "rust-analyzer.assist.importGranularity": {
+          "markdownDescription": "How imports should be grouped into use statements.",
           "default": "crate",
           "type": "string",
           "enum": [
-            "none",
+            "preserve",
             "crate",
-            "module"
+            "module",
+            "item"
           ],
           "enumDescriptions": [
-            "Do not merge imports at all.",
-            "Merge imports from the same crate into a single `use` statement.",
-            "Merge imports from the same module into a single `use` statement."
+            "Do not change the granularity of any imports and preserve the original structure written by the developer.",
+            "Merge imports from the same crate into a single use statement. Conversely, imports from different crates are split into separate statements.",
+            "Merge imports from the same module into a single use statement. Conversely, imports from different modules are split into separate statements.",
+            "Flatten imports so that each has its own use statement."
           ]
+        },
+        "rust-analyzer.assist.importEnforceGranularity": {
+          "markdownDescription": "Whether to enforce the import granularity setting for all files. If set to false rust-analyzer will try to keep import styles consistent per file.",
+          "default": false,
+          "type": "boolean"
         },
         "rust-analyzer.assist.importPrefix": {
           "markdownDescription": "The path structure for newly inserted paths to use.",
@@ -391,6 +398,11 @@
           "items": {
             "type": "string"
           }
+        },
+        "rust-analyzer.highlighting.strings": {
+          "markdownDescription": "Use semantic tokens for strings.\n\nIn some editors (e.g. vscode) semantic tokens override other highlighting grammars.\nBy disabling semantic tokens for strings, other grammars can be used to highlight\ntheir contents.",
+          "default": true,
+          "type": "boolean"
         },
         "rust-analyzer.hoverActions.enable": {
           "markdownDescription": "Whether to show HoverActions in Rust files.",
