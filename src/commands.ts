@@ -493,7 +493,7 @@ export async function applySnippetWorkspaceEdit(edit: WorkspaceEdit) {
 
         newText = insert;
       } else {
-        lineDelta = countLines(indel.newText) - (indel.range.end.line - indel.range.start.line);
+        lineDelta += countLines(indel.newText) - (indel.range.end.line - indel.range.start.line);
       }
 
       newEdits.push(TextEdit.replace(indel.range, newText));
