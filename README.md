@@ -9,7 +9,7 @@
 
 `:CocInstall coc-rust-analyzer`
 
-> remove `rust-analyzer` config from `coc-settings.json` if you set
+> remove `rust-analyzer` config from `coc-settings.json` if you've set
 
 ## Configurations
 
