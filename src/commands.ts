@@ -417,11 +417,11 @@ export function explainError(ctx: Ctx): Cmd {
 
     const diagnostic = ctx.client.diagnostics?.get(document.uri)?.find((diagnostic) => isInRange(diagnostic.range, position));
     if (diagnostic?.code) {
-      const explaination = spawnSync('rustc', ['--explain', `${diagnostic.code}`], { encoding: 'utf-8' }).stdout.toString();
+      const explanation = spawnSync('rustc', ['--explain', `${diagnostic.code}`], { encoding: 'utf-8' }).stdout.toString();
 
       const docs: Documentation[] = [];
       let isCode = false;
-      for (const part of explaination.split('```\n')) {
+      for (const part of explanation.split('```\n')) {
         docs.push({ content: part, filetype: isCode ? 'rust' : 'markdown' });
         isCode = !isCode;
       }
