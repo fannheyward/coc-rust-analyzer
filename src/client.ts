@@ -1,6 +1,7 @@
 import { CodeActionKind, Command, Executable, LanguageClient, LanguageClientOptions, ServerOptions, StaticFeature, Uri, workspace } from 'coc.nvim';
 import { CodeAction, CodeActionParams, CodeActionRequest } from 'vscode-languageserver-protocol';
 import { Env } from './config';
+import { isRustDocument } from './ctx';
 
 class ExperimentalFeatures implements StaticFeature {
   fillClientCapabilities(capabilities: any): void {
@@ -47,10 +48,18 @@ export function createClient(bin: string, extra: Env): LanguageClient {
     options: { env, cwd: folder },
   };
 
+  let initializationOptions = workspace.getConfiguration('rust-analyzer');
+  if (workspace.workspaceFolders.length === 0) {
+    const docs = workspace.documents.filter((doc) => isRustDocument(doc.textDocument));
+    if (docs.length) {
+      initializationOptions = { detachedFiles: docs.map((doc) => Uri.parse(doc.uri).fsPath), ...initializationOptions };
+    }
+  }
+
   const serverOptions: ServerOptions = run;
   const clientOptions: LanguageClientOptions = {
     documentSelector: [{ language: 'rust' }],
-    initializationOptions: workspace.getConfiguration('rust-analyzer'),
+    initializationOptions,
     middleware: {
       async resolveCompletionItem(item, token, next) {
         if (item.data && !item.data.position) {

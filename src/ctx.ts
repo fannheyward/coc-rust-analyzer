@@ -53,7 +53,7 @@ export class Ctx {
     });
     client.onNotification(ra.serverStatus, async (status) => {
       if (status.health !== 'ok' && status.message?.length) {
-        window.showNotification({ content: status.message, timeout: 5000});
+        window.showNotification({ content: status.message, timeout: 5000 });
         window.showMessage(`rust-analyzer failed to start, run ':CocCommand rust-analyzer.reloadWorkspace' to reload`);
       }
     });
