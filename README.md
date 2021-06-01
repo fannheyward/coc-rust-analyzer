@@ -67,7 +67,7 @@ This extension is configured using a jsonc file. You can open this configuration
 | `rust-analyzer.assist.importGroup` | Group inserted imports by the [following order](https://rust-analyzer.github.io/manual.html#auto-import). Groups are separated by newlines | `true` |
 | `rust-analyzer.callInfo.full` | Show function name and docs in parameter hints | `true` |
 | `rust-analyzer.trace.server` | Trace requests to server | `off` |
-| `rust-analyzer.debug.runtime` | Which runtime debug to use, options: `vimspector`, `termdebug` | `termdebug` |
+| `rust-analyzer.debug.runtime` | Which runtime debug to use, options: `vimspector`, `termdebug`. FYI [Debugging Rust in (Neo)Vim](https://youtu.be/U3uvbdgFMRE?t=293) | `termdebug` |
 | `rust-analyzer.debug.vimspector.configuration.name` | The name of the vimspector configuration. The following variables will be passed to the configuration  `Executable` and `Args`. Make sure to add them to the configuration | `launch` |
 
 Settings not specific to `rust-analyzer` can be found at `:help coc-configuration`.
