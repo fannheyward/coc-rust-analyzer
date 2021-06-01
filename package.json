@@ -371,7 +371,7 @@
           "type": "object"
         },
         "rust-analyzer.diagnostics.warningsAsHint": {
-          "markdownDescription": "List of warnings that should be displayed with info severity.\n\nThe warnings will be indicated by a blue squiggly underline in code\nand a blue icon in the `Problems Panel`.",
+          "markdownDescription": "List of warnings that should be displayed with hint severity.\n\nThe warnings will be indicated by faded text or three dots in code\nand will not show up in the `Problems Panel`.",
           "default": [],
           "type": "array",
           "items": {
@@ -379,7 +379,7 @@
           }
         },
         "rust-analyzer.diagnostics.warningsAsInfo": {
-          "markdownDescription": "List of warnings that should be displayed with hint severity.\n\nThe warnings will be indicated by faded text or three dots in code\nand will not show up in the `Problems Panel`.",
+          "markdownDescription": "List of warnings that should be displayed with info severity.\n\nThe warnings will be indicated by a blue squiggly underline in code\nand a blue icon in the `Problems Panel`.",
           "default": [],
           "type": "array",
           "items": {
@@ -538,6 +538,11 @@
           "items": {
             "type": "string"
           }
+        },
+        "rust-analyzer.rustfmt.enableRangeFormatting": {
+          "markdownDescription": "Enables the use of rustfmt's unstable range formatting command for the\n`textDocument/rangeFormatting` request. The rustfmt option is unstable and only\navailable on a nightly build.",
+          "default": false,
+          "type": "boolean"
         },
         "rust-analyzer.workspace.symbol.search.scope": {
           "markdownDescription": "Workspace symbol search scope.",
