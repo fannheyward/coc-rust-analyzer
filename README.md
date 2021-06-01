@@ -43,6 +43,7 @@ This extension is configured using a jsonc file. You can open this configuration
 | `rust-analyzer.procMacro.enable` | Enable support for procedural macros, implies `#rust-analyzer.cargo.runBuildScripts#` | `false` |
 | `rust-analyzer.rustfmt.extraArgs` | Additional arguments to rustfmt | `[]` |
 | `rust-analyzer.rustfmt.overrideCommand` | Advanced option, fully override the command rust-analyzer uses for formatting | `null` |
+| `rust-analyzer.rustfmt.enableRangeFormatting` | Enables rustfmt's unstable range formatting, only available on a nightly build. | `false` |
 | `rust-analyzer.checkOnSave.enable` | Run specified `cargo check` command for diagnostics on save | `true` |
 | `rust-analyzer.checkOnSave.target` | Check for a specific target | `null` |
 | `rust-analyzer.checkOnSave.extraArgs` | Extra arguments for `cargo check` | `[]` |
