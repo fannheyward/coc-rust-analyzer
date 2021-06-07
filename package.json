@@ -327,7 +327,7 @@
           }
         },
         "rust-analyzer.completion.addCallArgumentSnippets": {
-          "markdownDescription": "Whether to add argument snippets when completing functions.",
+          "markdownDescription": "Whether to add argument snippets when completing functions.\nOnly applies when `#rust-analyzer.completion.addCallParenthesis#` is set.",
           "default": true,
           "type": "boolean"
         },
@@ -343,6 +343,11 @@
         },
         "rust-analyzer.completion.autoimport.enable": {
           "markdownDescription": "Toggles the additional completions that automatically add imports when completed.\nNote that your client must specify the `additionalTextEdits` LSP client capability to truly have this feature enabled.",
+          "default": true,
+          "type": "boolean"
+        },
+        "rust-analyzer.completion.autoself.enable": {
+          "markdownDescription": "Toggles the additional completions that automatically show method calls and field accesses\nwith `self` prefixed to them when inside a method.",
           "default": true,
           "type": "boolean"
         },
@@ -385,6 +390,11 @@
           "items": {
             "type": "string"
           }
+        },
+        "rust-analyzer.experimental.procAttrMacros": {
+          "markdownDescription": "Expand attribute macros.",
+          "default": false,
+          "type": "boolean"
         },
         "rust-analyzer.files.watcher": {
           "markdownDescription": "Controls file watching implementation.",

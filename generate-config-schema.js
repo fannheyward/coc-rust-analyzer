@@ -9,6 +9,7 @@ const coc_ra_config = require('./coc-rust-analyzer-configurations.json');
 const not_supported = [
   'rust-analyzer.hoverActions.debug',
   'rust-analyzer.hoverActions.gotoTypeDef',
+  'rust-analyzer.hoverActions.references',
   'rust-analyzer.hoverActions.implementations',
   'rust-analyzer.hoverActions.run',
   'rust-analyzer.inlayHints.parameterHints',
