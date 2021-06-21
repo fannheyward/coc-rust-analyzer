@@ -64,6 +64,7 @@ This extension is configured using a jsonc file. You can open this configuration
 | `rust-analyzer.hoverActions.linksInHover` | Whether to show document links in hover | `false` |
 | `rust-analyzer.assist.importGranularity` | How imports should be grouped into use statements | `crate` |
 | `rust-analyzer.assist.importEnforceGranularity` | Whether to enforce the import granularity setting for all files | `false` |
+| `rust-analyzer.assist.allowMergingIntoGlobImports` | Whether to allow import insertion to merge new imports into single path glob imports like `use std::fmt::*;` | true |
 | `rust-analyzer.assist.importPrefix` | The path structure for newly inserted paths to use | `plain` |
 | `rust-analyzer.assist.importGroup` | Group inserted imports by the [following order](https://rust-analyzer.github.io/manual.html#auto-import). Groups are separated by newlines | `true` |
 | `rust-analyzer.callInfo.full` | Show function name and docs in parameter hints | `true` |
