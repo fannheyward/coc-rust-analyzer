@@ -226,6 +226,16 @@
           "default": false,
           "type": "boolean"
         },
+        "rust-analyzer.cargo.unsetTest": {
+          "markdownDescription": "Unsets `#[cfg(test)]` for the specified crates.",
+          "default": [
+            "core"
+          ],
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
         "rust-analyzer.cargo.features": {
           "markdownDescription": "List of features to activate.",
           "default": [],
@@ -419,13 +429,18 @@
           "default": true,
           "type": "boolean"
         },
-        "rust-analyzer.hoverActions.enable": {
-          "markdownDescription": "Whether to show HoverActions in Rust files.",
+        "rust-analyzer.hover.documentation": {
+          "markdownDescription": "Whether to show documentation on hover.",
           "default": true,
           "type": "boolean"
         },
-        "rust-analyzer.hoverActions.linksInHover": {
+        "rust-analyzer.hover.linksInHover": {
           "markdownDescription": "Use markdown syntax for links in hover.",
+          "default": true,
+          "type": "boolean"
+        },
+        "rust-analyzer.hoverActions.enable": {
+          "markdownDescription": "Whether to show HoverActions in Rust files.",
           "default": true,
           "type": "boolean"
         },
