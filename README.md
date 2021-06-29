@@ -26,7 +26,7 @@ This extension is configured using a jsonc file. You can open this configuration
 | `rust-analyzer.diagnostics.disabled`| List of rust-analyzer diagnostics to disable |`[]`|
 | `rust-analyzer.diagnostics.warningsAsInfo`| List of warnings that should be displayed with info severity |`[]`|
 | `rust-analyzer.diagnostics.warningsAsHint`| List of warnings that should be displayed with hint severity |`[]`|
-| `rust-analysis.experimental.procAttrMacros` | Expand attribute macros | `false` |
+| `rust-analyzer.experimental.procAttrMacros` | Expand attribute macros | `false` |
 | `rust-analyzer.lruCapacity` | Number of syntax trees rust-analyzer keeps in memory |`null`|
 | `rust-analyzer.inlayHints.enable`| Whether to show inlay hints |`true`|
 | `rust-analyzer.inlayHints.typeHints`| Whether to show inlay type hints for variables, **Neovim Only** | `true`|
