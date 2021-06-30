@@ -40,7 +40,7 @@ This extension is configured using a jsonc file. You can open this configuration
 | `rust-analyzer.cargo.allFeatures` | Activate all available features | `false` |
 | `rust-analyzer.cargo.features` | List of features to activate |`[]`|
 | `rust-analyzer.cargo.noDefaultFeatures` | Do not activate the `default` feature | `false` |
-| `rust-analyzer.cargo.loadOutDirsFromCheck` | Run build scripts (`build.rs`) for more precise code analysis | `false` |
+| `rust-analyzer.cargo.runBuildScripts` | Run build scripts (`build.rs`) for more precise code analysis | `false` |
 | `rust-analyzer.procMacro.enable` | Enable support for procedural macros, implies `#rust-analyzer.cargo.runBuildScripts#` | `false` |
 | `rust-analyzer.rustfmt.extraArgs` | Additional arguments to rustfmt | `[]` |
 | `rust-analyzer.rustfmt.overrideCommand` | Advanced option, fully override the command rust-analyzer uses for formatting | `null` |
