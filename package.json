@@ -704,6 +704,11 @@
         "category": "Rust Analyzer"
       },
       {
+        "command": "rust-analyzer.viewFullCrateGraph",
+        "title": "View Crate Graph (Full)",
+        "category": "Rust Analyzer"
+      },
+      {
         "command": "rust-analyzer.echoRunCommandLine",
         "title": "Echo Run Command Line",
         "category": "Rust Analyzer"

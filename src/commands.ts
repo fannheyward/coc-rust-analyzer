@@ -657,7 +657,14 @@ export function moveItemDown(ctx: Ctx): Cmd {
 
 export function viewCrateGraph(ctx: Ctx): Cmd {
   return async () => {
-    const svg = await ctx.client.sendRequest(ra.viewCrateGraph);
+    const svg = await ctx.client.sendRequest(ra.viewCrateGraph, { full: false });
+    window.echoLines([svg]);
+  };
+}
+
+export function viewFullCrateGraph(ctx: Ctx): Cmd {
+  return async () => {
+    const svg = await ctx.client.sendRequest(ra.viewCrateGraph, { full: true });
     window.echoLines([svg]);
   };
 }

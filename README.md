@@ -103,6 +103,7 @@ You can use these commands by `:CocCommand XYZ`.
 | rust-analyzer.upgrade | Download latest `rust-analyzer` from [GitHub release](https://github.com/rust-analyzer/rust-analyzer/releases) |
 | rust-analyzer.viewHir | View Hir |
 | rust-analyzer.viewCrateGraph | View Crate Graph |
+| rust-analyzer.viewFullCrateGraph | View Crate Graph (Full) |
 
 ## Highlight Group
 
