@@ -463,6 +463,21 @@
           "default": true,
           "type": "boolean"
         },
+        "rust-analyzer.joinLines.joinElseIf": {
+          "markdownDescription": "Join lines inserts else between consecutive ifs.",
+          "default": true,
+          "type": "boolean"
+        },
+        "rust-analyzer.joinLines.removeTrailingComma": {
+          "markdownDescription": "Join lines removes trailing commas.",
+          "default": true,
+          "type": "boolean"
+        },
+        "rust-analyzer.joinLines.unwrapTrivialBlock": {
+          "markdownDescription": "Join lines unwraps trivial blocks.",
+          "default": true,
+          "type": "boolean"
+        },
         "rust-analyzer.lens.enable": {
           "markdownDescription": "Whether to show CodeLens in Rust files. You also need to enable `codeLens.enable` in coc-settings.json.",
           "default": true,
