@@ -1,5 +1,6 @@
 {
   "compilerOptions": {
+    "noEmit": true,
     "target": "ES2018",
     "module": "commonjs",
     "declaration": false,
