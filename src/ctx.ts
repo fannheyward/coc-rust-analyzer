@@ -53,6 +53,8 @@ export class Ctx {
     });
     client.onNotification(ra.serverStatus, async (status) => {
       if (status.health !== 'ok' && status.message?.length) {
+        // https://github.com/fannheyward/coc-rust-analyzer/issues/763
+        if (status.message.startsWith('cargo check failed')) return;
         window.showNotification({ content: status.message, timeout: 5000 });
         window.showMessage(`rust-analyzer failed to start, run ':CocCommand rust-analyzer.reloadWorkspace' to reload`);
       }
