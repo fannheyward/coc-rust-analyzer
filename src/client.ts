@@ -1,7 +1,8 @@
-import { CodeActionKind, Command, Executable, LanguageClient, LanguageClientOptions, ServerOptions, StaticFeature, Uri, workspace } from 'coc.nvim';
+import { CodeActionKind, Command, Executable, LanguageClient, LanguageClientOptions, Position, Range, ServerOptions, StaticFeature, Uri, workspace } from 'coc.nvim';
 import { CodeAction, CodeActionParams, CodeActionRequest } from 'vscode-languageserver-protocol';
 import { Env } from './config';
 import { isRustDocument } from './ctx';
+import * as ra from './lsp_ext';
 
 class ExperimentalFeatures implements StaticFeature {
   fillClientCapabilities(capabilities: any): void {
@@ -61,6 +62,23 @@ export function createClient(bin: string, extra: Env): LanguageClient {
     documentSelector: [{ language: 'rust' }],
     initializationOptions,
     middleware: {
+      async provideHover(document, position, token) {
+        const doc = await workspace.document;
+        let positionOrRange: Range | Position | null = null;
+        const mode = (await workspace.nvim.call('visualmode')) as string;
+        if (mode) {
+          positionOrRange = await workspace.getSelectedRange(mode, doc);
+        }
+        if (!positionOrRange) {
+          const state = await workspace.getCurrentState();
+          positionOrRange = state.position;
+        }
+        const param: ra.HoverParams = {
+          position: positionOrRange,
+          textDocument: { uri: doc.uri },
+        };
+        return await client.sendRequest(ra.hover, param, token);
+      },
       async resolveCompletionItem(item, token, next) {
         if (item.data && !item.data.position) {
           // TODO: remove this if coc undefined item.data
