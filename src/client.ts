@@ -1,4 +1,6 @@
 import { CodeActionKind, Command, Executable, LanguageClient, LanguageClientOptions, ServerOptions, StaticFeature, Uri, workspace } from 'coc.nvim';
+import { existsSync } from 'fs';
+import { join } from 'path';
 import { CodeAction, CodeActionParams, CodeActionRequest } from 'vscode-languageserver-protocol';
 import { Env } from './config';
 import { isRustDocument } from './ctx';
@@ -49,7 +51,8 @@ export function createClient(bin: string, extra: Env): LanguageClient {
   };
 
   let initializationOptions = workspace.getConfiguration('rust-analyzer');
-  if (workspace.workspaceFolders.length === 0) {
+  const standalone = workspace.workspaceFolder ? !existsSync(join(Uri.parse(workspace.workspaceFolder.uri).fsPath, 'Cargo.toml')) : true;
+  if (standalone) {
     const docs = workspace.documents.filter((doc) => isRustDocument(doc.textDocument));
     if (docs.length) {
       initializationOptions = { detachedFiles: docs.map((doc) => Uri.parse(doc.uri).fsPath), ...initializationOptions };
