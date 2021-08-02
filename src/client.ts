@@ -21,6 +21,14 @@ class ExperimentalFeatures implements StaticFeature {
     caps.snippetTextEdit = true;
     caps.resolveCodeAction = true;
     caps.serverStatusNotification = true;
+    caps.commands = {
+      commands: [
+        'rust-analyzer.runSingle',
+        'rust-analyzer.debugSingle',
+        'rust-analyzer.showReferences',
+        'rust-analyzer.gotoLocation',
+        'editor.action.triggerParameterHints'],
+    };
     capabilities.experimental = caps;
   }
   initialize(): void {}
