@@ -3,15 +3,6 @@ updates:
 - package-ecosystem: npm
   directory: "/"
   schedule:
-    interval: daily
-    time: "21:00"
-  open-pull-requests-limit: 10
+    interval: weekly
   reviewers:
   - fannheyward
-  ignore:
-  - dependency-name: "@types/node"
-    versions:
-    - 15.0.1
-  - dependency-name: husky
-    versions:
-    - 5.0.9
