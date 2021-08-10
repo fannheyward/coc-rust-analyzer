@@ -150,7 +150,6 @@ export class Ctx {
           throw error;
         }
 
-        // TODO
         // ErrorCodes.RequestCancelled = -32800;¬
         if (error.code === -32800) {
           throw error;

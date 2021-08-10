@@ -17,7 +17,7 @@ import {
   WorkspaceEdit,
 } from 'coc.nvim';
 import readline from 'readline';
-import { TextDocumentEdit } from 'vscode-languageserver-protocol';
+import { CodeActionResolveRequest, TextDocumentEdit } from 'vscode-languageserver-protocol';
 import { Cmd, Ctx, isRustDocument } from './ctx';
 import * as ra from './lsp_ext';
 
@@ -528,8 +528,7 @@ export function applySnippetWorkspaceEditCommand(): Cmd {
 
 export function resolveCodeAction(ctx: Ctx): Cmd {
   return async (params: CodeAction) => {
-    // TODO: use CodeActionResolveRequest after coc supports 3.16
-    const item = (await ctx.client.sendRequest('codeAction/resolve', params)) as CodeAction;
+    const item = (await ctx.client.sendRequest(CodeActionResolveRequest.method, params)) as CodeAction;
     if (!item?.edit) return;
 
     const wsEditWithoutTextEdits: WorkspaceEdit = {

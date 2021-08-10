@@ -7,16 +7,6 @@ import { isRustDocument } from './ctx';
 
 class ExperimentalFeatures implements StaticFeature {
   fillClientCapabilities(capabilities: any): void {
-    // TODO: remove completionCaps/codeActionCaps after coc supports LSP 3.16
-    const completionCaps = capabilities.textDocument.completion;
-    completionCaps.completionItem.resolveSupport = {
-      properties: ['documentation', 'detail', 'additionalTextEdits'],
-    };
-    const codeActionCaps = capabilities.textDocument.codeAction;
-    codeActionCaps.resolveSupport = {
-      properties: ['edit'],
-    };
-
     const caps: any = capabilities.experimental ?? {};
     caps.snippetTextEdit = true;
     caps.resolveCodeAction = true;
@@ -88,7 +78,6 @@ export function createClient(bin: string, extra: Env): LanguageClient {
           range,
           context,
         };
-        // TODO
         const values = await client.sendRequest(CodeActionRequest.type.method, params, token);
         if (values === null) return undefined;
         const result: (CodeAction | Command)[] = [];
