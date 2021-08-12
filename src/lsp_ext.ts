@@ -19,6 +19,14 @@ export const serverStatus = new lc.NotificationType<ServerStatusParams>('experim
 
 export const reloadWorkspace = new lc.RequestType0<null, void>('rust-analyzer/reloadWorkspace');
 
+export const hover = new lc.RequestType<HoverParams, lc.Hover | null, void>('textDocument/hover');
+
+export interface HoverParams {
+  workDoneToken?: lc.ProgressToken;
+  textDocument: lc.TextDocumentIdentifier;
+  position: lc.Range | lc.Position;
+}
+
 export interface SyntaxTreeParams {
   textDocument: lc.TextDocumentIdentifier;
   range: lc.Range | null;
@@ -55,7 +63,7 @@ export interface MatchingBraceParams {
 }
 export const matchingBrace = new lc.RequestType<MatchingBraceParams, lc.Position[], void>('experimental/matchingBrace');
 
-export const parentModule = new lc.RequestType<lc.TextDocumentPositionParams, lc.Location[] | lc.LocationLink[], void>('experimental/parentModule');
+export const parentModule = new lc.RequestType<lc.TextDocumentPositionParams, lc.LocationLink[], void>('experimental/parentModule');
 
 export interface JoinLinesParams {
   textDocument: lc.TextDocumentIdentifier;
