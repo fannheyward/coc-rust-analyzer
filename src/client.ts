@@ -68,6 +68,7 @@ export function createClient(bin: string, extra: Env): LanguageClient {
         const mode = (await workspace.nvim.call('mode')) as string;
         if (mode === 'v' || mode === 'V') {
           const doc = workspace.getDocument(document.uri);
+          await workspace.nvim.call('eval', 'feedkeys("\\<esc>", "in")');
           positionOrRange = await workspace.getSelectedRange(mode, doc);
         }
         if (!positionOrRange) positionOrRange = position;
