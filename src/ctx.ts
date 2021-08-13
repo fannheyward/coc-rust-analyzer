@@ -1,5 +1,4 @@
 import { CancellationToken, commands, Disposable, ExtensionContext, LanguageClient, RequestType, services, TextDocument, window, workspace } from 'coc.nvim';
-import executable from 'executable';
 import { existsSync } from 'fs';
 import { homedir } from 'os';
 import { join } from 'path';
@@ -80,11 +79,6 @@ export class Ctx {
       bin = which.sync(bin, { nothrow: true }) || bin;
     }
     if (!existsSync(bin)) {
-      return;
-    }
-
-    if (!executable.sync(bin)) {
-      window.showMessage(`${bin} is not executable`, 'error');
       return;
     }
 

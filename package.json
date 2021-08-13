@@ -36,7 +36,6 @@
     "coc.nvim": "^0.0.81-next.3",
     "esbuild": "^0.12.0",
     "eslint": "^7.27.0",
-    "executable": "^4.1.1",
     "https-proxy-agent": "^5.0.0",
     "node-fetch": "^2.6.0",
     "rimraf": "^3.0.0",
