@@ -49,9 +49,14 @@ export function createClient(bin: string, extra: Env): LanguageClient {
     options: { env, cwd: folder },
   };
 
+  function standalone(root?: string) {
+    if (!root) return true;
+    if (existsSync(join(Uri.parse(root).fsPath, 'Cargo.toml'))) return false;
+    if (existsSync(join(Uri.parse(root).fsPath, 'rust-project.json'))) return false;
+    return true;
+  }
   let initializationOptions = workspace.getConfiguration('rust-analyzer');
-  const standalone = workspace.workspaceFolder ? !existsSync(join(Uri.parse(workspace.workspaceFolder.uri).fsPath, 'Cargo.toml')) : true;
-  if (standalone) {
+  if (standalone(workspace.workspaceFolder?.uri)) {
     const docs = workspace.documents.filter((doc) => isRustDocument(doc.textDocument));
     if (docs.length) {
       initializationOptions = { detachedFiles: docs.map((doc) => Uri.parse(doc.uri).fsPath), ...initializationOptions };
