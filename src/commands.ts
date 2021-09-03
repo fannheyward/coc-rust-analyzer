@@ -654,18 +654,27 @@ export function moveItemDown(ctx: Ctx): Cmd {
   return moveItem(ctx, ra.Direction.Down);
 }
 
-export function viewCrateGraph(ctx: Ctx): Cmd {
+function crateGraph(ctx: Ctx, full: boolean): Cmd {
   return async () => {
-    const svg = await ctx.client.sendRequest(ra.viewCrateGraph, { full: false });
-    window.echoLines([svg]);
+    const dot = await ctx.client.sendRequest(ra.viewCrateGraph, { full });
+    const lines = dot.split('\n');
+    const nvim = workspace.nvim;
+    nvim.pauseNotification();
+    nvim.command(`edit +setl\\ buftype=nofile [Crate]`, true);
+    nvim.command('setl filetype=dot', true);
+    nvim.command('setl nobuflisted bufhidden=wipe', true);
+    nvim.call('append', [0, lines], true);
+    nvim.command(`exe 1`, true);
+    await nvim.resumeNotification();
   };
 }
 
+export function viewCrateGraph(ctx: Ctx): Cmd {
+  return crateGraph(ctx, false);
+}
+
 export function viewFullCrateGraph(ctx: Ctx): Cmd {
-  return async () => {
-    const svg = await ctx.client.sendRequest(ra.viewCrateGraph, { full: true });
-    window.echoLines([svg]);
-  };
+  return crateGraph(ctx, true);
 }
 
 export function viewItemTree(ctx: Ctx): Cmd {
