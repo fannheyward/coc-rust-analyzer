@@ -118,6 +118,7 @@ export class Ctx {
       } catch (e) {
         console.error(e);
         let msg = 'Upgrade rust-analyzer failed, please try again';
+        // @ts-ignore
         if (e.code === 'EBUSY' || e.code === 'ETXTBSY' || e.code === 'EPERM') {
           msg = 'Upgrade rust-analyzer failed, other Vim instances might be using it, you should close them and try again';
         }
@@ -145,11 +146,13 @@ export class Ctx {
         }
 
         // ErrorCodes.RequestCancelled = -32800;¬
+        // @ts-ignore
         if (error.code === -32800) {
           throw error;
         }
 
         // ErrorCodes.ContentModified = -32801;
+        // @ts-ignore
         if (error.code !== -32801) {
           throw error;
         }
