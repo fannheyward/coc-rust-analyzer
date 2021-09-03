@@ -102,7 +102,7 @@ You can use these commands by `:CocCommand XYZ`.
 | rust-analyzer.toggleInlayHints | Toggle inlay hints on/off |
 | rust-analyzer.upgrade | Download latest `rust-analyzer` from [GitHub release](https://github.com/rust-analyzer/rust-analyzer/releases) |
 | rust-analyzer.viewHir | View Hir |
-| rust-analyzer.viewCrateGraph | View Crate Graph ([coc-webview](https://github.com/weirongxu/coc-webview) is recommended) |
+| rust-analyzer.viewCrateGraph | View Crate Graph |
 | rust-analyzer.viewFullCrateGraph | View Crate Graph (Full) |
 
 ## Highlight Group
