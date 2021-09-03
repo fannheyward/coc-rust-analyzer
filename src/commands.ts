@@ -3,6 +3,8 @@ import {
   CodeAction,
   commands,
   Documentation,
+  Extension,
+  extensions,
   FloatFactory,
   Location,
   Position,
@@ -16,6 +18,7 @@ import {
   workspace,
   WorkspaceEdit,
 } from 'coc.nvim';
+import type { WebviewAPI } from 'coc-webview';
 import readline from 'readline';
 import { CodeActionResolveRequest, TextDocumentEdit } from 'vscode-languageserver-protocol';
 import { Cmd, Ctx, isRustDocument } from './ctx';
@@ -657,15 +660,78 @@ export function moveItemDown(ctx: Ctx): Cmd {
 function crateGraph(ctx: Ctx, full: boolean): Cmd {
   return async () => {
     const dot = await ctx.client.sendRequest(ra.viewCrateGraph, { full });
-    const lines = dot.split('\n');
-    const nvim = workspace.nvim;
-    nvim.pauseNotification();
-    nvim.command(`edit +setl\\ buftype=nofile [Crate]`, true);
-    nvim.command('setl filetype=dot', true);
-    nvim.command('setl nobuflisted bufhidden=wipe', true);
-    nvim.call('append', [0, lines], true);
-    nvim.command(`exe 1`, true);
-    await nvim.resumeNotification();
+    const webview = extensions.all.find((ext) => ext.id === 'coc-webview') as Extension<WebviewAPI> | undefined;
+    if (!webview) {
+      const lines = dot.split('\n');
+      const nvim = workspace.nvim;
+      nvim.pauseNotification();
+      nvim.command(`edit +setl\\ buftype=nofile [Crate]`, true);
+      nvim.command('setl filetype=dot', true);
+      nvim.command('setl nobuflisted bufhidden=wipe', true);
+      nvim.call('append', [0, lines], true);
+      nvim.command(`exe 1`, true);
+      await nvim.resumeNotification();
+      return;
+    }
+
+    const panel = await webview.exports.createWebviewPanel('rust-crate-graph', 'View Crate Graph', { openURL: true, routeName: 'rust-crate-graph' }, { enableScripts: false });
+    panel.webview.html = `
+<!DOCTYPE html>
+<meta charset="utf-8">
+<head>
+    <style>
+        html, body { margin:0; padding:0; overflow:hidden }
+        svg { position:fixed; top:0; left:0; height:100%; width:100% }
+    </style>
+</head>
+<body>
+    <div id="graph"></div>
+    <script type="javascript/worker" src="https://cdn.jsdelivr.net/npm/@hpcc-js/wasm@1.11.0/dist/index.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/d3@7.0.1/dist/d3.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/d3-array@3.0.2/dist/d3-array.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/d3-axis@3.0.0/dist/d3-axis.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/d3-brush@3.0.0/dist/d3-brush.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/d3-chord@3.0.1/dist/d3-chord.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/d3-color@3.0.1/dist/d3-color.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/d3-contour@3.0.1/dist/d3-contour.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/d3-delaunay@6.0.2/dist/d3-delaunay.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/d3-dispatch@3.0.1/dist/d3-dispatch.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/d3-drag@3.0.0/dist/d3-drag.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/d3-dsv@3.0.1/dist/d3-dsv.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/d3-ease@3.0.1/dist/d3-ease.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/d3-fetch@3.0.1/dist/d3-fetch.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/d3-force@3.0.0/dist/d3-force.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/d3-format@3.0.1/dist/d3-format.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/d3-geo@3.0.1/dist/d3-geo.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/d3-hierarchy@3.0.1/dist/d3-hierarchy.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/d3-interpolate@3.0.1/dist/d3-interpolate.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/d3-path@3.0.1/dist/d3-path.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/d3-polygon@3.0.1/dist/d3-polygon.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/d3-quadtree@3.0.1/dist/d3-quadtree.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/d3-random@3.0.1/dist/d3-random.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/d3-scale@4.0.0/dist/d3-scale.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/d3-scale-chromatic@3.0.0/dist/d3-scale-chromatic.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/d3-selection@3.0.0/dist/d3-selection.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/d3-shape@3.0.1/dist/d3-shape.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/d3-time@3.0.0/dist/d3-time.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/d3-time-format@4.0.0/dist/d3-time-format.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/d3-timer@3.0.1/dist/d3-timer.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/d3-transition@3.0.1/dist/d3-transition.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/d3-zoom@3.0.0/dist/d3-zoom.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/d3-graphviz@4.0.0/build/d3-graphviz.min.js"></script>
+    <script>
+        let graph = d3.select("#graph")
+                      .graphviz()
+                      .fit(true)
+                      .zoomScaleExtent([0.1, Infinity])
+                      .renderDot(\`${dot}\`);
+        d3.select(window).on("click", (event) => {
+            if (event.ctrlKey) {
+                graph.resetZoom(d3.transition().duration(100));
+            }
+        });
+    </script>
+</body>`;
   };
 }
 
