@@ -29,7 +29,7 @@
   },
   "devDependencies": {
     "@types/node": "^16.0.0",
-    "@types/node-fetch": "^2.5.7",
+    "@types/node-fetch": "^3.0.3",
     "@types/which": "^2.0.0",
     "@typescript-eslint/eslint-plugin": "^4.26.0",
     "@typescript-eslint/parser": "^4.26.0",
