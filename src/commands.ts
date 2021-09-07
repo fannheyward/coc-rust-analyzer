@@ -408,6 +408,7 @@ export function expandMacro(ctx: Ctx): Cmd {
     nvim.pauseNotification();
     nvim.command(`edit +setl\\ buftype=nofile [Macro]`, true);
     nvim.command('setl nobuflisted bufhidden=wipe', true);
+    nvim.command('setl filetype=rust', true);
     nvim.call('append', [0, lines], true);
     nvim.command(`exe 1`, true);
     await nvim.resumeNotification();
