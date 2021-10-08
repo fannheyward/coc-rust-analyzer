@@ -201,7 +201,7 @@
           ]
         },
         "rust-analyzer.assist.importGroup": {
-          "markdownDescription": "Group inserted imports by the [following order](https://rust-analyzer.github.io/manual.html#auto-import). Groups are separated by newlines.",
+          "markdownDescription": "Group inserted imports by the https://rust-analyzer.github.io/manual.html#auto-import[following order]. Groups are separated by newlines.",
           "default": true,
           "type": "boolean"
         },
@@ -350,6 +350,11 @@
           "default": true,
           "type": "boolean"
         },
+        "rust-analyzer.completion.snippets": {
+          "markdownDescription": "Custom completion snippets.",
+          "default": {},
+          "type": "object"
+        },
         "rust-analyzer.completion.postfix.enable": {
           "markdownDescription": "Whether to show postfix snippets like `dbg`, `if`, `not`, etc.",
           "default": true,
@@ -407,7 +412,7 @@
         },
         "rust-analyzer.experimental.procAttrMacros": {
           "markdownDescription": "Expand attribute macros.",
-          "default": false,
+          "default": true,
           "type": "boolean"
         },
         "rust-analyzer.files.watcher": {
@@ -497,6 +502,11 @@
           "default": true,
           "type": "boolean"
         },
+        "rust-analyzer.joinLines.joinAssignments": {
+          "markdownDescription": "Join lines merges consecutive declaration and initialization of an assignment.",
+          "default": true,
+          "type": "boolean"
+        },
         "rust-analyzer.lens.enable": {
           "markdownDescription": "Whether to show CodeLens in Rust files. You also need to enable `codeLens.enable` in coc-settings.json.",
           "default": true,
@@ -518,7 +528,12 @@
           "type": "boolean"
         },
         "rust-analyzer.lens.references": {
-          "markdownDescription": "Whether to show `References` lens. Only applies when\n`#rust-analyzer.lens.enable#` is set.",
+          "markdownDescription": "Whether to show `References` lens for Struct, Enum, Union and Trait.\nOnly applies when `#rust-analyzer.lens.enable#` is set.",
+          "default": false,
+          "type": "boolean"
+        },
+        "rust-analyzer.lens.enumVariantReferences": {
+          "markdownDescription": "Whether to show `References` lens for Enum Variants.\nOnly applies when `#rust-analyzer.lens.enable#` is set.",
           "default": false,
           "type": "boolean"
         },
