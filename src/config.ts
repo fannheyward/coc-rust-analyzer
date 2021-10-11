@@ -67,6 +67,10 @@ export class Config {
     return this.cfg.get<UpdatesChannel>('updates.channel')!;
   }
 
+  get checkOnStartup() {
+    return this.cfg.get<boolean>('updates.checkOnStartup');
+  }
+
   get terminal() {
     return {
       startinsert: this.cfg.get<boolean>('terminal.startinsert'),

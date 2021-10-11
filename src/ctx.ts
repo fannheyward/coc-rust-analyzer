@@ -90,6 +90,9 @@ export class Ctx {
       // no update checking if using custom server
       return;
     }
+    if (auto && !this.config.checkOnStartup) {
+      return;
+    }
 
     const latest = await getLatestRelease(this.config.channel);
     if (!latest) {
