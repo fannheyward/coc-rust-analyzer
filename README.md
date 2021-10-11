@@ -26,6 +26,7 @@ This extension is configured using a jsonc file. You can open this configuration
 | `rust-analyzer.server.path` | Path to custom `rust-analyzer` executable |`''`|
 | `rust-analyzer.updates.prompt` | Prompt the user before downloading |`true`|
 | `rust-analyzer.updates.channel` | Use `stable` or `nightly` updates |`stable`|
+| `rust-analyzer.updates.checkOnStartup` | Check rust-analyzer updates on startup | `true` |
 | `rust-analyzer.diagnostics.enable` | Whether to show native rust-analyzer diagnostics |`true`|
 | `rust-analyzer.diagnostics.enableExperimental` | Whether to show experimental rust-analyzer diagnostics that might have more false positives than usual |`true`|
 | `rust-analyzer.diagnostics.disabled`| List of rust-analyzer diagnostics to disable |`[]`|
