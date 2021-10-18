@@ -88,6 +88,11 @@
     "default": true,
     "description": "Prompt the user before downloading rust-analyzer"
   },
+  "rust-analyzer.updates.checkOnStartup": {
+    "type": "boolean",
+    "default": true,
+    "description": "Auto-check rust-analyzer updates on startup"
+  },
   "rust-analyzer.updates.channel": {
     "type": "string",
     "default": "stable",
