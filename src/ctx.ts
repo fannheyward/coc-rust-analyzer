@@ -1,4 +1,4 @@
-import { CancellationToken, commands, Disposable, ExtensionContext, LanguageClient, RequestType, services, TextDocument, window, workspace } from 'coc.nvim';
+import { CancellationToken, commands, Disposable, ExtensionContext, LanguageClient, RequestType, services, TextDocument, Uri, window, workspace } from 'coc.nvim';
 import { existsSync } from 'fs';
 import { homedir } from 'os';
 import { join } from 'path';
@@ -13,6 +13,11 @@ import * as ra from './lsp_ext';
 export type RustDocument = TextDocument & { languageId: 'rust' };
 export function isRustDocument(document: TextDocument): document is RustDocument {
   return document.languageId === 'rust';
+}
+
+export function isCargoTomlDocument(document: TextDocument): document is RustDocument {
+  const u = Uri.parse(document.uri);
+  return u.scheme === 'file' && u.fsPath.endsWith('Cargo.toml');
 }
 
 export type Cmd = (...args: any[]) => unknown;

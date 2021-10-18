@@ -22,7 +22,7 @@ import { tmpdir } from 'os';
 import { join } from 'path';
 import readline from 'readline';
 import { CodeActionResolveRequest, TextDocumentEdit } from 'vscode-languageserver-protocol';
-import { Cmd, Ctx, isRustDocument } from './ctx';
+import { Cmd, Ctx, isCargoTomlDocument, isRustDocument } from './ctx';
 import * as ra from './lsp_ext';
 
 let terminal: Terminal | undefined;
@@ -125,7 +125,7 @@ export function joinLines(ctx: Ctx): Cmd {
 export function parentModule(ctx: Ctx): Cmd {
   return async () => {
     const { document, position } = await workspace.getCurrentState();
-    if (!isRustDocument(document)) return;
+    if (!(isRustDocument(document) || isCargoTomlDocument(document))) return;
 
     const param: TextDocumentPositionParams = {
       textDocument: { uri: document.uri },
@@ -133,7 +133,7 @@ export function parentModule(ctx: Ctx): Cmd {
     };
 
     const locations = await ctx.client.sendRequest(ra.parentModule, param);
-    if (!locations.length) return;
+    if (!locations) return;
 
     if (locations.length === 1) {
       const loc = locations[0];
