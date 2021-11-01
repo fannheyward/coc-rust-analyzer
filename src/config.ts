@@ -8,7 +8,7 @@ export interface Env {
 
 export class Config {
   private readonly rootSection = 'rust-analyzer';
-  private readonly requiresReloadOpts = ['server', 'cargo', 'procMacro', 'files', 'updates', 'lens', 'hoverActions', 'inlayHints'].map((opt) => `${this.rootSection}.${opt}`);
+  private readonly requiresReloadOpts = ['server', 'cargo', 'procMacro', 'files', 'updates', 'lens', 'inlayHints'].map((opt) => `${this.rootSection}.${opt}`);
   private cfg: WorkspaceConfiguration;
 
   constructor() {
