@@ -53,7 +53,8 @@
       {
         "filetype": "rust",
         "patterns": [
-          "Cargo.toml"
+          "Cargo.toml",
+          "rust-project.json"
         ]
       }
     ],
