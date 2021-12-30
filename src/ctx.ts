@@ -114,7 +114,7 @@ export class Ctx {
 
     const msg = `Rust Analyzer has a new release: ${latest.tag}, you're using ${old}. Would you like to download from GitHub`;
     let ret = 0;
-    if (this.config.prompt) {
+    if (this.config.prompt === true) {
       ret = await window.showQuickpick(['Yes, download the latest rust-analyzer', 'Check GitHub releases', 'Cancel'], msg);
     }
     if (ret === 0) {

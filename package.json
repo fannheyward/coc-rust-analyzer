@@ -147,7 +147,15 @@
           "description": "Trace requests to the rust-analyzer"
         },
         "rust-analyzer.updates.prompt": {
-          "type": "boolean",
+          "type": [
+            "boolean",
+            "string"
+          ],
+          "enum": [
+            true,
+            false,
+            "neverDownload"
+          ],
           "default": true,
           "description": "Prompt the user before downloading rust-analyzer"
         },

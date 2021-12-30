@@ -60,7 +60,7 @@ export class Config {
   }
 
   get prompt() {
-    return this.cfg.get<boolean>('updates.prompt');
+    return this.cfg.get<boolean | string>('updates.prompt', true);
   }
 
   get channel() {

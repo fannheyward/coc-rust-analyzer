@@ -18,8 +18,8 @@ export async function activate(context: ExtensionContext): Promise<void> {
   const bin = ctx.resolveBin();
   if (!bin) {
     let msg = 'Rust Analyzer is not found, download from GitHub release?';
-    let ret = 0;
-    if (ctx.config.prompt) {
+    let ret = ctx.config.prompt === 'neverDownload' ? -1 : 0;
+    if (ctx.config.prompt === true) {
       ret = await window.showQuickpick(['Yes', 'Cancel'], msg);
     }
     if (ret === 0) {
