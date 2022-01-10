@@ -177,6 +177,19 @@
             "`\"nightly\"` updates are shipped daily (extension updates automatically by downloading artifacts directly from GitHub), they contain cutting-edge features and latest bug fixes. These releases help us get your feedback very quickly and speed up rust-analyzer development **drastically**"
           ]
         },
+        "rust-analyzer.assist.exprFillDefault": {
+          "markdownDescription": "Placeholder for missing expressions in assists.",
+          "default": "todo",
+          "type": "string",
+          "enum": [
+            "todo",
+            "default"
+          ],
+          "enumDescriptions": [
+            "Fill missing expressions with the `todo` macro",
+            "Fill missing expressions with reasonable defaults, `new` or `default` constructors."
+          ]
+        },
         "rust-analyzer.assist.importGranularity": {
           "markdownDescription": "How imports should be grouped into use statements.",
           "default": "crate",
@@ -643,6 +656,11 @@
             "null",
             "string"
           ]
+        },
+        "rust-analyzer.procMacro.ignored": {
+          "markdownDescription": "These proc-macros will be ignored when trying to expand them.\n\nThis config takes a map of crate names with the exported proc-macro names to ignore as values.",
+          "default": {},
+          "type": "object"
         },
         "rust-analyzer.runnables.overrideCargo": {
           "markdownDescription": "Command to be executed instead of 'cargo' for runnables.",
