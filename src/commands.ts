@@ -481,15 +481,16 @@ export async function applySnippetWorkspaceEdit(edit: WorkspaceEdit) {
     const newEdits: TextEdit[] = [];
 
     for (const indel of change.edits) {
+      const { range } = indel;
       let { newText } = indel;
-      const parsed = parseSnippet(indel.newText);
+      const parsed = parseSnippet(newText);
       if (parsed) {
         const [insert, [placeholderStart, placeholderLength]] = parsed;
-        const prefix = insert.substr(0, placeholderStart);
+        const prefix = insert.substring(0, placeholderStart);
         const lastNewline = prefix.lastIndexOf('\n');
 
-        const startLine = indel.range.start.line + lineDelta + countLines(prefix);
-        const startColumn = lastNewline === -1 ? indel.range.start.character + placeholderStart : prefix.length - lastNewline - 1;
+        const startLine = range.start.line + lineDelta + countLines(prefix);
+        const startColumn = lastNewline === -1 ? range.start.character + placeholderStart : prefix.length - lastNewline - 1;
         if (placeholderLength) {
           selection = Range.create(startLine, startColumn, startLine, startColumn + placeholderLength);
         } else {
@@ -501,7 +502,7 @@ export async function applySnippetWorkspaceEdit(edit: WorkspaceEdit) {
         lineDelta += countLines(indel.newText) - (indel.range.end.line - indel.range.start.line);
       }
 
-      newEdits.push(TextEdit.replace(indel.range, newText));
+      newEdits.push(TextEdit.replace(range, newText));
     }
 
     const current = await workspace.document;
@@ -533,6 +534,7 @@ export function applySnippetWorkspaceEditCommand(): Cmd {
 
 export function resolveCodeAction(ctx: Ctx): Cmd {
   return async (params: CodeAction) => {
+    params.command = undefined;
     const item = (await ctx.client.sendRequest(CodeActionResolveRequest.method, params)) as CodeAction;
     if (!item?.edit) return;
 
