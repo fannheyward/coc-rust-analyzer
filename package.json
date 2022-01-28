@@ -33,7 +33,7 @@
     "@types/which": "^2.0.0",
     "@typescript-eslint/eslint-plugin": "^5.4.0",
     "@typescript-eslint/parser": "^5.4.0",
-    "coc.nvim": "^0.0.81-next.7",
+    "coc.nvim": "^0.0.81-next.11",
     "esbuild": "^0.14.2",
     "eslint": "^8.2.0",
     "https-proxy-agent": "^5.0.0",
