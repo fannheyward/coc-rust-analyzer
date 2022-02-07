@@ -277,9 +277,9 @@ chalk@^4.0.0:
     supports-color "^7.1.0"
 
 coc.nvim@^0.0.81-next.11:
-  version "0.0.81-next.11"
-  resolved "https://registry.yarnpkg.com/coc.nvim/-/coc.nvim-0.0.81-next.11.tgz#2ac44f770da662adbaf30678edc837715016fe90"
-  integrity sha512-XxRRdpK67tVJH+zvwi4bHc9e/UJWBj2ZJdY8Q9/Twp0tgipDstoCqK3KeoszT79J7whPzS/1Y/8VG7dRNrMJ4w==
+  version "0.0.81-next.14"
+  resolved "https://registry.yarnpkg.com/coc.nvim/-/coc.nvim-0.0.81-next.14.tgz#3e200650a6ccdee6ac097e2ebc9e43c9f4fce3e2"
+  integrity sha512-vq8M4rFTEFOLh/uIuqKnN684q/MGyPJ3UXJfovHtPj4H3i65/ob09yLHFI7W421P9JSAHNUw9Ic5cjmriEOcyg==
 
 color-convert@^2.0.1:
   version "2.0.1"
