@@ -42,7 +42,7 @@ export class HintsUpdater implements Disposable {
       (e) => {
         const doc = workspace.getDocument(e.bufnr);
         if (doc && isRustDocument(doc.textDocument)) {
-          if (workspace.insertMode && !this.ctx.config.inlayHints.refreshOnInsertMode) {
+          if (events.insertMode && !this.ctx.config.inlayHints.refreshOnInsertMode) {
             return;
           }
           this.syncAndRenderHints(doc);

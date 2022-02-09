@@ -106,9 +106,7 @@ export function joinLines(ctx: Ctx): Cmd {
 
     let range: Range | null = null;
     const mode = (await workspace.nvim.call('visualmode')) as string;
-    if (mode) {
-      range = await workspace.getSelectedRange(mode, doc);
-    }
+    if (mode) range = await window.getSelectedRange(mode);
     if (!range) {
       const state = await workspace.getCurrentState();
       range = Range.create(state.position, state.position);
@@ -166,8 +164,7 @@ export function ssr(ctx: Ctx): Cmd {
     const selections: Range[] = [];
     const mode = await workspace.nvim.call('visualmode');
     if (mode) {
-      const doc = await workspace.document;
-      const range = await workspace.getSelectedRange(mode, doc);
+      const range = await window.getSelectedRange(mode);
       if (range) selections.push(range);
     }
 
@@ -370,9 +367,7 @@ export function syntaxTree(ctx: Ctx): Cmd {
 
     const mode = await workspace.nvim.call('visualmode');
     let range: Range | null = null;
-    if (mode) {
-      range = await workspace.getSelectedRange(mode, doc);
-    }
+    if (mode) range = await window.getSelectedRange(mode);
     const param: ra.SyntaxTreeParams = {
       textDocument: { uri: doc.uri },
       range,
@@ -386,7 +381,7 @@ export function syntaxTree(ctx: Ctx): Cmd {
     nvim.command('setl nobuflisted bufhidden=wipe', true);
     nvim.call('append', [0, ret.split('\n')], true);
     nvim.command(`exe 1`, true);
-    await nvim.resumeNotification();
+    await nvim.resumeNotification(true);
   };
 }
 
@@ -411,7 +406,7 @@ export function expandMacro(ctx: Ctx): Cmd {
     nvim.command('setl filetype=rust', true);
     nvim.call('append', [0, lines], true);
     nvim.command(`exe 1`, true);
-    await nvim.resumeNotification();
+    await nvim.resumeNotification(true);
   };
 }
 
@@ -519,7 +514,7 @@ export async function applySnippetWorkspaceEdit(edit: WorkspaceEdit) {
     await workspace.applyEdit(wsEdit);
 
     if (selection) {
-      await workspace.selectRange(selection);
+      await window.selectRange(selection);
     } else if (position) {
       await window.moveTo(position);
     }
@@ -593,7 +588,7 @@ export function viewHir(ctx: Ctx): Cmd {
     nvim.command('setl nobuflisted bufhidden=wipe', true);
     nvim.call('append', [0, ret.split('\n')], true);
     nvim.command(`exe 1`, true);
-    await nvim.resumeNotification();
+    await nvim.resumeNotification(true);
   };
 }
 
@@ -634,9 +629,7 @@ function moveItem(ctx: Ctx, direction: ra.Direction): Cmd {
 
     let range: Range | null = null;
     const mode = (await workspace.nvim.call('visualmode')) as string;
-    if (mode) {
-      range = await workspace.getSelectedRange(mode, workspace.getDocument(document.uri));
-    }
+    if (mode) range = await window.getSelectedRange(mode);
     if (!range) range = Range.create(position, position);
     const params: ra.MoveItemParams = {
       direction,
@@ -754,6 +747,6 @@ export function viewItemTree(ctx: Ctx): Cmd {
     nvim.command('setl nobuflisted bufhidden=wipe', true);
     nvim.call('append', [0, ret.split('\n')], true);
     nvim.command(`exe 1`, true);
-    await nvim.resumeNotification();
+    await nvim.resumeNotification(true);
   };
 }

@@ -1,4 +1,4 @@
-import { CodeActionKind, Command, Executable, LanguageClient, LanguageClientOptions, Position, Range, ServerOptions, StaticFeature, Uri, workspace } from 'coc.nvim';
+import { CodeActionKind, Command, Executable, LanguageClient, LanguageClientOptions, Position, Range, ServerOptions, StaticFeature, Uri, window, workspace } from 'coc.nvim';
 import { existsSync } from 'fs';
 import { join } from 'path';
 import { CodeAction, CodeActionParams, CodeActionRequest } from 'vscode-languageserver-protocol';
@@ -39,8 +39,8 @@ function isCodeActionWithoutEditsAndCommands(value: any): boolean {
 
 export function createClient(bin: string, extra: Env): LanguageClient {
   let folder = '.';
-  if (workspace.workspaceFolder?.uri.length) {
-    folder = Uri.parse(workspace.workspaceFolder.uri).fsPath;
+  if (workspace.workspaceFolders.length) {
+    folder = Uri.parse(workspace.workspaceFolders[0].uri).fsPath;
   }
 
   const env = Object.assign(Object.assign({}, process.env), extra);
@@ -56,7 +56,7 @@ export function createClient(bin: string, extra: Env): LanguageClient {
     return true;
   }
   let initializationOptions = workspace.getConfiguration('rust-analyzer');
-  if (standalone(workspace.workspaceFolder?.uri)) {
+  if (workspace.workspaceFolders.length && standalone(workspace.workspaceFolders[0].uri)) {
     const docs = workspace.documents.filter((doc) => isRustDocument(doc.textDocument));
     if (docs.length) {
       initializationOptions = { detachedFiles: docs.map((doc) => Uri.parse(doc.uri).fsPath), ...initializationOptions };
@@ -72,9 +72,8 @@ export function createClient(bin: string, extra: Env): LanguageClient {
         let positionOrRange: Range | Position | null = null;
         const mode = (await workspace.nvim.call('mode')) as string;
         if (mode === 'v' || mode === 'V') {
-          const doc = workspace.getDocument(document.uri);
           await workspace.nvim.call('eval', 'feedkeys("\\<esc>", "in")');
-          positionOrRange = await workspace.getSelectedRange(mode, doc);
+          positionOrRange = await window.getSelectedRange(mode);
         }
         if (!positionOrRange) positionOrRange = position;
         const param: ra.HoverParams = {
