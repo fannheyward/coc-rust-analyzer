@@ -32,7 +32,7 @@ This extension is configured using a jsonc file. You can open this configuration
 | `rust-analyzer.diagnostics.disabled`| List of rust-analyzer diagnostics to disable |`[]`|
 | `rust-analyzer.diagnostics.warningsAsInfo`| List of warnings that should be displayed with info severity |`[]`|
 | `rust-analyzer.diagnostics.warningsAsHint`| List of warnings that should be displayed with hint severity |`[]`|
-| `rust-analyzer.experimental.procAttrMacros` | Expand attribute macros | `false` |
+| `rust-analyzer.experimental.procAttrMacros` | Expand attribute macros | `true` |
 | `rust-analyzer.lruCapacity` | Number of syntax trees rust-analyzer keeps in memory |`null`|
 | `rust-analyzer.inlayHints.enable`| Whether to show inlay hints |`true`|
 | `rust-analyzer.inlayHints.typeHints`| Whether to show inlay type hints for variables, **Neovim Only** | `true`|
@@ -46,8 +46,8 @@ This extension is configured using a jsonc file. You can open this configuration
 | `rust-analyzer.cargo.allFeatures` | Activate all available features | `false` |
 | `rust-analyzer.cargo.features` | List of features to activate |`[]`|
 | `rust-analyzer.cargo.noDefaultFeatures` | Do not activate the `default` feature | `false` |
-| `rust-analyzer.cargo.runBuildScripts` | Run build scripts (`build.rs`) for more precise code analysis | `false` |
-| `rust-analyzer.procMacro.enable` | Enable support for procedural macros, implies `#rust-analyzer.cargo.runBuildScripts#` | `false` |
+| `rust-analyzer.cargo.runBuildScripts` | Run build scripts (`build.rs`) for more precise code analysis | `true` |
+| `rust-analyzer.procMacro.enable` | Enable support for procedural macros, implies `#rust-analyzer.cargo.runBuildScripts#` | `true` |
 | `rust-analyzer.rustfmt.extraArgs` | Additional arguments to rustfmt | `[]` |
 | `rust-analyzer.rustfmt.overrideCommand` | Advanced option, fully override the command rust-analyzer uses for formatting | `null` |
 | `rust-analyzer.rustfmt.enableRangeFormatting` | Enables rustfmt's unstable range formatting, only available on a nightly build. | `false` |
@@ -68,10 +68,10 @@ This extension is configured using a jsonc file. You can open this configuration
 | `rust-analyzer.lens.run` | Whether to show Run lens | `true` |
 | `rust-analyzer.lens.implementations` | Whether to show Implementations lens | `true` |
 | `rust-analyzer.lens.methodReferences` | Whether to show `Method References` lens | `false` |
-| `rust-analyzer.hoverActions.linksInHover` | Whether to show document links in hover | `false` |
+| `rust-analyzer.hover.linksInHover` | Whether to show document links in hover | `true` |
 | `rust-analyzer.assist.importGranularity` | How imports should be grouped into use statements | `crate` |
 | `rust-analyzer.assist.importEnforceGranularity` | Whether to enforce the import granularity setting for all files | `false` |
-| `rust-analyzer.assist.allowMergingIntoGlobImports` | Whether to allow import insertion to merge new imports into single path glob imports like `use std::fmt::*;` | true |
+| `rust-analyzer.assist.allowMergingIntoGlobImports` | Whether to allow import insertion to merge new imports into single path glob imports like `use std::fmt::*;` | `true` |
 | `rust-analyzer.assist.importPrefix` | The path structure for newly inserted paths to use | `plain` |
 | `rust-analyzer.assist.importGroup` | Group inserted imports by the [following order](https://rust-analyzer.github.io/manual.html#auto-import). Groups are separated by newlines | `true` |
 | `rust-analyzer.callInfo.full` | Show function name and docs in parameter hints | `true` |
