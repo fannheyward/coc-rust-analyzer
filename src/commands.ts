@@ -352,7 +352,7 @@ export function runSingle(ctx: Ctx): Cmd {
       terminal.dispose();
       terminal = undefined;
     }
-    terminal = await workspace.createTerminal(opt);
+    terminal = await window.createTerminal(opt);
     terminal.sendText(cmd);
     if (ctx.config.terminal.startinsert) {
       await workspace.nvim.command('startinsert');
