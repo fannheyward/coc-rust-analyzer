@@ -529,7 +529,6 @@ export function applySnippetWorkspaceEditCommand(): Cmd {
 
 export function resolveCodeAction(ctx: Ctx): Cmd {
   return async (params: CodeAction) => {
-    params.command = undefined;
     const item = (await ctx.client.sendRequest(CodeActionResolveRequest.method, params)) as CodeAction;
     if (!item?.edit) return;
 
