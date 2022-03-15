@@ -99,11 +99,6 @@
           "default": "‣",
           "description": "Separator text for typeHints in virtual text"
         },
-        "rust-analyzer.inlayHints.typeHintsWithVariable": {
-          "type": "boolean",
-          "default": true,
-          "description": "Show typeHints with variables name"
-        },
         "rust-analyzer.inlayHints.chainingHintsSeparator": {
           "type": "string",
           "default": "‣",
@@ -542,6 +537,11 @@
         },
         "rust-analyzer.hoverActions.enable": {
           "markdownDescription": "Whether to show HoverActions in Rust files.",
+          "default": true,
+          "type": "boolean"
+        },
+        "rust-analyzer.inlayHints.renderColons": {
+          "markdownDescription": "Whether to render trailing colons for parameter hints, and trailing colons for parameter hints.",
           "default": true,
           "type": "boolean"
         },

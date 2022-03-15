@@ -106,10 +106,13 @@ export class HintsUpdater implements Disposable {
     };
     for (const hint of hints) {
       switch (hint.kind) {
-        case ra.InlayHint.Kind.TypeHint:
+        case ra.InlayHintKind.Type:
           decorations.type.push(hint);
           break;
-        case ra.InlayHint.Kind.ChainingHint:
+        case ra.InlayHintKind.Parameter:
+          decorations.param.push(hint);
+          break;
+        case null:
           decorations.chaining.push(hint);
           break;
         default:
@@ -122,30 +125,28 @@ export class HintsUpdater implements Disposable {
     const split: [string, string] = [' ', 'Normal'];
     if (this.ctx.config.inlayHints.typeHints) {
       const sep = this.ctx.config.inlayHints.typeHintsSeparator;
-      const showSymbol = this.ctx.config.inlayHints.typeHintsWithVariable;
       for (const item of decorations.type) {
-        const sn_start = item.range.start.character;
-        const sn_end = item.range.end.character;
-        const line = doc.getline(item.range.start.line);
-        const symbol_name = showSymbol ? `${line.substring(sn_start, sn_end)}: ` : '';
-        const chunks: [[string, string]] = [[`${sep}${symbol_name}${item.label}`, 'CocRustTypeHint']];
-        if (chaining_hints[item.range.end.line] === undefined) {
-          chaining_hints[item.range.end.line] = chunks;
+        let label = typeof item.label === 'string' ? item.label : item.label[0].value;
+        if (label.startsWith(': ')) label = label.replace(': ', '');
+        const chunks: [[string, string]] = [[`${sep}${label}`, 'CocRustTypeHint']];
+        if (chaining_hints[item.position.line] === undefined) {
+          chaining_hints[item.position.line] = chunks;
         } else {
-          chaining_hints[item.range.end.line].push(split);
-          chaining_hints[item.range.end.line].push(chunks[0]);
+          chaining_hints[item.position.line].push(split);
+          chaining_hints[item.position.line].push(chunks[0]);
         }
       }
     }
     if (this.ctx.config.inlayHints.chainingHints) {
       const sep = this.ctx.config.inlayHints.chainingHintsSeparator;
       for (const item of decorations.chaining) {
-        const chunks: [[string, string]] = [[`${sep}${item.label}`, 'CocRustChainingHint']];
-        if (chaining_hints[item.range.end.line] === undefined) {
-          chaining_hints[item.range.end.line] = chunks;
+        const label = typeof item.label === 'string' ? item.label : item.label[0].value;
+        const chunks: [[string, string]] = [[`${sep}${label}`, 'CocRustChainingHint']];
+        if (chaining_hints[item.position.line] === undefined) {
+          chaining_hints[item.position.line] = chunks;
         } else {
-          chaining_hints[item.range.end.line].push(split);
-          chaining_hints[item.range.end.line].push(chunks[0]);
+          chaining_hints[item.position.line].push(split);
+          chaining_hints[item.position.line].push(chunks[0]);
         }
       }
     }

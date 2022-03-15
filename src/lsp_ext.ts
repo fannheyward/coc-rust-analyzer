@@ -3,12 +3,14 @@
  */
 
 import * as lc from 'coc.nvim';
+import { Command, Position } from 'coc.nvim';
 
 export interface AnalyzerStatusParams {
   textDocument?: lc.TextDocumentIdentifier;
 }
 export const analyzerStatus = new lc.RequestType<AnalyzerStatusParams, string, void>('rust-analyzer/analyzerStatus');
 export const memoryUsage = new lc.RequestType0<string, void>('rust-analyzer/memoryUsage');
+export const shuffleCrateGraph = new lc.RequestType0<null, void>('rust-analyzer/shuffleCrateGraph');
 
 export interface ServerStatusParams {
   health: 'ok' | 'warning' | 'error';
@@ -99,33 +101,45 @@ export interface TestInfo {
 
 export const relatedTests = new lc.RequestType<lc.TextDocumentPositionParams, TestInfo[], void>('rust-analyzer/relatedTests');
 
-export type InlayHint = InlayHint.TypeHint | InlayHint.ParamHint | InlayHint.ChainingHint;
-
-export namespace InlayHint {
-  export const enum Kind {
-    TypeHint = 'TypeHint',
-    ParamHint = 'ParameterHint',
-    ChainingHint = 'ChainingHint',
-  }
-  interface Common {
-    range: lc.Range;
-    label: string;
-  }
-  export type TypeHint = Common & { kind: Kind.TypeHint };
-  export type ParamHint = Common & { kind: Kind.ParamHint };
-  export type ChainingHint = Common & { kind: Kind.ChainingHint };
-}
 export interface InlayHintsParams {
   textDocument: lc.TextDocumentIdentifier;
+  range: lc.Range;
 }
-export const inlayHints = new lc.RequestType<InlayHintsParams, InlayHint[], void>('rust-analyzer/inlayHints');
+
+export enum InlayHintKind {
+  /**
+   * An inlay hint that for a type annotation.
+   */
+  Type = 1,
+  /**
+   * An inlay hint that is for a parameter.
+   */
+  Parameter = 2,
+}
+
+export interface InlayHintLabelPart {
+  value: string;
+  tooltip?: string | undefined;
+  location?: Location | undefined;
+  command?: Command | undefined;
+}
+
+export interface InlayHint {
+  position: Position;
+  label: string | InlayHintLabelPart[];
+  tooltip?: string | undefined;
+  kind?: InlayHintKind;
+  paddingLeft?: boolean;
+  paddingRight?: boolean;
+}
+export const inlayHints = new lc.RequestType<InlayHintsParams, InlayHint[], void>('experimental/inlayHints');
 
 export interface SsrParams {
   query: string;
   parseOnly: boolean;
   textDocument: lc.TextDocumentIdentifier;
   position: lc.Position;
-  selections: lc.Range[];
+  selections: readonly lc.Range[];
 }
 export const ssr = new lc.RequestType<SsrParams, lc.WorkspaceEdit, void>('experimental/ssr');
 
