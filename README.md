@@ -110,6 +110,7 @@ You can use these commands by `:CocCommand XYZ`.
 | rust-analyzer.viewHir | View Hir |
 | rust-analyzer.viewCrateGraph | View Crate Graph |
 | rust-analyzer.viewFullCrateGraph | View Crate Graph (Full) |
+| rust-analyzer.shuffleCrateGraph | Shuffle Crate Graph |
 
 ## Highlight Group
 

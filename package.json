@@ -852,6 +852,11 @@
         "category": "Rust Analyzer"
       },
       {
+        "command": "rust-analyzer.shuffleCrateGraph",
+        "title": "Shuffle Crate Graph",
+        "category": "Rust Analyzer"
+      },
+      {
         "command": "rust-analyzer.viewFullCrateGraph",
         "title": "View Crate Graph (Full)",
         "category": "Rust Analyzer"

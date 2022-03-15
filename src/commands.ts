@@ -731,6 +731,15 @@ export function viewFullCrateGraph(ctx: Ctx): Cmd {
   return crateGraph(ctx, true);
 }
 
+export function shuffleCrateGraph(ctx: Ctx): Cmd {
+  return async () => {
+    const { document } = await workspace.getCurrentState();
+    if (!isRustDocument(document)) return;
+
+    await ctx.client.sendRequest(ra.shuffleCrateGraph);
+  };
+}
+
 export function viewItemTree(ctx: Ctx): Cmd {
   return async () => {
     const { document } = await workspace.getCurrentState();
