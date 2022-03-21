@@ -19,6 +19,7 @@ interface RustSourceFile {
 
 export class HintsUpdater implements Disposable {
   private readonly disposables: Disposable[] = [];
+  private sourceFiles = new Map<string, RustSourceFile>();
   private inlayHintsNS = workspace.createNameSpace('rust-inlay-hint');
   private inlayHintsEnabled: boolean;
 
@@ -27,6 +28,7 @@ export class HintsUpdater implements Disposable {
   }
 
   dispose() {
+    this.sourceFiles.forEach((file) => file.inlaysRequest?.cancel());
     this.disposables.forEach((d) => d.dispose());
   }
 
@@ -86,7 +88,7 @@ export class HintsUpdater implements Disposable {
   private async syncAndRenderHints(doc: Document) {
     if (!this.inlayHintsEnabled) return;
     if (doc && isRustDocument(doc.textDocument)) {
-      const file: RustSourceFile = {
+      const file = this.sourceFiles.get(doc.uri) || {
         document: doc.textDocument,
         inlaysRequest: null,
       };
