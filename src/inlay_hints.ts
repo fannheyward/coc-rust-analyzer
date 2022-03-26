@@ -129,6 +129,7 @@ export class HintsUpdater implements Disposable {
       const sep = this.ctx.config.inlayHints.typeHintsSeparator;
       for (const item of decorations.type) {
         let label = typeof item.label === 'string' ? item.label : item.label[0].value;
+        if (!label.length) continue;
         if (label.startsWith(': ')) label = label.replace(': ', '');
         const chunks: [[string, string]] = [[`${sep}${label}`, 'CocRustTypeHint']];
         if (chaining_hints[item.position.line] === undefined) {
@@ -143,6 +144,7 @@ export class HintsUpdater implements Disposable {
       const sep = this.ctx.config.inlayHints.chainingHintsSeparator;
       for (const item of decorations.chaining) {
         const label = typeof item.label === 'string' ? item.label : item.label[0].value;
+        if (!label.length) continue;
         const chunks: [[string, string]] = [[`${sep}${label}`, 'CocRustChainingHint']];
         if (chaining_hints[item.position.line] === undefined) {
           chaining_hints[item.position.line] = chunks;
