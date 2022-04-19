@@ -592,6 +592,24 @@ export function viewHir(ctx: Ctx): Cmd {
   };
 }
 
+export function viewFileText(ctx: Ctx): Cmd {
+  return async () => {
+    const { document } = await workspace.getCurrentState();
+    if (!isRustDocument(document)) return;
+
+    const ret = await ctx.client.sendRequest(ra.viewFileText, { uri: document.uri });
+    if (!ret) return;
+
+    const nvim = workspace.nvim;
+    nvim.pauseNotification();
+    nvim.command(`edit +setl\\ buftype=nofile [TEXT]`, true);
+    nvim.command('setl nobuflisted bufhidden=wipe', true);
+    nvim.call('append', [0, ret.split('\n')], true);
+    nvim.command(`exe 1`, true);
+    await nvim.resumeNotification(true);
+  };
+}
+
 export function echoRunCommandLine(ctx: Ctx) {
   return async () => {
     const runnable = await fetchRunnable(ctx);

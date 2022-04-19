@@ -51,6 +51,7 @@ export async function activate(context: ExtensionContext): Promise<void> {
   ctx.registerCommand('ssr', cmds.ssr);
   ctx.registerCommand('upgrade', cmds.upgrade);
   ctx.registerCommand('viewHir', cmds.viewHir);
+  ctx.registerCommand('viewFileText', cmds.viewFileText);
   ctx.registerCommand('openDocs', cmds.openDocs);
   ctx.registerCommand('joinLines', cmds.joinLines);
   ctx.registerCommand('peekTests', cmds.peekTests);
