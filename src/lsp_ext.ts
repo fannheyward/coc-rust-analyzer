@@ -132,7 +132,7 @@ export interface InlayHint {
   paddingLeft?: boolean;
   paddingRight?: boolean;
 }
-export const inlayHints = new lc.RequestType<InlayHintsParams, InlayHint[], void>('experimental/inlayHints');
+export const inlayHints = new lc.RequestType<InlayHintsParams, InlayHint[], void>('textDocument/inlayHint');
 
 export interface SsrParams {
   query: string;

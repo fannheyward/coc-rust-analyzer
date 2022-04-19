@@ -1,5 +1,5 @@
-import { CancellationTokenSource, Disposable, Document, events, workspace } from 'coc.nvim';
-import { Ctx, isRustDocument, RustDocument } from './ctx';
+import { CancellationTokenSource, Disposable, Document, events, Range, workspace } from 'coc.nvim';
+import { Ctx, isRustDocument } from './ctx';
 import * as ra from './lsp_ext';
 
 interface InlaysDecorations {
@@ -14,7 +14,7 @@ interface RustSourceFile {
    */
   inlaysRequest: null | CancellationTokenSource;
 
-  document: RustDocument;
+  doc: Document;
 }
 
 export class HintsUpdater implements Disposable {
@@ -89,7 +89,7 @@ export class HintsUpdater implements Disposable {
     if (!this.inlayHintsEnabled) return;
     if (doc && isRustDocument(doc.textDocument)) {
       const file = this.sourceFiles.get(doc.uri) || {
-        document: doc.textDocument,
+        doc,
         inlaysRequest: null,
       };
       this.fetchHints(file).then(async (hints) => {
@@ -165,7 +165,11 @@ export class HintsUpdater implements Disposable {
     const tokenSource = new CancellationTokenSource();
     file.inlaysRequest = tokenSource;
 
-    const param = { textDocument: { uri: file.document.uri.toString() } };
+    const endLine = file.doc.lineCount - 1;
+    const endChar = file.doc.getline(endLine).length;
+    const range = Range.create(0, 0, file.doc.lineCount - 1, endChar);
+
+    const param = {range, textDocument: { uri: file.doc.uri.toString() } };
     return this.ctx
       .sendRequestWithRetry(ra.inlayHints, param, tokenSource.token)
       .catch(() => null)
