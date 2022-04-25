@@ -15,6 +15,7 @@
 `:CocInstall coc-rust-analyzer`
 
 > remove `rust-analyzer` config from `coc-settings.json` if you've set
+> 
 > **NOTE**: For Apple Silicon users, you shouldn't use Node.js v15, checkout #975 for more.
 
 ## Configurations
