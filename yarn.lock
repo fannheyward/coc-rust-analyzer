@@ -66,9 +66,9 @@
     form-data "^3.0.0"
 
 "@types/node@*", "@types/node@^17.0.5":
-  version "17.0.23"
-  resolved "https://registry.yarnpkg.com/@types/node/-/node-17.0.23.tgz#3b41a6e643589ac6442bdbd7a4a3ded62f33f7da"
-  integrity sha512-UxDxWn7dl97rKVeVS61vErvw086aCYhDLyvRQZ5Rk65rZKepaFdm53GeqXaKBuOhED4e9uWq34IC3TdSdJJ2Gw==
+  version "17.0.30"
+  resolved "https://registry.yarnpkg.com/@types/node/-/node-17.0.30.tgz#2c6e8512acac70815e8176aa30c38025067880ef"
+  integrity sha512-oNBIZjIqyHYP8VCNAV9uEytXVeXG2oR0w9lgAXro20eugRQfY002qr3CUl6BAe+Yf/z3CRjPdz27Pu6WWtuSRw==
 
 "@types/which@^2.0.0":
   version "2.0.1"
@@ -243,9 +243,9 @@ chalk@^4.0.0:
     supports-color "^7.1.0"
 
 coc.nvim@^0.0.81-next.15:
-  version "0.0.81-next.22"
-  resolved "https://registry.yarnpkg.com/coc.nvim/-/coc.nvim-0.0.81-next.22.tgz#f1a29aace24f64a6d5514bab52d888fce9c016cf"
-  integrity sha512-vsIGQaqplpN0GUvvqqXKcfgrF5qn5p3S9LlYd+wGKqjfAolJFGxW6ii3HDnlKcIZasBaXvAErtYwd3VKRCK6Cg==
+  version "0.0.81-next.24"
+  resolved "https://registry.yarnpkg.com/coc.nvim/-/coc.nvim-0.0.81-next.24.tgz#81c6068416e0aee31d97d512e05706374288d4c4"
+  integrity sha512-wdpEnEhsWQp1YUKoRsYEz/vsEsKJGP+kgAu2uPal5yVZ5PbOG9KmQO4721LeZKKixbrtQkMz7jrq1israziA+Q==
 
 color-convert@^2.0.1:
   version "2.0.1"
