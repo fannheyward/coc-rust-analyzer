@@ -7,6 +7,7 @@ const packageJson = require('./package.json');
 const coc_ra_config = require('./coc-rust-analyzer-configurations.json');
 
 const not_supported = [
+  'rust-analyzer.hoverActions.enable',
   'rust-analyzer.hoverActions.debug',
   'rust-analyzer.hoverActions.gotoTypeDef',
   'rust-analyzer.hoverActions.references',
