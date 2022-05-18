@@ -57,8 +57,7 @@ This extension is configured using a jsonc file. You can open this configuration
 | `rust-analyzer.checkOnSave.features` | List of features to activate. Defaults to `#rust-analyzer.cargo.features#`. Set to `"all"` to pass `--all-features` to cargo. | `null` |
 | `rust-analyzer.checkOnSave.noDefaultFeatures` | Whether to pass `--no-default-features` to cargo. Defaults to `#rust-analyzer.cargo.noDefaultFeatures#`. | `null` |
 | `rust-analyzer.checkOnSave.overrideCommand` | Override the command rust-analyzer uses to  run build scripts and build procedural macros. | `null` |
-| `rust-analyzer.checkOnSave.target` | Check for a specific target. Defaults to
-`#rust-analyzer.cargo.target#`. | `null` |
+| `rust-analyzer.checkOnSave.target` | Check for a specific target. Defaults to `#rust-analyzer.cargo.target#`. | `null` |
 | `rust-analyzer.completion.autoimport.enable` | Toggles the additional completions that automatically add imports when completed. | `true` |
 | `rust-analyzer.completion.autoself.enable` | Toggles the additional completions that automatically show method calls and field accesses with `self` prefixed to them when inside a method. | `true` |
 | `rust-analyzer.completion.callable.snippets` | Whether to add parenthesis and argument snippets when completing function. | `fill_arguments` |
@@ -87,14 +86,12 @@ This extension is configured using a jsonc file. You can open this configuration
 | `rust-analyzer.inlayHints.bindingModeHints.enable` | Whether to show inlay type hints for binding modes. | `false` |
 | `rust-analyzer.inlayHints.chainingHints.enable` | Whether to show inlay type hints for method chains. | `true` |
 | `rust-analyzer.inlayHints.closingBraceHints.enable` | Whether to show inlay hints after a closing `}` to indicate what item it belongs to. | `true` |
-| `rust-analyzer.inlayHints.closingBraceHints.minLines` | Minimum number of lines required before the `}` until the hint is shown (set to 0 or 1
-to always show them). | `25` |
+| `rust-analyzer.inlayHints.closingBraceHints.minLines` | Minimum number of lines required before the `}` until the hint is shown (set to 0 or 1 to always show them). | `25` |
 | `rust-analyzer.inlayHints.closureReturnTypeHints.enable` | Whether to show inlay type hints for return types of closures with blocks. | `false` |
 | `rust-analyzer.inlayHints.lifetimeElisionHints.enable` | Whether to show inlay type hints for elided lifetimes in function signatures. | `never` |
 | `rust-analyzer.inlayHints.lifetimeElisionHints.useParameterNames` | Whether to prefer using parameter names as the name for elided lifetime hints if possible. | `false` |
 | `rust-analyzer.inlayHints.maxLength` | Maximum length for inlay hints. Set to null to have an unlimited length. | `25` |
-| `rust-analyzer.inlayHints.parameterHints.enable` | Whether to show function parameter name inlay hints at the call
-site. | `true` |
+| `rust-analyzer.inlayHints.parameterHints.enable` | Whether to show function parameter name inlay hints at the call site. | `true` |
 | `rust-analyzer.inlayHints.reborrowHints.enable` | Whether to show inlay type hints for compiler inserted reborrows. | `never` |
 | `rust-analyzer.inlayHints.renderColons` | Whether to render leading colons for type hints, and trailing colons for parameter hints. | `true` |
 | `rust-analyzer.inlayHints.typeHints.enable` | Whether to show inlay type hints for variables. | `true` |
