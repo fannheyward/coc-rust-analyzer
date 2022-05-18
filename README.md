@@ -23,6 +23,7 @@
 This extension is configured using a jsonc file. You can open this configuration file using the command `:CocConfig`, and it is typically located at `$HOME/.config/nvim/coc-settings.json`.
 
 | Configuration | Description | Default |
+|---|---|---|
 | `rust-analyzer.enable` | Enable `coc-rust-analyzer` | `true` |
 | `rust-analyzer.terminal.startinsert` | Enter insert mode after terminal displayed | `false` |
 | `rust-analyzer.debug.runtime` | Choose which debug runtime to use | `termdebug` |
