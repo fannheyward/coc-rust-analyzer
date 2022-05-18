@@ -7,14 +7,12 @@ const packageJson = require('./package.json');
 const coc_ra_config = require('./coc-rust-analyzer-configurations.json');
 
 const not_supported = [
-  'rust-analyzer.hoverActions.enable',
-  'rust-analyzer.hoverActions.debug',
-  'rust-analyzer.hoverActions.gotoTypeDef',
-  'rust-analyzer.hoverActions.references',
-  'rust-analyzer.hoverActions.implementations',
-  'rust-analyzer.hoverActions.run',
-  'rust-analyzer.inlayHints.parameterHints',
-  'rust-analyzer.lens.debug',
+  'rust-analyzer.hover.actions.debug.enable',
+  'rust-analyzer.hover.actions.enable',
+  'rust-analyzer.hover.actions.gotoTypeDef.enable',
+  'rust-analyzer.hover.actions.implementations.enable',
+  'rust-analyzer.hover.actions.references.enable',
+  'rust-analyzer.hover.actions.run.enable',
 ];
 
 let schema = execSync('rust-analyzer --print-config-schema', { encoding: 'utf8' });
