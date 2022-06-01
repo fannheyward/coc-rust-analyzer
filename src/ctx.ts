@@ -2,7 +2,6 @@ import { CancellationToken, commands, Disposable, ExtensionContext, LanguageClie
 import { existsSync } from 'fs';
 import { homedir } from 'os';
 import { join } from 'path';
-import { ShowMessageNotification } from 'vscode-languageserver-protocol';
 import which from 'which';
 import { createClient } from './client';
 import { Config } from './config';
@@ -52,15 +51,12 @@ export class Ctx {
     watcher.onDidChange(async () => await commands.executeCommand('rust-analyzer.reloadWorkspace'));
     await client.onReady();
 
-    client.onNotification(ShowMessageNotification.type.method, (msg) => {
-      console.error(msg);
-    });
     client.onNotification(ra.serverStatus, async (status) => {
       if (status.health !== 'ok' && status.message?.length) {
         // https://github.com/fannheyward/coc-rust-analyzer/issues/763
         if (status.message.startsWith('cargo check failed')) return;
-        window.showNotification({ content: status.message, timeout: 5000 });
-        window.showMessage(`rust-analyzer failed to start, run ':CocCommand rust-analyzer.reloadWorkspace' to reload`);
+        window.showNotification({ content: status.message });
+        window.showWarningMessage(`rust-analyzer failed to start, run ':CocCommand rust-analyzer.reloadWorkspace' to reload`);
       }
     });
 
@@ -107,7 +103,7 @@ export class Ctx {
     const old = this.extCtx.globalState.get('release') || 'unknown release';
     if (old === latest.tag) {
       if (!auto) {
-        window.showMessage(`Your Rust Analyzer release is updated`);
+        window.showInformationMessage(`Your Rust Analyzer release is updated`);
       }
       return;
     }
@@ -130,7 +126,7 @@ export class Ctx {
         if (e.code === 'EBUSY' || e.code === 'ETXTBSY' || e.code === 'EPERM') {
           msg = 'Upgrade rust-analyzer failed, other Vim instances might be using it, you should close them and try again';
         }
-        window.showMessage(msg, 'error');
+        window.showInformationMessage(msg, 'error');
         return;
       }
       await this.client.stop();

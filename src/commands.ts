@@ -189,12 +189,12 @@ export function serverVersion(ctx: Ctx): Cmd {
     const bin = ctx.resolveBin();
     if (!bin) {
       const msg = `Rust Analyzer is not found`;
-      window.showMessage(msg, 'error');
+      window.showErrorMessage(msg);
       return;
     }
 
     const version = spawnSync(bin, ['--version'], { encoding: 'utf-8' }).stdout.toString();
-    window.showMessage(version);
+    window.showInformationMessage(version);
   };
 }
 
@@ -202,7 +202,7 @@ async function fetchRunnable(ctx: Ctx): Promise<ra.Runnable | undefined> {
   const { document, position } = await workspace.getCurrentState();
   if (!isRustDocument(document)) return;
 
-  window.showMessage(`Fetching runnable...`);
+  window.showInformationMessage(`Fetching runnable...`);
 
   const params: ra.RunnablesParams = {
     textDocument: { uri: document.uri },
@@ -456,7 +456,7 @@ export function upgrade(ctx: Ctx) {
 export function toggleInlayHints(ctx: Ctx) {
   return async () => {
     if (!ctx.config.inlayHints.chainingHints) {
-      window.showMessage(`Inlay hints for method chains is disabled. Toggle action does nothing;`, 'warning');
+      window.showWarningMessage(`Inlay hints for method chains is disabled. Toggle action does nothing;`);
       return;
     }
     await ctx.toggleInlayHints();
@@ -622,7 +622,7 @@ export function echoRunCommandLine(ctx: Ctx) {
       args.push('--', ...runnable.args.executableArgs);
     }
     const commandLine = ['cargo', ...args].join(' ');
-    window.showMessage(commandLine);
+    window.showInformationMessage(commandLine);
   };
 }
 
