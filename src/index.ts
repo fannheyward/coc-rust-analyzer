@@ -30,7 +30,7 @@ export async function activate(context: ExtensionContext): Promise<void> {
       } catch (e) {
         console.error(e);
         msg = 'Download rust-analyzer failed, you can get it from https://github.com/rust-analyzer/rust-analyzer';
-        window.showMessage(msg, 'error');
+        window.showErrorMessage(msg);
         return;
       }
     } else {
@@ -75,7 +75,7 @@ export async function activate(context: ExtensionContext): Promise<void> {
   ctx.registerCommand('echoRunCommandLine', cmds.echoRunCommandLine);
   ctx.registerCommand('reload', (ctx) => {
     return async () => {
-      window.showMessage(`Reloading rust-analyzer...`);
+      window.showInformationMessage(`Reloading rust-analyzer...`);
 
       for (const sub of ctx.subscriptions) {
         try {
@@ -87,7 +87,7 @@ export async function activate(context: ExtensionContext): Promise<void> {
 
       await activate(context);
 
-      window.showMessage(`Reloaded rust-analyzer`);
+      window.showInformationMessage(`Reloaded rust-analyzer`);
     };
   });
 

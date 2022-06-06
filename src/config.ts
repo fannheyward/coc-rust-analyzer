@@ -25,7 +25,7 @@ export class Config {
     const msg = `Changing "${requiresReloadOpt}" requires a reload`;
     const prompt = await window.showPrompt(`${msg}. Reload now?`);
     if (prompt) {
-      await commands.executeCommand(`workbench.action.reloadWindow`);
+      await commands.executeCommand(`rust-analyzer.reload`);
     }
   }
 
