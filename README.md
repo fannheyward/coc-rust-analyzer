@@ -128,6 +128,7 @@ This extension is configured using a jsonc file. You can open this configuration
 | `rust-analyzer.workspace.symbol.search.kind` | Workspace symbol search kind. | `only_types` |
 | `rust-analyzer.workspace.symbol.search.limit` | Limits the number of items returned from a workspace symbol search (Defaults to 128). | `128` |
 | `rust-analyzer.workspace.symbol.search.scope` | Workspace symbol search scope. | `workspace` |
+| `rust-analyzer.disableProgressNotifications`  | Disable initialization and workdone progress notifications | `false` |
 
 ## Commands
 

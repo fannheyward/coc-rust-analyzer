@@ -44,7 +44,7 @@ export class Ctx {
       return;
     }
 
-    const client = createClient(bin, this.config.serverExtraEnv);
+    const client = createClient(bin, this.config);
     this.extCtx.subscriptions.push(services.registLanguageClient(client));
     const watcher = workspace.createFileSystemWatcher('**/Cargo.toml');
     this.extCtx.subscriptions.push(watcher);

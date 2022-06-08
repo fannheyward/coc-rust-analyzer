@@ -2,7 +2,7 @@ import { CodeActionKind, Command, Executable, LanguageClient, LanguageClientOpti
 import { existsSync } from 'fs';
 import { join } from 'path';
 import { CodeAction, CodeActionParams, CodeActionRequest } from 'vscode-languageserver-protocol';
-import { Env } from './config';
+import { Config } from './config';
 import { isRustDocument } from './ctx';
 import * as ra from './lsp_ext';
 
@@ -37,13 +37,13 @@ function isCodeActionWithoutEditsAndCommands(value: any): boolean {
   );
 }
 
-export function createClient(bin: string, extra: Env): LanguageClient {
+export function createClient(bin: string, config: Config): LanguageClient {
   let folder = '.';
   if (workspace.workspaceFolders.length) {
     folder = Uri.parse(workspace.workspaceFolders[0].uri).fsPath;
   }
 
-  const env = Object.assign(Object.assign({}, process.env), extra);
+  const env = Object.assign(Object.assign({}, process.env), config.serverExtraEnv);
   const run: Executable = {
     command: bin,
     options: { env, cwd: folder },
@@ -63,10 +63,16 @@ export function createClient(bin: string, extra: Env): LanguageClient {
     }
   }
 
+  const disabledFeatures: string[] = [];
+  if (config.disableProgressNotifications) {
+    disabledFeatures.push('progress');
+  }
   const serverOptions: ServerOptions = run;
   const clientOptions: LanguageClientOptions = {
     documentSelector: [{ language: 'rust' }],
     initializationOptions,
+    disabledFeatures,
+    progressOnInitialization: !config.disableProgressNotifications,
     middleware: {
       async provideHover(document, position, token) {
         let positionOrRange: Range | Position | null = null;

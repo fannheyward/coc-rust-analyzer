@@ -67,6 +67,11 @@
           "markdownDescription": "Enable `coc-rust-analyzer`",
           "default": true
         },
+        "rust-analyzer.disableProgressNotifications": {
+          "type": "boolean",
+          "default": false,
+          "markdownDescription": "Disable initialization and workdone progress notifications"
+        },
         "rust-analyzer.terminal.startinsert": {
           "type": "boolean",
           "default": false,

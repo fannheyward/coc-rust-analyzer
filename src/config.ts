@@ -80,4 +80,8 @@ export class Config {
   get enable() {
     return this.cfg.get<boolean>('enable');
   }
+
+  get disableProgressNotifications() {
+    return this.cfg.get<boolean>('disableProgressNotifications');
+  }
 }
