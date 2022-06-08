@@ -197,7 +197,7 @@
           "type": "boolean"
         },
         "rust-analyzer.cachePriming.numThreads": {
-          "markdownDescription": "How many worker threads to to handle priming caches. The default `0` means to pick automatically.",
+          "markdownDescription": "How many worker threads to handle priming caches. The default `0` means to pick automatically.",
           "default": 0,
           "type": "number",
           "minimum": 0,
@@ -584,9 +584,19 @@
           "minimum": 0
         },
         "rust-analyzer.inlayHints.closureReturnTypeHints.enable": {
-          "markdownDescription": "Whether to show inlay type hints for return types of closures with blocks.",
-          "default": false,
-          "type": "boolean"
+          "markdownDescription": "Whether to show inlay type hints for return types of closures.",
+          "default": "never",
+          "type": "string",
+          "enum": [
+            "always",
+            "never",
+            "with_block"
+          ],
+          "enumDescriptions": [
+            "Always show type hints for return types of closures.",
+            "Never show type hints for return types of closures.",
+            "Only show type hints for return types of closures with blocks."
+          ]
         },
         "rust-analyzer.inlayHints.lifetimeElisionHints.enable": {
           "markdownDescription": "Whether to show inlay type hints for elided lifetimes in function signatures.",
@@ -645,6 +655,11 @@
         "rust-analyzer.inlayHints.typeHints.enable": {
           "markdownDescription": "Whether to show inlay type hints for variables.",
           "default": true,
+          "type": "boolean"
+        },
+        "rust-analyzer.inlayHints.typeHints.hideClosureInitialization": {
+          "markdownDescription": "Whether to hide inlay type hints for `let` statements that initialize to a closure.\nOnly applies to closures with blocks, same as `#rust-analyzer.inlayHints.closureReturnTypeHints.enable#`.",
+          "default": false,
           "type": "boolean"
         },
         "rust-analyzer.inlayHints.typeHints.hideNamedConstructor": {
@@ -834,6 +849,11 @@
         "rust-analyzer.signatureInfo.documentation.enable": {
           "markdownDescription": "Show documentation.",
           "default": true,
+          "type": "boolean"
+        },
+        "rust-analyzer.typing.autoClosingAngleBrackets.enable": {
+          "markdownDescription": "Whether to insert closing angle brackets when typing an opening angle bracket of a generic argument list.",
+          "default": false,
           "type": "boolean"
         },
         "rust-analyzer.workspace.symbol.search.kind": {
