@@ -74,6 +74,10 @@ export function createClient(bin: string, config: Config): LanguageClient {
     disabledFeatures,
     progressOnInitialization: !config.disableProgressNotifications,
     middleware: {
+      handleWorkDoneProgress(token, params, next) {
+        if (!params.message || params.message.length === 0) return;
+        next(token, params);
+      },
       async provideHover(document, position, token) {
         let positionOrRange: Range | Position | null = null;
         const mode = (await workspace.nvim.call('mode')) as string;
