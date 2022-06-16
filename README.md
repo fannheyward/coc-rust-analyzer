@@ -34,6 +34,7 @@ This extension is configured using a jsonc file. You can open this configuration
 | `rust-analyzer.inlayHints.refreshOnInsertMode` | Whether to refresh inlayHints on insert mode | `false` |
 | `rust-analyzer.server.path` | Path to rust-analyzer executable (points to bundled binary by default). If this is set, then "rust-analyzer.updates.channel" setting is not used | `null` |
 | `rust-analyzer.server.extraEnv` | Extra environment variables that will be passed to the rust-analyzer executable. Useful for passing e.g. `RA_LOG` for debugging. | `null` |
+| `rust-analyzer.restartServerOnConfigChange` | Whether to restart the server automatically when certain settings that requires a restart are changed | `false` |
 | `rust-analyzer.trace.server` | Trace requests to the rust-analyzer | `off` |
 | `rust-analyzer.updates.prompt` | Prompt the user before downloading rust-analyzer | `true` |
 | `rust-analyzer.updates.checkOnStartup` | Auto-check rust-analyzer updates on startup | `true` |

@@ -22,9 +22,12 @@ export class Config {
     const requiresReloadOpt = this.requiresReloadOpts.find((opt) => event.affectsConfiguration(opt));
     if (!requiresReloadOpt) return;
 
-    const msg = `Changing "${requiresReloadOpt}" requires a reload`;
-    const prompt = await window.showPrompt(`${msg}. Reload now?`);
-    if (prompt) {
+    let reload = this.restartServerOnConfigChange ? true : false;
+    if (!reload) {
+      const msg = `Changing "${requiresReloadOpt}" requires a reload`;
+      reload = await window.showPrompt(`${msg}. Reload now?`);
+    }
+    if (reload) {
       await commands.executeCommand(`rust-analyzer.reload`);
     }
   }
@@ -35,6 +38,10 @@ export class Config {
 
   get serverExtraEnv() {
     return this.cfg.get<Env>('server.extraEnv') ?? {};
+  }
+
+  get restartServerOnConfigChange() {
+    return this.cfg.get<boolean>('restartServerOnConfigChange');
   }
 
   get inlayHints() {
