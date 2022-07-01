@@ -2,7 +2,7 @@ import { exec, spawnSync } from 'child_process';
 import { ExtensionContext, window } from 'coc.nvim';
 import { randomBytes } from 'crypto';
 import { createWriteStream, PathLike, promises as fs } from 'fs';
-import ProxyAgent from 'proxy-agent';
+import { HttpsProxyAgent } from 'https-proxy-agent';
 import fetch from 'node-fetch';
 import * as zlib from 'zlib';
 import path from 'path';
@@ -11,7 +11,7 @@ import util from 'util';
 import { UpdatesChannel } from './config';
 
 const pipeline = util.promisify(stream.pipeline);
-const agent = process.env.https_proxy ? new ProxyAgent(process.env.https_proxy as string) : null;
+const agent = process.env.https_proxy ? new HttpsProxyAgent(process.env.https_proxy as string) : null;
 
 async function patchelf(dest: PathLike): Promise<void> {
   const expression = `
