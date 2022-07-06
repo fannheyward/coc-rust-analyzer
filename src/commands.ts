@@ -737,7 +737,8 @@ function crateGraph(ctx: Ctx, full: boolean): Cmd {
 
     const tempFile = join(tmpdir(), `${randomBytes(5).toString('hex')}.html`);
     writeFileSync(tempFile, html, { encoding: 'utf-8' });
-    await workspace.nvim.call('coc#util#open_url', [tempFile]);
+    window.showMessage(`Crate Graph: ${tempFile}`);
+    await workspace.nvim.call('coc#ui#open_url', [tempFile]);
   };
 }
 
