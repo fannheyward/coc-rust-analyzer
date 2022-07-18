@@ -341,6 +341,7 @@ export function runSingle(ctx: Ctx): Cmd {
       args.push(...runnable.args.cargoExtraArgs);
     }
     if (runnable.args.executableArgs.length > 0) {
+      runnable.args['executableArgs'][0] = `'${runnable.args['executableArgs'][0]}'`;
       args.push('--', ...runnable.args.executableArgs);
     }
     const cmd = `${runnable.kind} ${args.join(' ')}`;
