@@ -46,7 +46,8 @@ This extension is configured using a jsonc file. You can open this configuration
 | `rust-analyzer.cargo.buildScripts.enable` | Run build scripts (`build.rs`) for more precise code analysis. | `true` |
 | `rust-analyzer.cargo.buildScripts.overrideCommand` | Override the command rust-analyzer uses to run build scripts and build procedural macros. | `null` |
 | `rust-analyzer.cargo.buildScripts.useRustcWrapper` | Use `RUSTC_WRAPPER=rust-analyzer` when running build scripts to avoid compiling unnecessary things. | `true` |
-| `rust-analyzer.cargo.features` | List of features to activate. Set this to `"all"` to pass `--all-features` to cargo. | `[]` |
+| `rust-analyzer.cargo.features` | List of features to activate. To add cargo feature `"foo"` set this to `["foo"]`. | `[]` |
+| `rust-analyzer.cargo.allFeatures` | Whether to pass `--all-features` to cargo. To enable set this to `true`. | `false` |
 | `rust-analyzer.cargo.noDefaultFeatures` | Whether to pass `--no-default-features` to cargo. | `false` |
 | `rust-analyzer.cargo.noSysroot` | Internal config for debugging, disables loading of sysroot crates. | `false` |
 | `rust-analyzer.cargo.target` | Compilation target override (target triple). | `null` |
