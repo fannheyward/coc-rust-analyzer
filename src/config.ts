@@ -67,7 +67,7 @@ export class Config {
   }
 
   get prompt() {
-    return this.cfg.get<boolean | string>('updates.prompt', true);
+    return this.cfg.get<boolean | 'neverDownload'>('updates.prompt', true);
   }
 
   get channel() {
