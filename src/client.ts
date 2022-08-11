@@ -67,6 +67,9 @@ export function createClient(bin: string, config: Config): LanguageClient {
   if (config.disableProgressNotifications) {
     disabledFeatures.push('progress');
   }
+  if (!config.inlayHints.enable) {
+    disabledFeatures.push('inlayHint');
+  }
   const serverOptions: ServerOptions = run;
   const clientOptions: LanguageClientOptions = {
     documentSelector: [{ language: 'rust' }],

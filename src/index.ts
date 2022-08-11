@@ -71,7 +71,6 @@ export async function activate(context: ExtensionContext): Promise<void> {
   ctx.registerCommand('shuffleCrateGraph', cmds.shuffleCrateGraph);
   ctx.registerCommand('viewFullCrateGraph', cmds.viewFullCrateGraph);
   ctx.registerCommand('reloadWorkspace', cmds.reloadWorkspace);
-  ctx.registerCommand('toggleInlayHints', cmds.toggleInlayHints);
   ctx.registerCommand('echoRunCommandLine', cmds.echoRunCommandLine);
   ctx.registerCommand('reload', (ctx) => {
     return async () => {
@@ -92,6 +91,5 @@ export async function activate(context: ExtensionContext): Promise<void> {
   });
 
   await ctx.startServer();
-  await ctx.activateInlayHints();
   if (bin) await ctx.checkUpdate();
 }

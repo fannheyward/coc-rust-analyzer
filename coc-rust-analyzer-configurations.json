@@ -37,21 +37,6 @@
     "default": true,
     "markdownDescription": "Whether to show inlay hints"
   },
-  "rust-analyzer.inlayHints.typeHintsSeparator": {
-    "type": "string",
-    "default": "‣",
-    "markdownDescription": "Separator text for typeHints in virtual text"
-  },
-  "rust-analyzer.inlayHints.chainingHintsSeparator": {
-    "type": "string",
-    "default": "‣",
-    "markdownDescription": "Separator text for chainingHints in virtual text"
-  },
-  "rust-analyzer.inlayHints.refreshOnInsertMode": {
-    "type": "boolean",
-    "default": false,
-    "markdownDescription": "Whether to refresh inlayHints on insert mode"
-  },
   "rust-analyzer.server.path": {
     "type": [
       "null",

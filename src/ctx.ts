@@ -6,7 +6,6 @@ import which from 'which';
 import { createClient } from './client';
 import { Config } from './config';
 import { downloadServer, getLatestRelease } from './downloader';
-import { HintsUpdater } from './inlay_hints';
 import * as ra from './lsp_ext';
 
 export type RustDocument = TextDocument & { languageId: 'rust' };
@@ -23,13 +22,9 @@ export type Cmd = (...args: any[]) => unknown;
 
 export class Ctx {
   client!: LanguageClient;
-  private updater: HintsUpdater;
   public readonly config = new Config();
 
-  constructor(private readonly extCtx: ExtensionContext) {
-    this.updater = new HintsUpdater(this);
-    this.extCtx.subscriptions.push(this.updater);
-  }
+  constructor(private readonly extCtx: ExtensionContext) {}
 
   registerCommand(name: string, factory: (ctx: Ctx) => Cmd, internal = false) {
     const fullName = `rust-analyzer.${name}`;
@@ -165,23 +160,5 @@ export class Ctx {
       }
     }
     throw 'unreachable';
-  }
-
-  async activateInlayHints() {
-    await workspace.nvim.command('hi default link CocRustChainingHint CocHintSign');
-    await workspace.nvim.command('hi default link CocRustTypeHint CocHintSign');
-
-    if (!this.config.inlayHints.enable) {
-      return;
-    }
-    if (!this.config.inlayHints.chainingHints && !this.config.inlayHints.typeHints) {
-      return;
-    }
-
-    this.updater.activate();
-  }
-
-  async toggleInlayHints() {
-    await this.updater.toggle();
   }
 }

@@ -29,9 +29,6 @@ This extension is configured using a jsonc file. You can open this configuration
 | `rust-analyzer.debug.runtime` | Choose which debug runtime to use | `termdebug` |
 | `rust-analyzer.debug.vimspector.configuration.name` | Specify the name of the vimspector configuration name. The following args will be passed to the configuration: `Executable` and `Args` (both strings) | `launch` |
 | `rust-analyzer.inlayHints.enable` | Whether to show inlay hints | `true` |
-| `rust-analyzer.inlayHints.typeHintsSeparator` | Separator text for typeHints in virtual text | `‣` |
-| `rust-analyzer.inlayHints.chainingHintsSeparator` | Separator text for chainingHints in virtual text | `‣` |
-| `rust-analyzer.inlayHints.refreshOnInsertMode` | Whether to refresh inlayHints on insert mode | `false` |
 | `rust-analyzer.server.path` | Path to rust-analyzer executable (points to bundled binary by default). If this is set, then "rust-analyzer.updates.channel" setting is not used | `null` |
 | `rust-analyzer.server.extraEnv` | Extra environment variables that will be passed to the rust-analyzer executable. Useful for passing e.g. `RA_LOG` for debugging. | `null` |
 | `rust-analyzer.restartServerOnConfigChange` | Whether to restart the server automatically when certain settings that requires a restart are changed | `false` |
@@ -156,7 +153,6 @@ You can use these commands by `:CocCommand XYZ`.
 | rust-analyzer.serverVersion | Show current Rust Analyzer server version |
 | rust-analyzer.ssr | Structural Search Replace |
 | rust-analyzer.syntaxTree | Show syntax tree |
-| rust-analyzer.toggleInlayHints | Toggle inlay hints on/off |
 | rust-analyzer.upgrade | Download latest `rust-analyzer` from [GitHub release](https://github.com/rust-analyzer/rust-analyzer/releases) |
 | rust-analyzer.viewHir | View Hir |
 | rust-analyzer.viewFileText | View File Text |

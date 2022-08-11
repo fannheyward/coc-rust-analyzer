@@ -3,7 +3,6 @@
  */
 
 import * as lc from 'coc.nvim';
-import { Command, Position } from 'coc.nvim';
 
 export interface AnalyzerStatusParams {
   textDocument?: lc.TextDocumentIdentifier;
@@ -102,39 +101,6 @@ export interface TestInfo {
 }
 
 export const relatedTests = new lc.RequestType<lc.TextDocumentPositionParams, TestInfo[], void>('rust-analyzer/relatedTests');
-
-export interface InlayHintsParams {
-  textDocument: lc.TextDocumentIdentifier;
-  range: lc.Range;
-}
-
-export enum InlayHintKind {
-  /**
-   * An inlay hint that for a type annotation.
-   */
-  Type = 1,
-  /**
-   * An inlay hint that is for a parameter.
-   */
-  Parameter = 2,
-}
-
-export interface InlayHintLabelPart {
-  value: string;
-  tooltip?: string | undefined;
-  location?: Location | undefined;
-  command?: Command | undefined;
-}
-
-export interface InlayHint {
-  position: Position;
-  label: string | InlayHintLabelPart[];
-  tooltip?: string | undefined;
-  kind?: InlayHintKind;
-  paddingLeft?: boolean;
-  paddingRight?: boolean;
-}
-export const inlayHints = new lc.RequestType<InlayHintsParams, InlayHint[], void>('textDocument/inlayHint');
 
 export interface SsrParams {
   query: string;
