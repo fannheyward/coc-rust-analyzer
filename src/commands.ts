@@ -613,7 +613,7 @@ export function echoRunCommandLine(ctx: Ctx) {
       args.push('--', ...runnable.args.executableArgs);
     }
     const commandLine = ['cargo', ...args].join(' ');
-    window.showInformationMessage(commandLine);
+    window.echoLines([commandLine]);
   };
 }
 
