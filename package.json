@@ -960,6 +960,11 @@
         "category": "Rust Analyzer"
       },
       {
+        "command": "rust-analyzer.testCurrent",
+        "title": "Test Current",
+        "category": "Rust Analyzer"
+      },
+      {
         "command": "rust-analyzer.upgrade",
         "title": "Upgrade Rust Analyzer from GitHub release",
         "category": "Rust Analyzer"

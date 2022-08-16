@@ -198,9 +198,9 @@ export function serverVersion(ctx: Ctx): Cmd {
   };
 }
 
-async function fetchRunnable(ctx: Ctx): Promise<ra.Runnable | undefined> {
+async function fetchRunnable(ctx: Ctx): Promise<ra.Runnable[]> {
   const { document, position } = await workspace.getCurrentState();
-  if (!isRustDocument(document)) return;
+  if (!isRustDocument(document)) return [];
 
   window.showInformationMessage(`Fetching runnable...`);
 
@@ -208,7 +208,13 @@ async function fetchRunnable(ctx: Ctx): Promise<ra.Runnable | undefined> {
     textDocument: { uri: document.uri },
     position,
   };
-  const runnables = await ctx.client.sendRequest(ra.runnables, params);
+
+  return await ctx.client.sendRequest(ra.runnables, params);
+}
+
+async function pickRunnable(ctx: Ctx): Promise<ra.Runnable | undefined> {
+  const runnables = await fetchRunnable(ctx);
+  if (!runnables.length) return;
 
   const items: RunnableQuickPick[] = [];
   for (const r of runnables) {
@@ -216,25 +222,38 @@ async function fetchRunnable(ctx: Ctx): Promise<ra.Runnable | undefined> {
   }
 
   const idx = await window.showQuickpick(items.map((o) => o.label));
-  if (idx === -1) {
-    return;
-  }
+  if (idx === -1) return;
 
   return items[idx].runnable;
 }
 
 export function run(ctx: Ctx): Cmd {
   return async () => {
-    const runnable = await fetchRunnable(ctx);
+    const runnable = await pickRunnable(ctx);
     if (!runnable) return;
 
     await runSingle(ctx)(runnable);
   };
 }
 
+export function testCurrent(ctx: Ctx): Cmd {
+  return async () => {
+    const runnables = await fetchRunnable(ctx);
+    if (!runnables.length) {
+      window.showInformationMessage(`No runnables found`);
+      return;
+    }
+
+    const testRunnable = runnables.find(run => run.label.startsWith('cargo test'));
+    if (!testRunnable) return;
+
+    await runSingle(ctx)(testRunnable);
+  };
+}
+
 export function debug(ctx: Ctx): Cmd {
   return async () => {
-    const runnable = await fetchRunnable(ctx);
+    const runnable = await pickRunnable(ctx);
     if (!runnable) return;
 
     await debugSingle(ctx)(runnable);
@@ -603,7 +622,7 @@ export function viewFileText(ctx: Ctx): Cmd {
 
 export function echoRunCommandLine(ctx: Ctx) {
   return async () => {
-    const runnable = await fetchRunnable(ctx);
+    const runnable = await pickRunnable(ctx);
     if (!runnable) return;
     const args = [...runnable.args.cargoArgs];
     if (runnable.args.cargoExtraArgs) {
