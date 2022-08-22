@@ -1030,6 +1030,11 @@
         "category": "Rust Analyzer"
       },
       {
+        "command": "rust-analyzer.cancelFlycheck",
+        "title": "Cancel running flychecks",
+        "category": "rust-analyzer"
+      },
+      {
         "command": "rust-analyzer.explainError",
         "title": "Explain the currently hovered diagnostic",
         "category": "Rust Analyzer"

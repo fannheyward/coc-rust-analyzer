@@ -244,7 +244,7 @@ export function testCurrent(ctx: Ctx): Cmd {
       return;
     }
 
-    const testRunnable = runnables.find(run => run.label.startsWith('cargo test'));
+    const testRunnable = runnables.find((run) => run.label.startsWith('cargo test'));
     if (!testRunnable) return;
 
     await runSingle(ctx)(testRunnable);
@@ -534,6 +534,12 @@ export async function applySnippetWorkspaceEdit(edit: WorkspaceEdit) {
 export function applySnippetWorkspaceEditCommand(): Cmd {
   return async (edit: WorkspaceEdit) => {
     await applySnippetWorkspaceEdit(edit);
+  };
+}
+
+export function cancelFlycheck(ctx: Ctx): Cmd {
+  return async () => {
+    await ctx.client.sendRequest(ra.cancelFlycheck);
   };
 }
 
