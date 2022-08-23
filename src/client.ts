@@ -91,16 +91,6 @@ export function createClient(bin: string, config: Config): LanguageClient {
         };
         return await client.sendRequest(ra.hover, param, token);
       },
-      async resolveCompletionItem(item, token, next) {
-        if (item.data && !item.data.position) {
-          // TODO: remove this if coc undefined item.data
-          // coc will set item.data to {} if undefined
-          // but RA will check item.data.position to resolve
-          // this hacks to delete item.data
-          delete item.data;
-        }
-        return await next(item, token);
-      },
       async provideCodeActions(document, range, context, token) {
         const params: CodeActionParams = {
           textDocument: { uri: document.uri },
@@ -127,7 +117,9 @@ export function createClient(bin: string, config: Config): LanguageClient {
             arguments: [item],
           };
           const kind: CodeActionKind = (item as any).kind;
-          result.push(CodeAction.create(item.title, command, kind));
+          const action = CodeAction.create(item.title, command, kind);
+          action.edit = {};
+          result.push(action);
         }
         return result;
       },
