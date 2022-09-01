@@ -34,7 +34,7 @@
     "@typescript-eslint/eslint-plugin": "^5.4.0",
     "@typescript-eslint/parser": "^5.4.0",
     "coc.nvim": "^0.0.82",
-    "esbuild": "^0.14.2",
+    "esbuild": "^0.15.6",
     "eslint": "^8.2.0",
     "https-proxy-agent": "^5.0.0",
     "node-fetch": "^2.6.0",
