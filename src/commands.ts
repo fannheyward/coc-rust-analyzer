@@ -277,8 +277,6 @@ export function debugSingle(ctx: Ctx): Cmd {
 
     // output as json
     args.push('--message-format=json');
-    // remove noise
-    args.push('-q');
 
     if (runnable.args.executableArgs.length > 0) {
       args.push('--', ...runnable.args.executableArgs);
@@ -291,6 +289,15 @@ export function debugSingle(ctx: Ctx): Cmd {
     console.debug(`${runnable.kind} ${args}`);
 
     const proc = spawn(runnable.kind, args, { shell: true });
+
+    const stderr_rl = readline.createInterface({
+      input: proc.stderr,
+      crlfDelay: Infinity,
+    });
+    stderr_rl.on('line', (line) => {
+      const trimmed_line = line.trimStart();
+      window.showInformationMessage(`Runnable: ${trimmed_line}`);
+    });
 
     const rl = readline.createInterface({
       input: proc.stdout,
