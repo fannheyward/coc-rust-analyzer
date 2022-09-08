@@ -294,9 +294,14 @@ export function debugSingle(ctx: Ctx): Cmd {
       input: proc.stderr,
       crlfDelay: Infinity,
     });
-    stderr_rl.on('line', (line) => {
-      const trimmed_line = line.trimStart();
-      window.showInformationMessage(`Runnable: ${trimmed_line}`);
+    window.withProgress({title: 'Building Debug Target', cancellable: false}, async (progress) => {
+        for await (const line of stderr_rl) {
+            if (!line) {
+                continue;
+            }
+            const message = line.trimStart();
+            progress.report({message: message});
+        }
     });
 
     const rl = readline.createInterface({
