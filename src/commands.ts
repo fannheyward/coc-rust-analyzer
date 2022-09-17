@@ -288,6 +288,62 @@ export function debugSingle(ctx: Ctx): Cmd {
 
     console.debug(`${runnable.kind} ${args}`);
 
+    // We can extract a list of generated executables from the output of cargo,
+    // but if multiple executables are generated we need a way to find out which
+    // one should be used for debugging.
+    // From the arguments given to cargo, we can infer the kind and name of the executable
+    // and filter the list of executables accordingly.
+    let expectedKind: string | undefined;
+    let expectedName: string | undefined;
+    for (const arg of runnable.args.cargoArgs) {
+      // Find the argument indicating the kind of the executable.
+      if (expectedKind === undefined) {
+        switch(arg) {
+          case '--bin':
+            expectedKind = 'bin';
+            break;
+          case '--lib':
+            expectedKind = 'lib';
+            break;
+          case '--test':
+            expectedKind = 'test';
+            break;
+          case '--example':
+            expectedKind = 'example';
+            break;
+          case '--bench':
+            expectedKind = 'bench';
+            break;
+        }
+      } else {
+        // expectedKind is defined if the previous argument matched one of the cases above.
+        // In all of these cases except for '--lib' the name of the executable is the
+        // argument analyzed in this iteration.
+        if (expectedKind !== 'lib') {
+          expectedName = arg;
+        }
+        // Stop iterating over the arguments, since we now have the information we need.
+        break;
+      }
+    }
+    // If the kind is 'lib' then the name of the executable is not yet known.
+    // However, it will be the name of the package, so if we find the
+    // --package argument we can get the name of the executable from it.
+    if (expectedName === undefined) {
+      let foundPackageArgument = false;
+      for (const arg of runnable.args.cargoArgs) {
+        if (foundPackageArgument) {
+          expectedName = arg;
+          break;
+        }
+        if (arg === '--package') {
+          foundPackageArgument = true;
+        }
+      }
+    }
+    console.debug(`Expected kind: ${expectedKind}`);
+    console.debug(`Expected name: ${expectedName}`);
+
     const proc = spawn(runnable.kind, args, { shell: true });
 
     const stderr_rl = readline.createInterface({
@@ -332,8 +388,19 @@ export function debugSingle(ctx: Ctx): Cmd {
         continue;
       }
 
-      if (!executable && cargoMessage['executable']) {
+      if (expectedKind !== undefined && !cargoMessage['target']['kind'].includes(expectedKind)) {
+        console.debug(`Wrong kind: ${cargoMessage['target']['kind']}, expected ${expectedKind}`);
+        continue;
+      }
+
+      if (expectedName !== undefined && cargoMessage['target']['name'] !== expectedName) {
+        console.debug(`Wrong name: ${cargoMessage['target']['name']}, expected ${expectedName}`);
+        continue;
+      }
+
+      if (cargoMessage['executable']) {
         executable = cargoMessage['executable'];
+        break;
       }
     }
 
