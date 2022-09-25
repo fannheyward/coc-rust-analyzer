@@ -11,3 +11,4 @@ assignees: fannheyward
 
 **What's the output of `:CocCommand rust-analyzer.serverVersion`**
 
+**What's your coc-rust-analyzer version? You can get it from `:CocList extensions`**
