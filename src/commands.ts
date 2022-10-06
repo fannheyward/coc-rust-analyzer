@@ -298,7 +298,7 @@ export function debugSingle(ctx: Ctx): Cmd {
     for (const arg of runnable.args.cargoArgs) {
       // Find the argument indicating the kind of the executable.
       if (expectedKind === undefined) {
-        switch(arg) {
+        switch (arg) {
           case '--bin':
             expectedKind = 'bin';
             break;
@@ -350,14 +350,14 @@ export function debugSingle(ctx: Ctx): Cmd {
       input: proc.stderr,
       crlfDelay: Infinity,
     });
-    window.withProgress({title: 'Building Debug Target', cancellable: false}, async (progress) => {
-        for await (const line of stderr_rl) {
-            if (!line) {
-                continue;
-            }
-            const message = line.trimStart();
-            progress.report({message: message});
+    window.withProgress({ title: 'Building Debug Target', cancellable: false }, async (progress) => {
+      for await (const line of stderr_rl) {
+        if (!line) {
+          continue;
         }
+        const message = line.trimStart();
+        progress.report({ message: message });
+      }
     });
 
     const rl = readline.createInterface({
