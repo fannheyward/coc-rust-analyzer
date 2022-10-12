@@ -67,7 +67,7 @@ export function createClient(bin: string, config: Config): LanguageClient {
   if (config.disableProgressNotifications) {
     disabledFeatures.push('progress');
   }
-  if (!config.inlayHints.enable) {
+  if (!config.inlayHint.enable) {
     disabledFeatures.push('inlayHint');
   }
   const serverOptions: ServerOptions = run;

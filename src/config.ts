@@ -44,9 +44,9 @@ export class Config {
     return this.cfg.get<boolean>('restartServerOnConfigChange');
   }
 
-  get inlayHints() {
+  get inlayHint() {
     return {
-      enable: this.cfg.get<boolean>('inlayHints.enable'),
+      enable: workspace.getConfiguration('inlayHint').get('enable', true),
     };
   }
 

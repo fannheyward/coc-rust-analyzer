@@ -28,7 +28,6 @@ This extension is configured using a jsonc file. You can open this configuration
 | `rust-analyzer.terminal.startinsert` | Enter insert mode after terminal displayed | `false` |
 | `rust-analyzer.debug.runtime` | Choose which debug runtime to use | `termdebug` |
 | `rust-analyzer.debug.vimspector.configuration.name` | Specify the name of the vimspector configuration name. The following args will be passed to the configuration: `Executable` and `Args` (both strings) | `launch` |
-| `rust-analyzer.inlayHints.enable` | Whether to show inlay hints | `true` |
 | `rust-analyzer.server.path` | Path to rust-analyzer executable (points to bundled binary by default). If this is set, then "rust-analyzer.updates.channel" setting is not used | `null` |
 | `rust-analyzer.server.extraEnv` | Extra environment variables that will be passed to the rust-analyzer executable. Useful for passing e.g. `RA_LOG` for debugging. | `null` |
 | `rust-analyzer.restartServerOnConfigChange` | Whether to restart the server automatically when certain settings that requires a restart are changed | `false` |

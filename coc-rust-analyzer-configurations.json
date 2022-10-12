@@ -32,11 +32,6 @@
     "default": "launch",
     "markdownDescription": "Specify the name of the vimspector configuration name. The following args will be passed to the configuration: `Executable` and `Args` (both strings)"
   },
-  "rust-analyzer.inlayHints.enable": {
-    "type": "boolean",
-    "default": true,
-    "markdownDescription": "Whether to show inlay hints"
-  },
   "rust-analyzer.server.path": {
     "type": [
       "null",
