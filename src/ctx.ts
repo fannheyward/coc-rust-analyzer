@@ -24,7 +24,12 @@ export class Ctx {
   client!: LanguageClient;
   public readonly config = new Config();
 
-  constructor(private readonly extCtx: ExtensionContext) {}
+  constructor(private readonly extCtx: ExtensionContext) {
+    const statusBar = window.createStatusBarItem(0);
+    statusBar.text = 'rust-analyzer';
+    statusBar.show();
+    this.extCtx.subscriptions.push(statusBar);
+  }
 
   registerCommand(name: string, factory: (ctx: Ctx) => Cmd, internal = false) {
     const fullName = `rust-analyzer.${name}`;
