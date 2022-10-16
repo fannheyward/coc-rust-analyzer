@@ -153,7 +153,7 @@ You can use these commands by `:CocCommand XYZ`.
 | rust-analyzer.ssr | Structural Search Replace |
 | rust-analyzer.syntaxTree | Show syntax tree |
 | rust-analyzer.testCurrent | Test Current |
-| rust-analyzer.upgrade | Download latest `rust-analyzer` from [GitHub release](https://github.com/rust-analyzer/rust-analyzer/releases) |
+| rust-analyzer.upgrade | Download latest `rust-analyzer` from [GitHub release](https://github.com/rust-lang/rust-analyzer/releases) |
 | rust-analyzer.viewHir | View Hir |
 | rust-analyzer.viewFileText | View File Text |
 | rust-analyzer.viewCrateGraph | View Crate Graph |
