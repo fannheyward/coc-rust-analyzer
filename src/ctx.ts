@@ -63,6 +63,12 @@ export class Ctx {
     this.client = client;
   }
 
+  async stopServer() {
+    if (this.client) {
+      await this.client.stop();
+    }
+  }
+
   get subscriptions(): Disposable[] {
     return this.extCtx.subscriptions;
   }

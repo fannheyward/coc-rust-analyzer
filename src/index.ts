@@ -86,6 +86,7 @@ export async function activate(context: ExtensionContext): Promise<void> {
         }
       }
 
+      await ctx.stopServer();
       await activate(context);
 
       window.showInformationMessage(`Reloaded rust-analyzer`);
