@@ -47,20 +47,21 @@ export async function activate(context: ExtensionContext): Promise<void> {
 
   // common commands
   ctx.registerCommand('run', cmds.run);
-  ctx.registerCommand('debug', cmds.debug);
   ctx.registerCommand('ssr', cmds.ssr);
+  ctx.registerCommand('debug', cmds.debug);
+  ctx.registerCommand('reload', cmds.reload);
   ctx.registerCommand('upgrade', cmds.upgrade);
   ctx.registerCommand('viewHir', cmds.viewHir);
-  ctx.registerCommand('viewFileText', cmds.viewFileText);
   ctx.registerCommand('openDocs', cmds.openDocs);
   ctx.registerCommand('joinLines', cmds.joinLines);
   ctx.registerCommand('peekTests', cmds.peekTests);
   ctx.registerCommand('syntaxTree', cmds.syntaxTree);
+  ctx.registerCommand('moveItemUp', cmds.moveItemUp);
   ctx.registerCommand('testCurrent', cmds.testCurrent);
   ctx.registerCommand('memoryUsage', cmds.memoryUsage);
   ctx.registerCommand('expandMacro', cmds.expandMacro);
-  ctx.registerCommand('moveItemUp', cmds.moveItemUp);
   ctx.registerCommand('moveItemDown', cmds.moveItemDown);
+  ctx.registerCommand('viewFileText', cmds.viewFileText);
   ctx.registerCommand('viewItemTree', cmds.viewItemTree);
   ctx.registerCommand('explainError', cmds.explainError);
   ctx.registerCommand('parentModule', cmds.parentModule);
@@ -74,24 +75,6 @@ export async function activate(context: ExtensionContext): Promise<void> {
   ctx.registerCommand('viewFullCrateGraph', cmds.viewFullCrateGraph);
   ctx.registerCommand('reloadWorkspace', cmds.reloadWorkspace);
   ctx.registerCommand('echoRunCommandLine', cmds.echoRunCommandLine);
-  ctx.registerCommand('reload', (ctx) => {
-    return async () => {
-      window.showInformationMessage(`Reloading rust-analyzer...`);
-
-      for (const sub of ctx.subscriptions) {
-        try {
-          sub.dispose();
-        } catch (e) {
-          console.error(e);
-        }
-      }
-
-      await ctx.stopServer();
-      await activate(context);
-
-      window.showInformationMessage(`Reloaded rust-analyzer`);
-    };
-  });
 
   await ctx.startServer();
   if (bin) await ctx.checkUpdate();

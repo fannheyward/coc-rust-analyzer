@@ -63,6 +63,17 @@ function countLines(text: string): number {
   return (text.match(/\n/g) || []).length;
 }
 
+export function reload(ctx: Ctx): Cmd {
+  return async () => {
+    window.showInformationMessage(`Reloading rust-analyzer...`);
+
+    await ctx.client.stop();
+    await ctx.client.start();
+
+    window.showInformationMessage(`Reloaded rust-analyzer`);
+  };
+}
+
 export function analyzerStatus(ctx: Ctx): Cmd {
   return async () => {
     const { document } = await workspace.getCurrentState();
