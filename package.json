@@ -163,6 +163,11 @@
             "`\"nightly\"` updates are shipped daily (extension updates automatically by downloading artifacts directly from GitHub), they contain cutting-edge features and latest bug fixes. These releases help us get your feedback very quickly and speed up rust-analyzer development **drastically**"
           ]
         },
+        "rust-analyzer.assist.emitMustUse": {
+          "markdownDescription": "Whether to insert #[must_use] when generating `as_` methods\nfor enum variants.",
+          "default": false,
+          "type": "boolean"
+        },
         "rust-analyzer.assist.expressionFillDefault": {
           "markdownDescription": "Placeholder expression to use for missing expressions in assists.",
           "default": "todo",
