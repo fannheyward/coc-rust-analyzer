@@ -16,8 +16,7 @@
     "coc": "^0.0.80"
   },
   "activationEvents": [
-    "onLanguage:rust",
-    "workspaceContains:**/Cargo.toml"
+    "onLanguage:rust"
   ],
   "scripts": {
     "clean": "rimraf lib",
