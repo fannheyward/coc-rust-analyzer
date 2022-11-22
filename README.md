@@ -55,7 +55,7 @@ This extension is configured using a jsonc file. You can open this configuration
 | `rust-analyzer.checkOnSave.features` | List of features to activate. Defaults to `#rust-analyzer.cargo.features#`. Set to `"all"` to pass `--all-features` to cargo. | `null` |
 | `rust-analyzer.checkOnSave.noDefaultFeatures` | Whether to pass `--no-default-features` to cargo. Defaults to `#rust-analyzer.cargo.noDefaultFeatures#`. | `null` |
 | `rust-analyzer.checkOnSave.overrideCommand` | Override the command rust-analyzer uses to  run build scripts and build procedural macros. | `null` |
-| `rust-analyzer.checkOnSave.target` | Check for a specific target. Defaults to `#rust-analyzer.cargo.target#`. | `null` |
+| `rust-analyzer.checkOnSave.target` | Check for a specific target. Defaults to `#rust-analyzer.cargo.target#`. | `[]` |
 | `rust-analyzer.completion.autoimport.enable` | Toggles the additional completions that automatically add imports when completed. | `true` |
 | `rust-analyzer.completion.autoself.enable` | Toggles the additional completions that automatically show method calls and field accesses with `self` prefixed to them when inside a method. | `true` |
 | `rust-analyzer.completion.callable.snippets` | Whether to add parenthesis and argument snippets when completing function. | `fill_arguments` |
