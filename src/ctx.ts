@@ -1,4 +1,4 @@
-import { CancellationToken, commands, Disposable, ExtensionContext, LanguageClient, RequestType, services, TextDocument, Uri, window, workspace } from 'coc.nvim';
+import { commands, Disposable, ExtensionContext, LanguageClient, services, TextDocument, Uri, window, workspace } from 'coc.nvim';
 import { existsSync } from 'fs';
 import { homedir } from 'os';
 import { join } from 'path';
@@ -142,34 +142,5 @@ export class Ctx {
     } else if (ret === 1) {
       await commands.executeCommand('vscode.open', 'https://github.com/rust-analyzer/rust-analyzer/releases').catch(() => {});
     }
-  }
-
-  sleep = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
-
-  async sendRequestWithRetry<TParam, TRet>(reqType: RequestType<TParam, TRet, unknown>, param: TParam, token?: CancellationToken): Promise<TRet> {
-    for (const delay of [2, 4, 6, 8, 10, null]) {
-      try {
-        return await (token ? this.client.sendRequest(reqType, param, token) : this.client.sendRequest(reqType, param));
-      } catch (error) {
-        if (delay === null) {
-          throw error;
-        }
-
-        // ErrorCodes.RequestCancelled = -32800;¬
-        // @ts-ignore
-        if (error.code === -32800) {
-          throw error;
-        }
-
-        // ErrorCodes.ContentModified = -32801;
-        // @ts-ignore
-        if (error.code !== -32801) {
-          throw error;
-        }
-
-        await this.sleep(10 * (1 << delay));
-      }
-    }
-    throw 'unreachable';
   }
 }
