@@ -29,6 +29,14 @@ export class Ctx {
     statusBar.text = 'rust-analyzer';
     statusBar.show();
     this.extCtx.subscriptions.push(statusBar);
+
+    window.onDidChangeActiveTextEditor(editor => {
+      if (editor && editor.document.languageId === 'rust') {
+        statusBar.show();
+      } else {
+        statusBar.hide();
+      }
+    });
   }
 
   registerCommand(name: string, factory: (ctx: Ctx) => Cmd, internal = false) {
