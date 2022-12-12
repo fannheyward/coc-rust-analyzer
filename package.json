@@ -57,6 +57,12 @@
         ]
       }
     ],
+    "jsonValidation": [
+      {
+        "fileMatch": "rust-project.json",
+        "url": "https://json.schemastore.org/rust-project.json"
+      }
+    ],
     "configuration": {
       "type": "object",
       "title": "coc-rust-analyzer configuration",
