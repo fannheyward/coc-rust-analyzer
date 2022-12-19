@@ -159,7 +159,9 @@ You can use these commands by `:CocCommand XYZ`.
 | rust-analyzer.viewCrateGraph | View Crate Graph |
 | rust-analyzer.viewFullCrateGraph | View Crate Graph (Full) |
 | rust-analyzer.shuffleCrateGraph | Shuffle Crate Graph |
+| rust-analyzer.runFlycheck | Run flycheck |
 | rust-analyzer.cancelFlycheck | Cancel running flychecks |
+| rust-analyzer.clearFlycheck | Clear flycheck diagnostics |
 
 ## Highlight Group
 

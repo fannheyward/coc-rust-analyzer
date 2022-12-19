@@ -627,9 +627,24 @@ export function applySnippetWorkspaceEditCommand(): Cmd {
   };
 }
 
+export function runFlycheck(ctx: Ctx): Cmd {
+  return async () => {
+    const { document } = await workspace.getCurrentState();
+    if (!isRustDocument(document)) return;
+
+    ctx.client.sendNotification(ra.runFlycheck, { textDocument: { uri: document.uri } });
+  };
+}
+
 export function cancelFlycheck(ctx: Ctx): Cmd {
   return async () => {
-    await ctx.client.sendRequest(ra.cancelFlycheck);
+    ctx.client.sendNotification(ra.cancelFlycheck);
+  };
+}
+
+export function clearFlycheck(ctx: Ctx): Cmd {
+  return async () => {
+    ctx.client.sendNotification(ra.clearFlycheck);
   };
 }
 
