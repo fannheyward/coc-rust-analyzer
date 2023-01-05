@@ -76,6 +76,7 @@ function getPlatform(): string | undefined {
     'x64 win32': 'x86_64-pc-windows-msvc',
     'x64 linux': 'x86_64-unknown-linux-gnu',
     'x64 darwin': 'x86_64-apple-darwin',
+    'arm linux': 'arm-unknown-linux-gnueabihf',
     'arm64 win32': 'aarch64-pc-windows-msvc',
     'arm64 linux': 'aarch64-unknown-linux-gnu',
     'arm64 darwin': 'aarch64-apple-darwin',

@@ -1,6 +1,5 @@
 import { commands, Disposable, ExtensionContext, LanguageClient, services, TextDocument, Uri, window, workspace } from 'coc.nvim';
 import { existsSync } from 'fs';
-import { homedir } from 'os';
 import { join } from 'path';
 import which from 'which';
 import { createClient } from './client';
@@ -86,12 +85,7 @@ export class Ctx {
     // 2. bundled
     let bin = join(this.extCtx.storagePath, process.platform === 'win32' ? 'rust-analyzer.exe' : 'rust-analyzer');
     if (this.config.serverPath) {
-      bin = this.config.serverPath;
-      if (bin.startsWith('~/')) {
-        bin = bin.replace('~', homedir());
-      }
-
-      bin = which.sync(bin, { nothrow: true }) || bin;
+      bin = which.sync(workspace.expand(this.config.serverPath), { nothrow: true }) || bin;
     }
     if (!existsSync(bin)) {
       return;
