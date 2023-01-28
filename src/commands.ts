@@ -786,11 +786,11 @@ function moveItem(ctx: Ctx, direction: ra.Direction): Cmd {
 }
 
 export function moveItemUp(ctx: Ctx): Cmd {
-  return moveItem(ctx, ra.Direction.Up);
+  return moveItem(ctx, 'Up');
 }
 
 export function moveItemDown(ctx: Ctx): Cmd {
-  return moveItem(ctx, ra.Direction.Down);
+  return moveItem(ctx, 'Down');
 }
 
 function crateGraph(ctx: Ctx, full: boolean): Cmd {
