@@ -22,6 +22,7 @@ export type Cmd = (...args: any[]) => unknown;
 export class Ctx {
   client!: LanguageClient;
   public readonly config = new Config();
+  private usingSystemServer = false;
 
   constructor(private readonly extCtx: ExtensionContext) {
     const statusBar = window.createStatusBarItem(0);
@@ -29,7 +30,7 @@ export class Ctx {
     statusBar.show();
     this.extCtx.subscriptions.push(statusBar);
 
-    window.onDidChangeActiveTextEditor(editor => {
+    window.onDidChangeActiveTextEditor((editor) => {
       if (editor && editor.document.languageId === 'rust') {
         statusBar.show();
       } else {
@@ -83,20 +84,28 @@ export class Ctx {
   resolveBin(): string | undefined {
     // 1. from config, custom server path
     // 2. bundled
-    let bin = join(this.extCtx.storagePath, process.platform === 'win32' ? 'rust-analyzer.exe' : 'rust-analyzer');
+    const executableName = process.platform === 'win32' ? 'rust-analyzer.exe' : 'rust-analyzer';
+    let bin = join(this.extCtx.storagePath, executableName);
     if (this.config.serverPath) {
       bin = which.sync(workspace.expand(this.config.serverPath), { nothrow: true }) || bin;
     }
-    if (!existsSync(bin)) {
-      return;
+
+    if (existsSync(bin)) {
+      return bin;
     }
 
-    return bin;
+    bin = which.sync(executableName, { nothrow: true });
+    if (bin) {
+      this.usingSystemServer = true;
+      return bin;
+    }
+
+    return;
   }
 
   async checkUpdate(auto = true) {
-    if (this.config.serverPath) {
-      // no update checking if using custom server
+    if (this.config.serverPath || this.usingSystemServer) {
+      // no update checking if using custom or system server
       return;
     }
     if (auto && !this.config.checkOnStartup) {
