@@ -163,11 +163,6 @@ You can use these commands by `:CocCommand XYZ`.
 | rust-analyzer.cancelFlycheck | Cancel running flychecks |
 | rust-analyzer.clearFlycheck | Clear flycheck diagnostics |
 
-## Highlight Group
-
-- `CocRustTypeHint`: highlight name for `typeHints`, default link to `CocHintSign`
-- `CocRustChainingHint`: highlight name for `chainingHints`, default link to `CocHintSign`
-
 ## License
 
 MIT
