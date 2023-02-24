@@ -26,3 +26,7 @@ Object.keys(schema).forEach((k) => {
 
 packageJson.contributes.configuration.properties = coc_ra_config;
 fs.writeFileSync('./package.json', JSON.stringify(packageJson, null, 2) + '\n');
+
+for (const x of Object.keys(coc_ra_config).sort()) {
+  console.log(`| \`${x}\` | ${coc_ra_config[x].markdownDescription} | \`${coc_ra_config[x].default || null}\` |`);
+}
