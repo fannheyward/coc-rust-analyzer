@@ -1,9 +1,4 @@
 {
-  "workspace.ignoredFolders": [
-    "$HOME",
-    "$HOME/.cargo/**",
-    "$HOME/.rustup/**"
-  ],
   "rust-analyzer.enable": {
     "type": "boolean",
     "markdownDescription": "Enable `coc-rust-analyzer`",
