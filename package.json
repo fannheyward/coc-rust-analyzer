@@ -67,6 +67,11 @@
       "type": "object",
       "title": "coc-rust-analyzer configuration",
       "properties": {
+        "workspace.ignoredFolders": [
+          "$HOME",
+          "$HOME/.cargo/**",
+          "$HOME/.rustup/**"
+        ],
         "rust-analyzer.enable": {
           "type": "boolean",
           "markdownDescription": "Enable `coc-rust-analyzer`",
@@ -249,6 +254,14 @@
           "markdownDescription": "Use `RUSTC_WRAPPER=rust-analyzer` when running build scripts to\navoid checking unnecessary things.",
           "default": true,
           "type": "boolean"
+        },
+        "rust-analyzer.cargo.extraArgs": {
+          "markdownDescription": "Extra arguments that are passed to every cargo invocation.",
+          "default": [],
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
         },
         "rust-analyzer.cargo.extraEnv": {
           "markdownDescription": "Extra environment variables that will be set when running cargo, rustc\nor other commands within the workspace. Useful for setting RUSTFLAGS.",
@@ -824,6 +837,11 @@
           "default": false,
           "type": "boolean"
         },
+        "rust-analyzer.interpret.tests": {
+          "markdownDescription": "Enables the experimental support for interpreting tests.",
+          "default": false,
+          "type": "boolean"
+        },
         "rust-analyzer.joinLines.joinAssignments": {
           "markdownDescription": "Join lines merges consecutive declaration and initialization of an assignment.",
           "default": true,
@@ -997,7 +1015,7 @@
           }
         },
         "rust-analyzer.rustfmt.overrideCommand": {
-          "markdownDescription": "Advanced option, fully override the command rust-analyzer uses for\nformatting.",
+          "markdownDescription": "Advanced option, fully override the command rust-analyzer uses for\nformatting. This should be the equivalent of `rustfmt` here, and\nnot that of `cargo fmt`. The file contents will be passed on the\nstandard input and the formatted result will be read from the\nstandard output.",
           "default": null,
           "type": [
             "null",
