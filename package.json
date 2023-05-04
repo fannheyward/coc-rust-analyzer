@@ -22,9 +22,9 @@
     "clean": "rimraf lib",
     "lint": "eslint src --ext ts",
     "schema": "node ./generate-config-schema.js",
-    "build": "node esbuild.js",
-    "watch": "node esbuild.js --watch",
-    "prepare": "node esbuild.js"
+    "build": "node esbuild.mjs",
+    "watch": "node esbuild.mjs --watch",
+    "prepare": "node esbuild.mjs"
   },
   "devDependencies": {
     "@types/node": "^18.0.0",
