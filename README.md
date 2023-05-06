@@ -189,6 +189,7 @@ You can use these commands by `:CocCommand XYZ`.
 | rust-analyzer.cancelFlycheck | Cancel running flychecks |
 | rust-analyzer.clearFlycheck | Clear flycheck diagnostics |
 | rust-analyzer.rebuildProcMacros | Rebuild proc macros and build scripts |
+| rust-analyzer.interpretFunction | Interpret Function |
 
 ## License
 

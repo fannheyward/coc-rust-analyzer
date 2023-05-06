@@ -722,6 +722,27 @@ export function viewMir(ctx: Ctx): Cmd {
   return viewXir(ctx, 'MIR');
 }
 
+export function interpretFunction(ctx: Ctx): Cmd {
+  return async () => {
+    const { document, position } = await workspace.getCurrentState();
+    if (!isRustDocument(document)) return;
+
+    const param: TextDocumentPositionParams = {
+      textDocument: { uri: document.uri },
+      position,
+    };
+    const ret = await ctx.client.sendRequest(ra.interpretFunction, param);
+    if (!ret) return;
+    const nvim = workspace.nvim;
+    nvim.pauseNotification();
+    nvim.command(`edit +setl\\ buftype=nofile [interpretFunction]`, true);
+    nvim.command('setl nobuflisted bufhidden=wipe', true);
+    nvim.call('append', [0, ret.split('\n')], true);
+    nvim.command(`exe 1`, true);
+    await nvim.resumeNotification(true);
+  };
+}
+
 export function viewFileText(ctx: Ctx): Cmd {
   return async () => {
     const { document } = await workspace.getCurrentState();
