@@ -180,6 +180,7 @@ You can use these commands by `:CocCommand XYZ`.
 | rust-analyzer.testCurrent | Test Current |
 | rust-analyzer.upgrade | Download latest `rust-analyzer` from [GitHub release](https://github.com/rust-lang/rust-analyzer/releases) |
 | rust-analyzer.viewHir | View Hir |
+| rust-analyzer.viewMir | View Mir |
 | rust-analyzer.viewFileText | View File Text |
 | rust-analyzer.viewCrateGraph | View Crate Graph |
 | rust-analyzer.viewFullCrateGraph | View Crate Graph (Full) |

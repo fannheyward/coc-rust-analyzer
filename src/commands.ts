@@ -692,7 +692,7 @@ export function openCargoToml(ctx: Ctx): Cmd {
   };
 }
 
-export function viewHir(ctx: Ctx): Cmd {
+function viewXir(ctx: Ctx, xir: 'HIR' | 'MIR'): Cmd {
   return async () => {
     const { document, position } = await workspace.getCurrentState();
     if (!isRustDocument(document)) return;
@@ -701,16 +701,25 @@ export function viewHir(ctx: Ctx): Cmd {
       textDocument: { uri: document.uri },
       position,
     };
-    const ret = await ctx.client.sendRequest(ra.viewHir, param);
+    const req = xir === 'HIR' ? ra.viewHir : ra.viewMir;
+    const ret = await ctx.client.sendRequest(req, param);
     if (!ret) return;
     const nvim = workspace.nvim;
     nvim.pauseNotification();
-    nvim.command(`edit +setl\\ buftype=nofile [HIR]`, true);
+    nvim.command(`edit +setl\\ buftype=nofile [${xir}]`, true);
     nvim.command('setl nobuflisted bufhidden=wipe', true);
     nvim.call('append', [0, ret.split('\n')], true);
     nvim.command(`exe 1`, true);
     await nvim.resumeNotification(true);
   };
+}
+
+export function viewHir(ctx: Ctx): Cmd {
+  return viewXir(ctx, 'HIR');
+}
+
+export function viewMir(ctx: Ctx): Cmd {
+  return viewXir(ctx, 'MIR');
 }
 
 export function viewFileText(ctx: Ctx): Cmd {

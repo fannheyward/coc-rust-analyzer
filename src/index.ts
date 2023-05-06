@@ -52,6 +52,7 @@ export async function activate(context: ExtensionContext): Promise<void> {
   ctx.registerCommand('reload', cmds.reload);
   ctx.registerCommand('upgrade', cmds.upgrade);
   ctx.registerCommand('viewHir', cmds.viewHir);
+  ctx.registerCommand('viewMir', cmds.viewMir);
   ctx.registerCommand('openDocs', cmds.openDocs);
   ctx.registerCommand('joinLines', cmds.joinLines);
   ctx.registerCommand('peekTests', cmds.peekTests);
