@@ -43,6 +43,8 @@ export const relatedTests = new lc.RequestType<lc.TextDocumentPositionParams, Te
   'rust-analyzer/relatedTests'
 );
 export const reloadWorkspace = new lc.RequestType0<null, void>('rust-analyzer/reloadWorkspace');
+export const rebuildProcMacros = new lc.RequestType0<null, void>('rust-analyzer/rebuildProcMacros');
+
 export const runFlycheck = new lc.NotificationType<{
   textDocument: lc.TextDocumentIdentifier | null;
 }>('rust-analyzer/runFlycheck');

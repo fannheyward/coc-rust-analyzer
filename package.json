@@ -1291,6 +1291,11 @@
         "category": "rust-analyzer"
       },
       {
+        "command": "rust-analyzer.rebuildProcMacros",
+        "title": "Rebuild proc macros and build scripts",
+        "category": "rust-analyzer"
+      },
+      {
         "command": "rust-analyzer.explainError",
         "title": "Explain the currently hovered diagnostic",
         "category": "Rust Analyzer"

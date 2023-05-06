@@ -899,3 +899,12 @@ export function viewItemTree(ctx: Ctx): Cmd {
     await nvim.resumeNotification(true);
   };
 }
+
+export function rebuildProcMacros(ctx: Ctx): Cmd {
+  return async () => {
+    const { document } = await workspace.getCurrentState();
+    if (!isRustDocument(document)) return;
+
+    await ctx.client.sendRequest(ra.rebuildProcMacros);
+  };
+}
