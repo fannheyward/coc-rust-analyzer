@@ -593,6 +593,11 @@
           "default": true,
           "type": "boolean"
         },
+        "rust-analyzer.highlightRelated.closureCaptures.enable": {
+          "markdownDescription": "Enables highlighting of all captures of a closure while the cursor is on the `|` or move keyword of a closure.",
+          "default": true,
+          "type": "boolean"
+        },
         "rust-analyzer.highlightRelated.exitPoints.enable": {
           "markdownDescription": "Enables highlighting of all exit points while the cursor is on any `return`, `?`, `fn`, or return type arrow (`->`).",
           "default": true,
@@ -619,7 +624,12 @@
           "type": "boolean"
         },
         "rust-analyzer.hover.links.enable": {
-          "markdownDescription": "Use markdown syntax for links in hover.",
+          "markdownDescription": "Use markdown syntax for links on hover.",
+          "default": true,
+          "type": "boolean"
+        },
+        "rust-analyzer.hover.memoryLayout.enable": {
+          "markdownDescription": "Whether to show memory layout data on hover.",
           "default": true,
           "type": "boolean"
         },
