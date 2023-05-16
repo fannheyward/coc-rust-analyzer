@@ -18,6 +18,18 @@
 >  
 > **NOTE**: For Apple Silicon users, you shouldn't use Node.js v15, checkout [#975](https://github.com/fannheyward/coc-rust-analyzer/issues/975) for more.
 
+## Notes
+
+It's recommended to add `$CARGO_HOME` to `workspace.ignoredFolders` to stop rust-analyzer runs `cargo check`:
+
+```json
+"workspace.ignoredFolders": [
+  "$HOME",
+  "$HOME/.cargo/**",
+  "$HOME/.rustup/**"
+],
+```
+
 ## Configurations
 
 This extension is configured using a jsonc file. You can open this configuration file using the command `:CocConfig`, and it is typically located at `$HOME/.config/nvim/coc-settings.json`.
