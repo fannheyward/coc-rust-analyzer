@@ -20,7 +20,7 @@
 
 ## Notes
 
-It's recommended to add `$CARGO_HOME` to `workspace.ignoredFolders` to stop rust-analyzer runs `cargo check`:
+It's recommended to add `$CARGO_HOME` to `workspace.ignoredFolders` to stop rust-analyzer runs `cargo check` on sysroot crates:
 
 ```json
 "workspace.ignoredFolders": [
