@@ -250,6 +250,11 @@
           "default": true,
           "type": "boolean"
         },
+        "rust-analyzer.cargo.cfgs": {
+          "markdownDescription": "List of cfg options to enable with the given values.",
+          "default": {},
+          "type": "object"
+        },
         "rust-analyzer.cargo.extraArgs": {
           "markdownDescription": "Extra arguments that are passed to every cargo invocation.",
           "default": [],
@@ -314,7 +319,7 @@
           ]
         },
         "rust-analyzer.cargo.unsetTest": {
-          "markdownDescription": "Unsets `#[cfg(test)]` for the specified crates.",
+          "markdownDescription": "Unsets the implicit `#[cfg(test)]` for the specified crates.",
           "default": [
             "core"
           ],
@@ -628,10 +633,84 @@
           "default": true,
           "type": "boolean"
         },
+        "rust-analyzer.hover.memoryLayout.alignment": {
+          "markdownDescription": "How to render the align information in a memory layout hover.",
+          "default": "hexadecimal",
+          "anyOf": [
+            {
+              "type": "null"
+            },
+            {
+              "type": "string",
+              "enum": [
+                "both",
+                "decimal",
+                "hexadecimal"
+              ],
+              "enumDescriptions": [
+                "Render as 12 (0xC)",
+                "Render as 12",
+                "Render as 0xC"
+              ]
+            }
+          ]
+        },
         "rust-analyzer.hover.memoryLayout.enable": {
           "markdownDescription": "Whether to show memory layout data on hover.",
           "default": true,
           "type": "boolean"
+        },
+        "rust-analyzer.hover.memoryLayout.niches": {
+          "markdownDescription": "How to render the niche information in a memory layout hover.",
+          "default": false,
+          "type": [
+            "null",
+            "boolean"
+          ]
+        },
+        "rust-analyzer.hover.memoryLayout.offset": {
+          "markdownDescription": "How to render the offset information in a memory layout hover.",
+          "default": "hexadecimal",
+          "anyOf": [
+            {
+              "type": "null"
+            },
+            {
+              "type": "string",
+              "enum": [
+                "both",
+                "decimal",
+                "hexadecimal"
+              ],
+              "enumDescriptions": [
+                "Render as 12 (0xC)",
+                "Render as 12",
+                "Render as 0xC"
+              ]
+            }
+          ]
+        },
+        "rust-analyzer.hover.memoryLayout.size": {
+          "markdownDescription": "How to render the size information in a memory layout hover.",
+          "default": "both",
+          "anyOf": [
+            {
+              "type": "null"
+            },
+            {
+              "type": "string",
+              "enum": [
+                "both",
+                "decimal",
+                "hexadecimal"
+              ],
+              "enumDescriptions": [
+                "Render as 12 (0xC)",
+                "Render as 12",
+                "Render as 0xC"
+              ]
+            }
+          ]
         },
         "rust-analyzer.imports.granularity.enforce": {
           "markdownDescription": "Whether to enforce the import granularity setting for all files. If set to false rust-analyzer will try to keep import styles consistent per file.",
@@ -705,6 +784,11 @@
           "default": 25,
           "type": "integer",
           "minimum": 0
+        },
+        "rust-analyzer.inlayHints.closureCaptureHints.enable": {
+          "markdownDescription": "Whether to show inlay hints for closure captures.",
+          "default": false,
+          "type": "boolean"
         },
         "rust-analyzer.inlayHints.closureReturnTypeHints.enable": {
           "markdownDescription": "Whether to show inlay type hints for return types of closures.",
@@ -1059,6 +1143,11 @@
         },
         "rust-analyzer.semanticHighlighting.doc.comment.inject.enable": {
           "markdownDescription": "Inject additional highlighting into doc comments.\n\nWhen enabled, rust-analyzer will highlight rust source in doc comments as well as intra\ndoc links.",
+          "default": true,
+          "type": "boolean"
+        },
+        "rust-analyzer.semanticHighlighting.nonStandardTokens": {
+          "markdownDescription": "Whether the server is allowed to emit non-standard tokens and modifiers.",
           "default": true,
           "type": "boolean"
         },
