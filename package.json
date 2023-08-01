@@ -36,7 +36,7 @@
     "esbuild": "^0.18.10",
     "eslint": "^8.2.0",
     "https-proxy-agent": "^7.0.0",
-    "node-fetch": "2.6.7",
+    "node-fetch": "3.3.2",
     "rimraf": "^5.0.0",
     "typescript": "^5.0.3",
     "vscode-languageserver-protocol": "^3.16.0",
