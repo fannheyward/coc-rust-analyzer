@@ -40,7 +40,7 @@
     "rimraf": "^5.0.0",
     "typescript": "^5.0.3",
     "vscode-languageserver-protocol": "^3.16.0",
-    "which": "^3.0.1"
+    "which": "^4.0.0"
   },
   "prettier": {
     "singleQuote": true,
