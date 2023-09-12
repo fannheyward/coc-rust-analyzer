@@ -436,6 +436,14 @@ export function debugSingle(ctx: Ctx): Cmd {
       return;
     }
 
+    if (runtime === 'nvim-dap') {
+      const template = ctx.config.debug.nvimdapConfiguration.template;
+      const args = executableArgs.split(' ').filter(s => s !== '').map(s => `"${s}"`).join(",");
+      const configuration = template?.replace('$exe', `\"${executable}\"`).replace('$args', `{${args}}`);
+      await workspace.nvim.lua(`require("dap").run(${configuration})`)
+      return;
+    }
+
     throw new Error(`Invalid debug runtime: ${runtime}`);
   };
 }

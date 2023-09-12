@@ -56,6 +56,9 @@ export class Config {
       vimspectorConfiguration: {
         name: this.cfg.get<string>('debug.vimspector.configuration.name'),
       },
+      nvimdapConfiguration: {
+        template: this.cfg.get<string>('debug.nvimdap.configuration.template'),
+      },
     };
   }
 
