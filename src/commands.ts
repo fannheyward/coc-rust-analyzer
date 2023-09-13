@@ -1,4 +1,4 @@
-import {spawn, spawnSync} from 'child_process';
+import { spawn, spawnSync } from 'child_process';
 import {
   CodeAction,
   commands,
@@ -16,13 +16,13 @@ import {
   workspace,
   WorkspaceEdit,
 } from 'coc.nvim';
-import {randomBytes} from 'crypto';
-import {writeFileSync} from 'fs';
-import {tmpdir} from 'os';
-import {join} from 'path';
+import { randomBytes } from 'crypto';
+import { writeFileSync } from 'fs';
+import { tmpdir } from 'os';
+import { join } from 'path';
 import readline from 'readline';
-import {CodeActionResolveRequest, TextDocumentEdit} from 'vscode-languageserver-protocol';
-import {Cmd, Ctx, isCargoTomlDocument, isRustDocument} from './ctx';
+import { CodeActionResolveRequest, TextDocumentEdit } from 'vscode-languageserver-protocol';
+import { Cmd, Ctx, isCargoTomlDocument, isRustDocument } from './ctx';
 import * as ra from './lsp_ext';
 
 let terminal: Terminal | undefined;
@@ -76,10 +76,10 @@ export function reload(ctx: Ctx): Cmd {
 
 export function analyzerStatus(ctx: Ctx): Cmd {
   return async () => {
-    const {document} = await workspace.getCurrentState();
+    const { document } = await workspace.getCurrentState();
     if (!isRustDocument(document)) return;
     const params: ra.AnalyzerStatusParams = {
-      textDocument: {uri: document.uri},
+      textDocument: { uri: document.uri },
     };
     const ret = await ctx.client.sendRequest(ra.analyzerStatus, params);
     window.echoLines(ret.split('\n'));
@@ -95,11 +95,11 @@ export function memoryUsage(ctx: Ctx): Cmd {
 
 export function matchingBrace(ctx: Ctx): Cmd {
   return async () => {
-    const {document, position} = await workspace.getCurrentState();
+    const { document, position } = await workspace.getCurrentState();
     if (!isRustDocument(document)) return;
 
     const params: ra.MatchingBraceParams = {
-      textDocument: {uri: document.uri},
+      textDocument: { uri: document.uri },
       positions: [position],
     };
 
@@ -123,7 +123,7 @@ export function joinLines(ctx: Ctx): Cmd {
       range = Range.create(state.position, state.position);
     }
     const param: ra.JoinLinesParams = {
-      textDocument: {uri: doc.uri},
+      textDocument: { uri: doc.uri },
       ranges: [range],
     };
     const items = await ctx.client.sendRequest(ra.joinLines, param);
@@ -133,11 +133,11 @@ export function joinLines(ctx: Ctx): Cmd {
 
 export function parentModule(ctx: Ctx): Cmd {
   return async () => {
-    const {document, position} = await workspace.getCurrentState();
+    const { document, position } = await workspace.getCurrentState();
     if (!(isRustDocument(document) || isCargoTomlDocument(document))) return;
 
     const param: TextDocumentPositionParams = {
-      textDocument: {uri: document.uri},
+      textDocument: { uri: document.uri },
       position,
     };
 
@@ -179,16 +179,16 @@ export function ssr(ctx: Ctx): Cmd {
       if (range) selections.push(range);
     }
 
-    const {document, position} = await workspace.getCurrentState();
+    const { document, position } = await workspace.getCurrentState();
     const param: ra.SsrParams = {
       query: input,
       parseOnly: false,
-      textDocument: {uri: document.uri},
+      textDocument: { uri: document.uri },
       position,
       selections,
     };
 
-    window.withProgress({title: 'Structured search replacing...', cancellable: false}, async () => {
+    window.withProgress({ title: 'Structured search replacing...', cancellable: false }, async () => {
       const edit = await ctx.client.sendRequest(ra.ssr, param);
       await workspace.applyEdit(edit);
     });
@@ -204,19 +204,19 @@ export function serverVersion(ctx: Ctx): Cmd {
       return;
     }
 
-    const version = spawnSync(bin, ['--version'], {encoding: 'utf-8'}).stdout.toString();
+    const version = spawnSync(bin, ['--version'], { encoding: 'utf-8' }).stdout.toString();
     window.showInformationMessage(version);
   };
 }
 
 async function fetchRunnable(ctx: Ctx): Promise<ra.Runnable[]> {
-  const {document, position} = await workspace.getCurrentState();
+  const { document, position } = await workspace.getCurrentState();
   if (!isRustDocument(document)) return [];
 
   window.showInformationMessage(`Fetching runnable...`);
 
   const params: ra.RunnablesParams = {
-    textDocument: {uri: document.uri},
+    textDocument: { uri: document.uri },
     position,
   };
 
@@ -273,7 +273,7 @@ export function debug(ctx: Ctx): Cmd {
 
 export function debugSingle(ctx: Ctx): Cmd {
   return async (runnable: ra.Runnable) => {
-    const {document} = await workspace.getCurrentState();
+    const { document } = await workspace.getCurrentState();
     if (!runnable || !isRustDocument(document)) return;
 
     const args = [...runnable.args.cargoArgs];
@@ -355,19 +355,19 @@ export function debugSingle(ctx: Ctx): Cmd {
     console.debug(`Expected kind: ${expectedKind}`);
     console.debug(`Expected name: ${expectedName}`);
 
-    const proc = spawn(runnable.kind, args, {shell: true});
+    const proc = spawn(runnable.kind, args, { shell: true });
 
     const stderr_rl = readline.createInterface({
       input: proc.stderr,
       crlfDelay: Infinity,
     });
-    window.withProgress({title: 'Building Debug Target', cancellable: false}, async (progress) => {
+    window.withProgress({ title: 'Building Debug Target', cancellable: false }, async (progress) => {
       for await (const line of stderr_rl) {
         if (!line) {
           continue;
         }
         const message = line.trimStart();
-        progress.report({message: message});
+        progress.report({ message: message });
       }
     });
 
@@ -431,7 +431,7 @@ export function debugSingle(ctx: Ctx): Cmd {
 
     if (runtime === 'vimspector') {
       const name = ctx.config.debug.vimspectorConfiguration.name;
-      const configuration = {configuration: name, Executable: executable, Args: executableArgs};
+      const configuration = { configuration: name, Executable: executable, Args: executableArgs };
       await workspace.nvim.call('vimspector#LaunchWithSettings', configuration);
       return;
     }
@@ -450,7 +450,7 @@ export function debugSingle(ctx: Ctx): Cmd {
 
 export function runSingle(ctx: Ctx): Cmd {
   return async (runnable: ra.Runnable) => {
-    const {document} = await workspace.getCurrentState();
+    const { document } = await workspace.getCurrentState();
     if (!runnable || !isRustDocument(document)) return;
 
     const args = [...runnable.args.cargoArgs];
@@ -487,7 +487,7 @@ export function syntaxTree(ctx: Ctx): Cmd {
     let range: Range | null = null;
     if (mode) range = await window.getSelectedRange(mode);
     const param: ra.SyntaxTreeParams = {
-      textDocument: {uri: doc.uri},
+      textDocument: { uri: doc.uri },
       range,
     };
 
@@ -505,11 +505,11 @@ export function syntaxTree(ctx: Ctx): Cmd {
 
 export function expandMacro(ctx: Ctx): Cmd {
   return async () => {
-    const {document, position} = await workspace.getCurrentState();
+    const { document, position } = await workspace.getCurrentState();
     if (!isRustDocument(document)) return;
 
     const param: TextDocumentPositionParams = {
-      textDocument: {uri: document.uri},
+      textDocument: { uri: document.uri },
       position,
     };
 
@@ -530,17 +530,17 @@ export function expandMacro(ctx: Ctx): Cmd {
 
 export function explainError(ctx: Ctx): Cmd {
   return async () => {
-    const {document, position} = await workspace.getCurrentState();
+    const { document, position } = await workspace.getCurrentState();
     if (!isRustDocument(document)) return;
 
     const diagnostic = ctx.client.diagnostics?.get(document.uri)?.find((diagnostic) => isInRange(diagnostic.range, position));
     if (diagnostic?.code) {
-      const explanation = spawnSync('rustc', ['--explain', `${diagnostic.code}`], {encoding: 'utf-8'}).stdout.toString();
+      const explanation = spawnSync('rustc', ['--explain', `${diagnostic.code}`], { encoding: 'utf-8' }).stdout.toString();
 
       const docs: Documentation[] = [];
       let isCode = false;
       for (const part of explanation.split('```\n')) {
-        docs.push({content: part, filetype: isCode ? 'rust' : 'markdown'});
+        docs.push({ content: part, filetype: isCode ? 'rust' : 'markdown' });
         isCode = !isCode;
       }
 
@@ -584,8 +584,8 @@ export async function applySnippetWorkspaceEdit(edit: WorkspaceEdit) {
     const newEdits: TextEdit[] = [];
 
     for (const indel of change.edits) {
-      const {range} = indel;
-      let {newText} = indel;
+      const { range } = indel;
+      let { newText } = indel;
       const parsed = parseSnippet(newText);
       if (parsed) {
         const [insert, [placeholderStart, placeholderLength]] = parsed;
@@ -637,10 +637,10 @@ export function applySnippetWorkspaceEditCommand(): Cmd {
 
 export function runFlycheck(ctx: Ctx): Cmd {
   return async () => {
-    const {document} = await workspace.getCurrentState();
+    const { document } = await workspace.getCurrentState();
     if (!isRustDocument(document)) return;
 
-    ctx.client.sendNotification(ra.runFlycheck, {textDocument: {uri: document.uri}});
+    ctx.client.sendNotification(ra.runFlycheck, { textDocument: { uri: document.uri } });
   };
 }
 
@@ -672,11 +672,11 @@ export function resolveCodeAction(ctx: Ctx): Cmd {
 
 export function openDocs(ctx: Ctx): Cmd {
   return async () => {
-    const {document, position} = await workspace.getCurrentState();
+    const { document, position } = await workspace.getCurrentState();
     if (!isRustDocument(document)) return;
 
     const param: TextDocumentPositionParams = {
-      textDocument: {uri: document.uri},
+      textDocument: { uri: document.uri },
       position,
     };
     const doclink = await ctx.client.sendRequest(ra.openDocs, param);
@@ -688,11 +688,11 @@ export function openDocs(ctx: Ctx): Cmd {
 
 export function openCargoToml(ctx: Ctx): Cmd {
   return async () => {
-    const {document} = await workspace.getCurrentState();
+    const { document } = await workspace.getCurrentState();
     if (!isRustDocument(document)) return;
 
     const location = await ctx.client.sendRequest(ra.openCargoToml, {
-      textDocument: {uri: document.uri},
+      textDocument: { uri: document.uri },
     });
     if (!location) return;
 
@@ -702,11 +702,11 @@ export function openCargoToml(ctx: Ctx): Cmd {
 
 function viewXir(ctx: Ctx, xir: 'HIR' | 'MIR'): Cmd {
   return async () => {
-    const {document, position} = await workspace.getCurrentState();
+    const { document, position } = await workspace.getCurrentState();
     if (!isRustDocument(document)) return;
 
     const param: TextDocumentPositionParams = {
-      textDocument: {uri: document.uri},
+      textDocument: { uri: document.uri },
       position,
     };
     const req = xir === 'HIR' ? ra.viewHir : ra.viewMir;
