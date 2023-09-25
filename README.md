@@ -74,6 +74,7 @@ with `self` prefixed to them when inside a method. | `true` |
 | `rust-analyzer.completion.snippets.custom` | Custom completion snippets. | |
 | `rust-analyzer.debug.runtime` | Choose which debug runtime to use | `termdebug` |
 | `rust-analyzer.debug.vimspector.configuration.name` | Specify the name of the vimspector configuration name. The following args will be passed to the configuration: `Executable` and `Args` (both strings) | `launch` |
+| `rust-analyzer.debug.nvimdap.configuration.template` | Configuration template used to invoked dap.run([conf](https://github.com/mfussenegger/nvim-dap/blob/0e6b7c47dd70e80793ed39271b2aa712d9366dbc/doc/dap.txt#L656C2-L656C2)). The template will be instantiate like thie: `$exe` will be replaced with executable path, `$args` will be replaced with arguments. An example template: `{ name = \"Debug (with args)\", type = \"codelldb\", request = \"launch\", program = $exe, args = $args, cwd = \"${workspaceFolder}\", stopOnEntry = false, terminal = \"integrated\" }` | `""`|
 | `rust-analyzer.diagnostics.disabled` | List of rust-analyzer diagnostics to disable. | `` |
 | `rust-analyzer.diagnostics.enable` | Whether to show native rust-analyzer diagnostics. | `true` |
 | `rust-analyzer.diagnostics.experimental.enable` | Whether to show experimental rust-analyzer diagnostics that might have more false positives than usual. | `false` |

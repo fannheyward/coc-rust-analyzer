@@ -87,18 +87,25 @@
           "default": "termdebug",
           "enum": [
             "termdebug",
-            "vimspector"
+            "vimspector",
+            "nvim-dap"
           ],
           "markdownDescription": "Choose which debug runtime to use",
           "enumDescriptions": [
             "`\"termdebug\"` use vim/neovim builtin debugger - gdb",
-            "`\"vimspector\"` use vimspector plugin"
+            "`\"vimspector\"` use vimspector plugin",
+            "`\"nvim-dap\"` use nvim-dap plugin"
           ]
         },
         "rust-analyzer.debug.vimspector.configuration.name": {
           "type": "string",
           "default": "launch",
           "markdownDescription": "Specify the name of the vimspector configuration name. The following args will be passed to the configuration: `Executable` and `Args` (both strings)"
+        },
+        "rust-analyzer.debug.nvimdap.configuration.template": {
+          "type": "string",
+          "default": "",
+          "markdownDescription": "Configuration template used to invoked dap.run(conf). The template will be instantiate like thie: `$exe` will be replaced with executable path, `$args` will be replaced with arguments."
         },
         "rust-analyzer.server.path": {
           "type": [
