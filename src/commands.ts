@@ -732,7 +732,7 @@ export function viewMir(ctx: Ctx): Cmd {
 
 export function interpretFunction(ctx: Ctx): Cmd {
   return async () => {
-    const {document, position} = await workspace.getCurrentState();
+    const { document, position } = await workspace.getCurrentState();
     if (!isRustDocument(document)) return;
 
     const param: TextDocumentPositionParams = {
