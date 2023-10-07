@@ -19,7 +19,6 @@
     "onLanguage:rust"
   ],
   "scripts": {
-    "clean": "rimraf lib",
     "lint": "eslint src --ext ts",
     "schema": "node ./generate-config-schema.js",
     "build": "node esbuild.mjs",
@@ -37,7 +36,6 @@
     "eslint": "^8.2.0",
     "https-proxy-agent": "^7.0.0",
     "node-fetch": "2.6.7",
-    "rimraf": "^5.0.0",
     "typescript": "^5.0.3",
     "vscode-languageserver-protocol": "^3.16.0",
     "which": "^3.0.1"
