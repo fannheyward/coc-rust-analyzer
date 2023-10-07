@@ -3,7 +3,6 @@ import {
   CodeAction,
   commands,
   Documentation,
-  FloatFactory,
   Location,
   Position,
   Range,
@@ -544,8 +543,8 @@ export function explainError(ctx: Ctx): Cmd {
         isCode = !isCode;
       }
 
-      const factory = new FloatFactory(workspace.nvim);
-      await factory.show(docs);
+      const float = window.createFloatFactory({});
+      await float.show(docs);
     }
   };
 }
@@ -736,7 +735,7 @@ export function interpretFunction(ctx: Ctx): Cmd {
     if (!isRustDocument(document)) return;
 
     const param: TextDocumentPositionParams = {
-      textDocument: {uri: document.uri},
+      textDocument: { uri: document.uri },
       position,
     };
     const ret = await ctx.client.sendRequest(ra.interpretFunction, param);
@@ -753,10 +752,10 @@ export function interpretFunction(ctx: Ctx): Cmd {
 
 export function viewFileText(ctx: Ctx): Cmd {
   return async () => {
-    const {document} = await workspace.getCurrentState();
+    const { document } = await workspace.getCurrentState();
     if (!isRustDocument(document)) return;
 
-    const ret = await ctx.client.sendRequest(ra.viewFileText, {uri: document.uri});
+    const ret = await ctx.client.sendRequest(ra.viewFileText, { uri: document.uri });
     if (!ret) return;
 
     const nvim = workspace.nvim;
@@ -787,11 +786,11 @@ export function echoRunCommandLine(ctx: Ctx) {
 
 export function peekTests(ctx: Ctx): Cmd {
   return async () => {
-    const {document, position} = await workspace.getCurrentState();
+    const { document, position } = await workspace.getCurrentState();
     if (!isRustDocument(document)) return;
 
     const tests = await ctx.client.sendRequest(ra.relatedTests, {
-      textDocument: {uri: document.uri},
+      textDocument: { uri: document.uri },
       position,
     });
     const locations: Location[] = tests.map((it) => Location.create(it.runnable.location!.targetUri, it.runnable.location!.targetSelectionRange));
@@ -801,7 +800,7 @@ export function peekTests(ctx: Ctx): Cmd {
 
 function moveItem(ctx: Ctx, direction: ra.Direction): Cmd {
   return async () => {
-    const {document, position} = await workspace.getCurrentState();
+    const { document, position } = await workspace.getCurrentState();
     if (!isRustDocument(document)) return;
 
     let range: Range | null = null;
@@ -810,14 +809,14 @@ function moveItem(ctx: Ctx, direction: ra.Direction): Cmd {
     if (!range) range = Range.create(position, position);
     const params: ra.MoveItemParams = {
       direction,
-      textDocument: {uri: document.uri},
+      textDocument: { uri: document.uri },
       range,
     };
     const edits = await ctx.client.sendRequest(ra.moveItem, params);
     if (!edits?.length) return;
 
     const wsEdit: WorkspaceEdit = {
-      documentChanges: [{textDocument: {uri: document.uri, version: document.version}, edits}],
+      documentChanges: [{ textDocument: { uri: document.uri, version: document.version }, edits }],
     };
     await applySnippetWorkspaceEdit(wsEdit);
   };
@@ -833,7 +832,7 @@ export function moveItemDown(ctx: Ctx): Cmd {
 
 function crateGraph(ctx: Ctx, full: boolean): Cmd {
   return async () => {
-    const dot = await ctx.client.sendRequest(ra.viewCrateGraph, {full});
+    const dot = await ctx.client.sendRequest(ra.viewCrateGraph, { full });
     const html = `
 <!DOCTYPE html>
 <meta charset="utf-8">
@@ -895,7 +894,7 @@ function crateGraph(ctx: Ctx, full: boolean): Cmd {
 `;
 
     const tempFile = join(tmpdir(), `${randomBytes(5).toString('hex')}.html`);
-    writeFileSync(tempFile, html, {encoding: 'utf-8'});
+    writeFileSync(tempFile, html, { encoding: 'utf-8' });
     window.showMessage(`Crate Graph: ${tempFile}`);
     await workspace.nvim.call('coc#ui#open_url', [tempFile]);
   };
@@ -911,7 +910,7 @@ export function viewFullCrateGraph(ctx: Ctx): Cmd {
 
 export function shuffleCrateGraph(ctx: Ctx): Cmd {
   return async () => {
-    const {document} = await workspace.getCurrentState();
+    const { document } = await workspace.getCurrentState();
     if (!isRustDocument(document)) return;
 
     await ctx.client.sendRequest(ra.shuffleCrateGraph);
@@ -920,11 +919,11 @@ export function shuffleCrateGraph(ctx: Ctx): Cmd {
 
 export function viewItemTree(ctx: Ctx): Cmd {
   return async () => {
-    const {document} = await workspace.getCurrentState();
+    const { document } = await workspace.getCurrentState();
     if (!isRustDocument(document)) return;
 
     const param: ra.ViewItemTreeParams = {
-      textDocument: {uri: document.uri},
+      textDocument: { uri: document.uri },
     };
     const ret = await ctx.client.sendRequest(ra.viewItemTree, param);
     if (!ret) return;
@@ -940,7 +939,7 @@ export function viewItemTree(ctx: Ctx): Cmd {
 
 export function rebuildProcMacros(ctx: Ctx): Cmd {
   return async () => {
-    const {document} = await workspace.getCurrentState();
+    const { document } = await workspace.getCurrentState();
     if (!isRustDocument(document)) return;
 
     await ctx.client.sendRequest(ra.rebuildProcMacros);
