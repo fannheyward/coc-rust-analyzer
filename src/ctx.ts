@@ -83,7 +83,8 @@ export class Ctx {
 
   resolveBin(): string | undefined {
     // 1. from config, custom server path
-    // 2. bundled
+    // 2. bundled, coc-rust-analyzer can handle updating
+    // 3. fallback to system installed server
     const executableName = process.platform === 'win32' ? 'rust-analyzer.exe' : 'rust-analyzer';
     let bin = join(this.extCtx.storagePath, executableName);
     if (this.config.serverPath) {
@@ -94,10 +95,10 @@ export class Ctx {
       return bin;
     }
 
-    bin = which.sync(executableName, { nothrow: true });
-    if (bin) {
+    const systemBin = which.sync(executableName, { nothrow: true });
+    if (systemBin) {
       this.usingSystemServer = true;
-      return bin;
+      return systemBin;
     }
 
     return;
