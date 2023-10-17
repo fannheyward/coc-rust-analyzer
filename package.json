@@ -10,7 +10,7 @@
   ],
   "repository": {
     "type": "git",
-    "url": "https://github.com/fannheyward/coc-rust-analyzer.git"
+    "url": "git+https://github.com/fannheyward/coc-rust-analyzer.git"
   },
   "engines": {
     "coc": "^0.0.80"
