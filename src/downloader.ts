@@ -3,7 +3,7 @@ import { ExtensionContext, window } from 'coc.nvim';
 import { randomBytes } from 'crypto';
 import { createWriteStream, PathLike, promises as fs } from 'fs';
 import { HttpsProxyAgent } from 'https-proxy-agent';
-import fetch from 'node-fetch';
+import fetch from 'node-fetch-native';
 import * as zlib from 'zlib';
 import path from 'path';
 import stream from 'stream';

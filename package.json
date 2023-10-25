@@ -27,7 +27,6 @@
   },
   "devDependencies": {
     "@types/node": "16",
-    "@types/node-fetch": "2.6.3",
     "@types/which": "^3.0.0",
     "@typescript-eslint/eslint-plugin": "^6.4.1",
     "@typescript-eslint/parser": "^6.4.1",
@@ -35,7 +34,7 @@
     "esbuild": "^0.19.2",
     "eslint": "^8.2.0",
     "https-proxy-agent": "^7.0.0",
-    "node-fetch": "2.6.7",
+    "node-fetch-native": "^1.4.0",
     "typescript": "^5.0.3",
     "vscode-languageserver-protocol": "^3.16.0",
     "which": "^3.0.1"
