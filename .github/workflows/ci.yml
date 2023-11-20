@@ -21,17 +21,14 @@ jobs:
       NODE_ENV: test
 
     steps:
-      - uses: actions/checkout@v1
+      - uses: actions/checkout@v3
       - name: Use Node.js ${{ matrix.node-version }}
         uses: actions/setup-node@v1
         with:
           node-version: ${{ matrix.node-version }}
-      - name: Install yarn
+      - name: npm ci
         run: |
-          curl --compressed -o- -L https://yarnpkg.com/install.sh | bash
-      - name: yarn build
+          npm ci
+      - name: npm lint
         run: |
-          yarn
-      - name: yarn lint
-        run: |
-          yarn lint
+          npm run lint
