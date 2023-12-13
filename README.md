@@ -65,8 +65,7 @@ This extension is configured using a jsonc file. You can open this configuration
 | `rust-analyzer.check.targets` | Check for specific targets. Defaults to `#rust-analyzer.cargo.target#` if empty. | `null` |
 | `rust-analyzer.checkOnSave` | Run the check command for diagnostics on save. | `true` |
 | `rust-analyzer.completion.autoimport.enable` | Toggles the additional completions that automatically add imports when completed | `true` |
-| `rust-analyzer.completion.autoself.enable` | Toggles the additional completions that automatically show method calls and field accesses
-with `self` prefixed to them when inside a method. | `true` |
+| `rust-analyzer.completion.autoself.enable` | Toggles the additional completions that automatically show method calls and field accesses with `self` prefixed to them when inside a method. | `true` |
 | `rust-analyzer.completion.callable.snippets` | Whether to add parenthesis and argument snippets when completing function. | `fill_arguments` |
 | `rust-analyzer.completion.limit` | Maximum number of completions to return. If `None`, the limit is infinite. | `null` |
 | `rust-analyzer.completion.postfix.enable` | Whether to show postfix snippets like `dbg`, `if`, `not`, etc. | `true` |
