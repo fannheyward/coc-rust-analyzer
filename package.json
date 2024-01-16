@@ -250,6 +250,11 @@
             "type": "string"
           }
         },
+        "rust-analyzer.cargo.buildScripts.rebuildOnSave": {
+          "markdownDescription": "Rerun proc-macros building/build-scripts running when proc-macro\nor build-script sources change and are saved.",
+          "default": false,
+          "type": "boolean"
+        },
         "rust-analyzer.cargo.buildScripts.useRustcWrapper": {
           "markdownDescription": "Use `RUSTC_WRAPPER=rust-analyzer` when running build scripts to\navoid checking unnecessary things.",
           "default": true,
@@ -395,7 +400,7 @@
           "uniqueItems": true
         },
         "rust-analyzer.check.invocationLocation": {
-          "markdownDescription": "Specifies the working directory for running checks.\n- \"workspace\": run checks for workspaces in the corresponding workspaces' root directories.\n  This falls back to \"root\" if `#rust-analyzer.cargo.check.invocationStrategy#` is set to `once`.\n- \"root\": run checks in the project's root directory.\nThis config only has an effect when `#rust-analyzer.cargo.check.overrideCommand#`\nis set.",
+          "markdownDescription": "Specifies the working directory for running checks.\n- \"workspace\": run checks for workspaces in the corresponding workspaces' root directories.\n  This falls back to \"root\" if `#rust-analyzer.check.invocationStrategy#` is set to `once`.\n- \"root\": run checks in the project's root directory.\nThis config only has an effect when `#rust-analyzer.check.overrideCommand#`\nis set.",
           "default": "workspace",
           "type": "string",
           "enum": [
@@ -408,7 +413,7 @@
           ]
         },
         "rust-analyzer.check.invocationStrategy": {
-          "markdownDescription": "Specifies the invocation strategy to use when running the check command.\nIf `per_workspace` is set, the command will be executed for each workspace.\nIf `once` is set, the command will be executed once.\nThis config only has an effect when `#rust-analyzer.cargo.check.overrideCommand#`\nis set.",
+          "markdownDescription": "Specifies the invocation strategy to use when running the check command.\nIf `per_workspace` is set, the command will be executed for each workspace.\nIf `once` is set, the command will be executed once.\nThis config only has an effect when `#rust-analyzer.check.overrideCommand#`\nis set.",
           "default": "per_workspace",
           "type": "string",
           "enum": [
@@ -429,7 +434,7 @@
           ]
         },
         "rust-analyzer.check.overrideCommand": {
-          "markdownDescription": "Override the command rust-analyzer uses instead of `cargo check` for\ndiagnostics on save. The command is required to output json and\nshould therefore include `--message-format=json` or a similar option\n(if your client supports the `colorDiagnosticOutput` experimental\ncapability, you can use `--message-format=json-diagnostic-rendered-ansi`).\n\nIf you're changing this because you're using some tool wrapping\nCargo, you might also want to change\n`#rust-analyzer.cargo.buildScripts.overrideCommand#`.\n\nIf there are multiple linked projects/workspaces, this command is invoked for\neach of them, with the working directory being the workspace root\n(i.e., the folder containing the `Cargo.toml`). This can be overwritten\nby changing `#rust-analyzer.cargo.check.invocationStrategy#` and\n`#rust-analyzer.cargo.check.invocationLocation#`.\n\nAn example command would be:\n\n```bash\ncargo check --workspace --message-format=json --all-targets\n```\n.",
+          "markdownDescription": "Override the command rust-analyzer uses instead of `cargo check` for\ndiagnostics on save. The command is required to output json and\nshould therefore include `--message-format=json` or a similar option\n(if your client supports the `colorDiagnosticOutput` experimental\ncapability, you can use `--message-format=json-diagnostic-rendered-ansi`).\n\nIf you're changing this because you're using some tool wrapping\nCargo, you might also want to change\n`#rust-analyzer.cargo.buildScripts.overrideCommand#`.\n\nIf there are multiple linked projects/workspaces, this command is invoked for\neach of them, with the working directory being the workspace root\n(i.e., the folder containing the `Cargo.toml`). This can be overwritten\nby changing `#rust-analyzer.check.invocationStrategy#` and\n`#rust-analyzer.check.invocationLocation#`.\n\nAn example command would be:\n\n```bash\ncargo check --workspace --message-format=json --all-targets\n```\n.",
           "default": null,
           "type": [
             "null",
@@ -935,6 +940,11 @@
         "rust-analyzer.inlayHints.parameterHints.enable": {
           "markdownDescription": "Whether to show function parameter name inlay hints at the call\nsite.",
           "default": true,
+          "type": "boolean"
+        },
+        "rust-analyzer.inlayHints.rangeExclusiveHints.enable": {
+          "markdownDescription": "Whether to show exclusive range inlay hints.",
+          "default": false,
           "type": "boolean"
         },
         "rust-analyzer.inlayHints.reborrowHints.enable": {
