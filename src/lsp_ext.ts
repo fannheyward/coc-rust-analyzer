@@ -73,13 +73,12 @@ export const viewItemTree = new lc.RequestType<ViewItemTreeParams, string, void>
 
 export type AnalyzerStatusParams = { textDocument?: lc.TextDocumentIdentifier };
 
-// eslint-disable-next-line @typescript-eslint/no-empty-interface
 export interface FetchDependencyListParams {}
 
 export interface FetchDependencyListResult {
   crates: {
-    name: string | undefined;
-    version: string | undefined;
+    name?: string;
+    version?: string;
     path: string;
   }[];
 }
@@ -90,7 +89,6 @@ export const fetchDependencyList = new lc.RequestType<
   void
 >('rust-analyzer/fetchDependencyList');
 
-// eslint-disable-next-line @typescript-eslint/no-empty-interface
 export interface FetchDependencyGraphParams {}
 
 export interface FetchDependencyGraphResult {
@@ -155,6 +153,11 @@ export const serverStatus = new lc.NotificationType<ServerStatusParams>(
   'experimental/serverStatus'
 );
 export const ssr = new lc.RequestType<SsrParams, lc.WorkspaceEdit, void>('experimental/ssr');
+export const viewRecursiveMemoryLayout = new lc.RequestType<
+  lc.TextDocumentPositionParams,
+  RecursiveMemoryLayout | null,
+  void
+>('rust-analyzer/viewRecursiveMemoryLayout');
 
 export type JoinLinesParams = {
   textDocument: lc.TextDocumentIdentifier;
@@ -202,3 +205,21 @@ export type SsrParams = {
   position: lc.Position;
   selections: readonly lc.Range[];
 };
+
+export type RecursiveMemoryLayoutNode = {
+  item_name: string;
+  typename: string;
+  size: number;
+  alignment: number;
+  offset: number;
+  parent_idx: number;
+  children_start: number;
+  children_len: number;
+};
+export type RecursiveMemoryLayout = {
+  nodes: RecursiveMemoryLayoutNode[];
+};
+
+export const unindexedProject = new lc.NotificationType<UnindexedProjectParams>('rust-analyzer/unindexedProject');
+
+export type UnindexedProjectParams = { textDocuments: lc.TextDocumentIdentifier[] };
