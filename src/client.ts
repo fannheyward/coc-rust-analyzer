@@ -10,7 +10,6 @@ class ExperimentalFeatures implements StaticFeature {
   fillClientCapabilities(capabilities: any): void {
     const caps: any = capabilities.experimental ?? {};
     caps.snippetTextEdit = true;
-    caps.resolveCodeAction = true;
     caps.serverStatusNotification = true;
     caps.commands = {
       commands: [
