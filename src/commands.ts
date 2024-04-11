@@ -584,7 +584,7 @@ export async function applySnippetWorkspaceEdit(edit: WorkspaceEdit) {
 
     for (const indel of change.edits) {
       const { range } = indel;
-      let newText = indel.newText.replace('\\}', '}');
+      let newText = indel.newText.replaceAll('\\}', '}');
       const parsed = parseSnippet(newText);
       if (parsed) {
         const [insert, [placeholderStart, placeholderLength]] = parsed;
