@@ -203,6 +203,11 @@
           "minimum": 0,
           "maximum": 255
         },
+        "rust-analyzer.cargo.allTargets": {
+          "markdownDescription": "Pass `--all-targets` to cargo invocation.",
+          "default": true,
+          "type": "boolean"
+        },
         "rust-analyzer.cargo.autoreload": {
           "markdownDescription": "Automatically refresh project info via `cargo metadata` on\n`Cargo.toml` or `.cargo/config.toml` changes.",
           "default": true,
@@ -262,7 +267,10 @@
         },
         "rust-analyzer.cargo.cfgs": {
           "markdownDescription": "List of cfg options to enable with the given values.",
-          "default": {},
+          "default": {
+            "debug_assertions": null,
+            "miri": null
+          },
           "type": "object"
         },
         "rust-analyzer.cargo.extraArgs": {
@@ -333,15 +341,20 @@
             "string"
           ]
         },
-        "rust-analyzer.cargo.unsetTest": {
-          "markdownDescription": "Unsets the implicit `#[cfg(test)]` for the specified crates.",
-          "default": [
-            "core"
-          ],
-          "type": "array",
-          "items": {
-            "type": "string"
-          }
+        "rust-analyzer.cargo.targetDir": {
+          "markdownDescription": "Optional path to a rust-analyzer specific target directory.\nThis prevents rust-analyzer's `cargo check` and initial build-script and proc-macro\nbuilding from locking the `Cargo.lock` at the expense of duplicating build artifacts.\n\nSet to `true` to use a subdirectory of the existing target directory or\nset to a path relative to the workspace to use that path.",
+          "default": null,
+          "anyOf": [
+            {
+              "type": "null"
+            },
+            {
+              "type": "boolean"
+            },
+            {
+              "type": "string"
+            }
+          ]
         },
         "rust-analyzer.checkOnSave": {
           "markdownDescription": "Run the check command for diagnostics on save.",
@@ -349,9 +362,12 @@
           "type": "boolean"
         },
         "rust-analyzer.check.allTargets": {
-          "markdownDescription": "Check all targets and tests (`--all-targets`).",
-          "default": true,
-          "type": "boolean"
+          "markdownDescription": "Check all targets and tests (`--all-targets`). Defaults to\n`#rust-analyzer.cargo.allTargets#`.",
+          "default": null,
+          "type": [
+            "null",
+            "boolean"
+          ]
         },
         "rust-analyzer.check.command": {
           "markdownDescription": "Cargo command to use for `cargo check`.",
@@ -439,7 +455,7 @@
           ]
         },
         "rust-analyzer.check.overrideCommand": {
-          "markdownDescription": "Override the command rust-analyzer uses instead of `cargo check` for\ndiagnostics on save. The command is required to output json and\nshould therefore include `--message-format=json` or a similar option\n(if your client supports the `colorDiagnosticOutput` experimental\ncapability, you can use `--message-format=json-diagnostic-rendered-ansi`).\n\nIf you're changing this because you're using some tool wrapping\nCargo, you might also want to change\n`#rust-analyzer.cargo.buildScripts.overrideCommand#`.\n\nIf there are multiple linked projects/workspaces, this command is invoked for\neach of them, with the working directory being the workspace root\n(i.e., the folder containing the `Cargo.toml`). This can be overwritten\nby changing `#rust-analyzer.check.invocationStrategy#` and\n`#rust-analyzer.check.invocationLocation#`.\n\nIf `$saved_file` is part of the command, rust-analyzer will pass\nthe absolute path of the saved file to the provided command. This is\nintended to be used with non-Cargo build systems.\nNote that `$saved_file` is experimental and may be removed in the futureg.\n\nAn example command would be:\n\n```bash\ncargo check --workspace --message-format=json --all-targets\n```\n.",
+          "markdownDescription": "Override the command rust-analyzer uses instead of `cargo check` for\ndiagnostics on save. The command is required to output json and\nshould therefore include `--message-format=json` or a similar option\n(if your client supports the `colorDiagnosticOutput` experimental\ncapability, you can use `--message-format=json-diagnostic-rendered-ansi`).\n\nIf you're changing this because you're using some tool wrapping\nCargo, you might also want to change\n`#rust-analyzer.cargo.buildScripts.overrideCommand#`.\n\nIf there are multiple linked projects/workspaces, this command is invoked for\neach of them, with the working directory being the workspace root\n(i.e., the folder containing the `Cargo.toml`). This can be overwritten\nby changing `#rust-analyzer.check.invocationStrategy#` and\n`#rust-analyzer.check.invocationLocation#`.\n\nIf `$saved_file` is part of the command, rust-analyzer will pass\nthe absolute path of the saved file to the provided command. This is\nintended to be used with non-Cargo build systems.\nNote that `$saved_file` is experimental and may be removed in the future.\n\nAn example command would be:\n\n```bash\ncargo check --workspace --message-format=json --all-targets\n```\n.",
           "default": null,
           "type": [
             "null",
@@ -594,6 +610,11 @@
           "markdownDescription": "Map of prefixes to be substituted when parsing diagnostic file paths.\nThis should be the reverse mapping of what is passed to `rustc` as `--remap-path-prefix`.",
           "default": {},
           "type": "object"
+        },
+        "rust-analyzer.diagnostics.styleLints.enable": {
+          "markdownDescription": "Whether to run additional style lints.",
+          "default": false,
+          "type": "boolean"
         },
         "rust-analyzer.diagnostics.warningsAsHint": {
           "markdownDescription": "List of warnings that should be displayed with hint severity.\n\nThe warnings will be indicated by faded text or three dots in code\nand will not show up in the `Problems Panel`.",
@@ -750,6 +771,33 @@
               ]
             }
           ]
+        },
+        "rust-analyzer.hover.show.enumVariants": {
+          "markdownDescription": "How many variants of an enum to display when hovering on. Show none if empty.",
+          "default": 5,
+          "type": [
+            "null",
+            "integer"
+          ],
+          "minimum": 0
+        },
+        "rust-analyzer.hover.show.fields": {
+          "markdownDescription": "How many fields of a struct, variant or union to display when hovering on. Show none if empty.",
+          "default": 5,
+          "type": [
+            "null",
+            "integer"
+          ],
+          "minimum": 0
+        },
+        "rust-analyzer.hover.show.traitAssocItems": {
+          "markdownDescription": "How many associated items of a trait to display when hovering a trait.",
+          "default": null,
+          "type": [
+            "null",
+            "integer"
+          ],
+          "minimum": 0
         },
         "rust-analyzer.imports.granularity.enforce": {
           "markdownDescription": "Whether to enforce the import granularity setting for all files. If set to false rust-analyzer will try to keep import styles consistent per file.",
@@ -1083,7 +1131,7 @@
           "type": "boolean"
         },
         "rust-analyzer.linkedProjects": {
-          "markdownDescription": "Disable project auto-discovery in favor of explicitly specified set\nof projects.\n\nElements must be paths pointing to `Cargo.toml`,\n`rust-project.json`, or JSON objects in `rust-project.json` format.",
+          "markdownDescription": "Disable project auto-discovery in favor of explicitly specified set\nof projects.\n\nElements must be paths pointing to `Cargo.toml`,\n`rust-project.json`, `.rs` files (which will be treated as standalone files) or JSON\nobjects in `rust-project.json` format.",
           "default": [],
           "type": "array",
           "items": {
@@ -1175,20 +1223,15 @@
             "type": "string"
           }
         },
-        "rust-analyzer.rust.analyzerTargetDir": {
-          "markdownDescription": "Optional path to a rust-analyzer specific target directory.\nThis prevents rust-analyzer's `cargo check` from locking the `Cargo.lock`\nat the expense of duplicating build artifacts.\n\nSet to `true` to use a subdirectory of the existing target directory or\nset to a path relative to the workspace to use that path.",
-          "default": null,
-          "anyOf": [
-            {
-              "type": "null"
-            },
-            {
-              "type": "boolean"
-            },
-            {
-              "type": "string"
-            }
-          ]
+        "rust-analyzer.runnables.extraTestBinaryArgs": {
+          "markdownDescription": "Additional arguments to be passed through Cargo to launched tests, benchmarks, or\ndoc-tests.\n\nUnless the launched target uses a\n[custom test harness](https://doc.rust-lang.org/cargo/reference/cargo-targets.html#the-harness-field),\nthey will end up being interpreted as options to\n[`rustc`’s built-in test harness (“libtest”)](https://doc.rust-lang.org/rustc/tests/index.html#cli-arguments).",
+          "default": [
+            "--show-output"
+          ],
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
         },
         "rust-analyzer.rustc.source": {
           "markdownDescription": "Path to the Cargo.toml of the rust compiler workspace, for usage in rustc_private\nprojects, or \"discover\" to try to automatically find it if the `rustc-dev` component\nis installed.\n\nAny project which uses rust-analyzer with the rustcPrivate\ncrates must set `[package.metadata.rust-analyzer] rustc_private=true` to use it.\n\nThis option does not take effect until rust-analyzer is restarted.",
