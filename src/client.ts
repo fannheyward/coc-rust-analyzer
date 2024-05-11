@@ -55,7 +55,7 @@ export function createClient(bin: string, config: Config): LanguageClient {
     return true;
   }
   let initializationOptions = workspace.getConfiguration('rust-analyzer');
-  if (workspace.workspaceFolders.length && standalone(workspace.workspaceFolders[0].uri)) {
+  if (workspace.workspaceFolders.every((folder) => standalone(folder.uri))) {
     const docs = workspace.documents.filter((doc) => isRustDocument(doc.textDocument));
     if (docs.length) {
       initializationOptions = { detachedFiles: docs.map((doc) => Uri.parse(doc.uri).fsPath), ...initializationOptions };
