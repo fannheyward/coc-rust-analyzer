@@ -1439,6 +1439,11 @@
         "category": "rust-analyzer"
       },
       {
+        "command": "rust-analyzer.install",
+        "title": "Install Rust Analyzer from GitHub release",
+        "category": "rust-analyzer"
+      },
+      {
         "command": "rust-analyzer.upgrade",
         "title": "Upgrade Rust Analyzer from GitHub release",
         "category": "rust-analyzer"

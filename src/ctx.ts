@@ -4,7 +4,7 @@ import { join } from 'path';
 import which from 'which';
 import { createClient } from './client';
 import { Config } from './config';
-import { downloadServer, getLatestRelease } from './downloader';
+import { downloadServer, getLatestRelease, ReleaseTag } from './downloader';
 import * as ra from './lsp_ext';
 
 export type RustDocument = TextDocument & { languageId: 'rust' };
@@ -102,6 +102,33 @@ export class Ctx {
     }
 
     return;
+  }
+
+  async installServerFromGitHub() {
+    const latest = await getLatestRelease(this.config.channel);
+    if (!latest) {
+      return;
+    }
+    try {
+      if (process.platform === 'win32') {
+        await this.client.stop();
+      }
+
+      await downloadServer(this.extCtx, latest);
+    } catch (e) {
+      console.error(e);
+      let msg = 'Install rust-analyzer failed, please try again';
+      // @ts-ignore
+      if (e.code === 'EBUSY' || e.code === 'ETXTBSY' || e.code === 'EPERM') {
+        msg = 'Install rust-analyzer failed, other Vim instances might be using it, you should close them and try again';
+      }
+      window.showInformationMessage(msg, 'error');
+      return;
+    }
+    await this.client.stop();
+    this.client.start();
+
+    this.extCtx.globalState.update('release', latest.tag);
   }
 
   async checkUpdate(auto = true) {

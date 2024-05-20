@@ -564,6 +564,12 @@ export function showReferences(): Cmd {
   };
 }
 
+export function install(ctx: Ctx): Cmd {
+  return async () => {
+    await ctx.installServerFromGitHub();
+  };
+}
+
 export function upgrade(ctx: Ctx) {
   return async () => {
     await ctx.checkUpdate(false);
