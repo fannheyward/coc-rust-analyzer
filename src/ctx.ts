@@ -4,7 +4,7 @@ import { join } from 'path';
 import which from 'which';
 import { createClient } from './client';
 import { Config } from './config';
-import { downloadServer, getLatestRelease, ReleaseTag } from './downloader';
+import { downloadServer, getLatestRelease } from './downloader';
 import * as ra from './lsp_ext';
 
 export type RustDocument = TextDocument & { languageId: 'rust' };
