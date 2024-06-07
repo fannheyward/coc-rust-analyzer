@@ -1,14 +1,14 @@
-import { exec, spawnSync } from 'child_process';
-import { ExtensionContext, window } from 'coc.nvim';
-import { randomBytes } from 'crypto';
-import { createWriteStream, PathLike, promises as fs } from 'fs';
+import { exec, spawnSync } from 'node:child_process';
+import { type ExtensionContext, window } from 'coc.nvim';
+import { randomBytes } from 'node:crypto';
+import { createWriteStream, type PathLike, promises as fs } from 'node:fs';
 import { HttpsProxyAgent } from 'https-proxy-agent';
 import fetch from 'node-fetch';
-import * as zlib from 'zlib';
-import path from 'path';
-import stream from 'stream';
-import util from 'util';
-import { UpdatesChannel } from './config';
+import * as zlib from 'node:zlib';
+import path from 'node:path';
+import stream from 'node:stream';
+import util from 'node:util';
+import type { UpdatesChannel } from './config';
 
 const pipeline = util.promisify(stream.pipeline);
 const agent = process.env.https_proxy ? new HttpsProxyAgent(process.env.https_proxy as string) : null;
@@ -27,11 +27,11 @@ async function patchelf(dest: PathLike): Promise<void> {
         '';
     }
 `;
-  const origFile = dest + '-orig';
+  const origFile = `${dest}-orig`;
   await fs.rename(dest, origFile);
 
   await new Promise((resolve, reject) => {
-    const handle = exec(`nix-build -E - --arg src '${origFile}' -o ${dest}`, (err, stdout, stderr) => { // lgtm[js/shell-command-constructed-from-input]
+    const handle = exec(`nix-build -E - --arg src '${origFile}' -o ${dest}`, (err, stdout, stderr) => {
       if (err != null) {
         reject(Error(stderr));
       } else {
@@ -164,10 +164,10 @@ export async function downloadServer(context: ExtensionContext, release: Release
 
   try {
     if (await fs.stat('/etc/nixos')) {
-      statusItem.text = `Patching rust-analyzer executable...`;
+      statusItem.text = 'Patching rust-analyzer executable...';
       await patchelf(_path);
     }
-  } catch (e) {}
+  } catch (_e) {}
 
   statusItem.hide();
 }

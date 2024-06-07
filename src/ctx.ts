@@ -1,6 +1,16 @@
-import { commands, Disposable, ExtensionContext, LanguageClient, services, TextDocument, Uri, window, workspace } from 'coc.nvim';
-import { existsSync } from 'fs';
-import { join } from 'path';
+import {
+  commands,
+  type Disposable,
+  type ExtensionContext,
+  type LanguageClient,
+  services,
+  type TextDocument,
+  Uri,
+  window,
+  workspace,
+} from 'coc.nvim';
+import { existsSync } from 'node:fs';
+import { join } from 'node:path';
 import which from 'which';
 import { createClient } from './client';
 import { Config } from './config';
@@ -64,7 +74,9 @@ export class Ctx {
         // https://github.com/fannheyward/coc-rust-analyzer/issues/763
         if (status.message.startsWith('cargo check failed')) return;
         window.showNotification({ content: status.message });
-        window.showWarningMessage(`rust-analyzer failed to start, run ':CocCommand rust-analyzer.reloadWorkspace' to reload`);
+        window.showWarningMessage(
+          `rust-analyzer failed to start, run ':CocCommand rust-analyzer.reloadWorkspace' to reload`,
+        );
       }
     });
 
@@ -120,7 +132,8 @@ export class Ctx {
       let msg = 'Install rust-analyzer failed, please try again';
       // @ts-ignore
       if (e.code === 'EBUSY' || e.code === 'ETXTBSY' || e.code === 'EPERM') {
-        msg = 'Install rust-analyzer failed, other Vim instances might be using it, you should close them and try again';
+        msg =
+          'Install rust-analyzer failed, other Vim instances might be using it, you should close them and try again';
       }
       window.showInformationMessage(msg, 'error');
       return;
@@ -148,7 +161,7 @@ export class Ctx {
     const old = this.extCtx.globalState.get('release') || 'unknown release';
     if (old === latest.tag) {
       if (!auto) {
-        window.showInformationMessage(`Your Rust Analyzer release is updated`);
+        window.showInformationMessage('Your Rust Analyzer release is updated');
       }
       return;
     }
@@ -156,7 +169,10 @@ export class Ctx {
     const msg = `Rust Analyzer has a new release: ${latest.tag}, you're using ${old}. Would you like to download from GitHub`;
     let ret = 0;
     if (this.config.prompt === true) {
-      ret = await window.showQuickpick(['Yes, download the latest rust-analyzer', 'Check GitHub releases', 'Cancel'], msg);
+      ret = await window.showQuickpick(
+        ['Yes, download the latest rust-analyzer', 'Check GitHub releases', 'Cancel'],
+        msg,
+      );
     }
     if (ret === 0) {
       if (process.platform === 'win32') {
@@ -169,7 +185,8 @@ export class Ctx {
         let msg = 'Upgrade rust-analyzer failed, please try again';
         // @ts-ignore
         if (e.code === 'EBUSY' || e.code === 'ETXTBSY' || e.code === 'EPERM') {
-          msg = 'Upgrade rust-analyzer failed, other Vim instances might be using it, you should close them and try again';
+          msg =
+            'Upgrade rust-analyzer failed, other Vim instances might be using it, you should close them and try again';
         }
         window.showInformationMessage(msg, 'error');
         return;
@@ -179,7 +196,9 @@ export class Ctx {
 
       this.extCtx.globalState.update('release', latest.tag);
     } else if (ret === 1) {
-      await commands.executeCommand('vscode.open', 'https://github.com/rust-analyzer/rust-analyzer/releases').catch(() => {});
+      await commands
+        .executeCommand('vscode.open', 'https://github.com/rust-analyzer/rust-analyzer/releases')
+        .catch(() => {});
     }
   }
 }

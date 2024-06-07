@@ -1,27 +1,27 @@
-import { spawn, spawnSync } from 'child_process';
+import { spawn, spawnSync } from 'node:child_process';
 import {
-  CodeAction,
+  type CodeAction,
   commands,
-  Documentation,
+  type Documentation,
   Location,
   Position,
   Range,
-  Terminal,
-  TerminalOptions,
-  TextDocumentPositionParams,
+  type Terminal,
+  type TerminalOptions,
+  type TextDocumentPositionParams,
   TextEdit,
   Uri,
   window,
   workspace,
-  WorkspaceEdit,
+  type WorkspaceEdit,
 } from 'coc.nvim';
-import { randomBytes } from 'crypto';
-import { writeFileSync } from 'fs';
-import { tmpdir } from 'os';
-import { join } from 'path';
-import readline from 'readline';
+import { randomBytes } from 'node:crypto';
+import { writeFileSync } from 'node:fs';
+import { tmpdir } from 'node:os';
+import { join } from 'node:path';
+import readline from 'node:readline';
 import { CodeActionResolveRequest, TextDocumentEdit } from 'vscode-languageserver-protocol';
-import { Cmd, Ctx, isCargoTomlDocument, isRustDocument } from './ctx';
+import { type Cmd, type Ctx, isCargoTomlDocument, isRustDocument } from './ctx';
 import * as ra from './lsp_ext';
 
 let terminal: Terminal | undefined;
@@ -42,7 +42,7 @@ function isInRange(range: Range, position: Position): boolean {
 
 function codeFormat(expanded: ra.ExpandedMacro): string {
   let result = `// Recursive expansion of ${expanded.name}! macro\n`;
-  result += '// ' + '='.repeat(result.length - 3);
+  result += `// ${'='.repeat(result.length - 3)}`;
   result += '\n\n';
   result += expanded.expansion;
 
@@ -64,12 +64,12 @@ function countLines(text: string): number {
 
 export function reload(ctx: Ctx): Cmd {
   return async () => {
-    window.showInformationMessage(`Reloading rust-analyzer...`);
+    window.showInformationMessage('Reloading rust-analyzer...');
 
     await ctx.client.stop();
     await ctx.client.start();
 
-    window.showInformationMessage(`Reloaded rust-analyzer`);
+    window.showInformationMessage('Reloaded rust-analyzer');
   };
 }
 
@@ -161,7 +161,7 @@ export function parentModule(ctx: Ctx): Cmd {
 
 export function ssr(ctx: Ctx): Cmd {
   return async () => {
-    const input = await workspace.callAsync<string>('input', ['Enter request like this: foo($a, $b) ==>> ($a).foo($b): ']);
+    const input = await workspace.callAsync<string>('input', ['Enter request like: foo($a, $b) ==>> ($a).foo($b): ']);
     workspace.nvim.command('normal! :<C-u>', true);
     if (!input) {
       return;
@@ -198,7 +198,7 @@ export function serverVersion(ctx: Ctx): Cmd {
   return async () => {
     const bin = ctx.resolveBin();
     if (!bin) {
-      const msg = `Rust Analyzer is not found`;
+      const msg = 'Rust Analyzer is not found';
       window.showErrorMessage(msg);
       return;
     }
@@ -212,7 +212,7 @@ async function fetchRunnable(ctx: Ctx): Promise<ra.Runnable[]> {
   const { document, position } = await workspace.getCurrentState();
   if (!isRustDocument(document)) return [];
 
-  window.showInformationMessage(`Fetching runnable...`);
+  window.showInformationMessage('Fetching runnable...');
 
   const params: ra.RunnablesParams = {
     textDocument: { uri: document.uri },
@@ -250,7 +250,7 @@ export function testCurrent(ctx: Ctx): Cmd {
   return async () => {
     const runnables = await fetchRunnable(ctx);
     if (!runnables.length) {
-      window.showInformationMessage(`No runnables found`);
+      window.showInformationMessage('No runnables found');
       return;
     }
 
@@ -437,7 +437,11 @@ export function debugSingle(ctx: Ctx): Cmd {
 
     if (runtime === 'nvim-dap') {
       const template = ctx.config.debug.nvimdapConfiguration.template;
-      const args = executableArgs.split(' ').filter(s => s !== '').map(s => `"${s}"`).join(',');
+      const args = executableArgs
+        .split(' ')
+        .filter((s) => s !== '')
+        .map((s) => `"${s}"`)
+        .join(',');
       const configuration = template?.replace('$exe', `"${executable}"`).replace('$args', `{${args}}`);
       await workspace.nvim.lua(`require("dap").run(${configuration})`);
       return;
@@ -494,10 +498,10 @@ export function syntaxTree(ctx: Ctx): Cmd {
     if (!ret) return;
     const nvim = workspace.nvim;
     nvim.pauseNotification();
-    nvim.command(`edit +setl\\ buftype=nofile [SyntaxTree]`, true);
+    nvim.command('edit +setl\\ buftype=nofile [SyntaxTree]', true);
     nvim.command('setl nobuflisted bufhidden=wipe', true);
     nvim.call('append', [0, ret.split('\n')], true);
-    nvim.command(`exe 1`, true);
+    nvim.command('exe 1', true);
     await nvim.resumeNotification(true);
   };
 }
@@ -518,11 +522,11 @@ export function expandMacro(ctx: Ctx): Cmd {
     const lines = codeFormat(expanded).split('\n');
     const nvim = workspace.nvim;
     nvim.pauseNotification();
-    nvim.command(`edit +setl\\ buftype=nofile [Macro]`, true);
+    nvim.command('edit +setl\\ buftype=nofile [Macro]', true);
     nvim.command('setl nobuflisted bufhidden=wipe', true);
     nvim.command('setl filetype=rust', true);
     nvim.call('append', [0, lines], true);
-    nvim.command(`exe 1`, true);
+    nvim.command('exe 1', true);
     await nvim.resumeNotification(true);
   };
 }
@@ -532,9 +536,9 @@ export function explainError(ctx: Ctx): Cmd {
     const { document, position } = await workspace.getCurrentState();
     if (!isRustDocument(document)) return;
 
-    const diagnostic = ctx.client.diagnostics?.get(document.uri)?.find((diagnostic) => isInRange(diagnostic.range, position));
-    if (diagnostic?.code) {
-      const explanation = spawnSync('rustc', ['--explain', `${diagnostic.code}`], { encoding: 'utf-8' }).stdout.toString();
+    const diag = ctx.client.diagnostics?.get(document.uri)?.find((diagnostic) => isInRange(diagnostic.range, position));
+    if (diag?.code) {
+      const explanation = spawnSync('rustc', ['--explain', `${diag.code}`], { encoding: 'utf-8' }).stdout.toString();
 
       const docs: Documentation[] = [];
       let isCode = false;
@@ -593,16 +597,16 @@ export async function applySnippetWorkspaceEdit(edit: WorkspaceEdit) {
       let newText = indel.newText.replaceAll('\\}', '}');
       const parsed = parseSnippet(newText);
       if (parsed) {
-        const [insert, [placeholderStart, placeholderLength]] = parsed;
-        const prefix = insert.substring(0, placeholderStart);
+        const [insert, [snipStart, snipLength]] = parsed;
+        const prefix = insert.substring(0, snipStart);
         const lastNewline = prefix.lastIndexOf('\n');
 
         const startLine = range.start.line + lineDelta + countLines(prefix);
-        const startColumn = lastNewline === -1 ? range.start.character + placeholderStart : prefix.length - lastNewline - 1;
-        if (placeholderLength) {
-          selection = Range.create(startLine, startColumn, startLine, startColumn + placeholderLength);
+        const startCol = lastNewline === -1 ? range.start.character + snipStart : prefix.length - lastNewline - 1;
+        if (snipLength) {
+          selection = Range.create(startLine, startCol, startLine, startCol + snipLength);
         } else {
-          position = Position.create(startLine, startColumn);
+          position = Position.create(startLine, startCol);
         }
 
         newText = insert;
@@ -722,7 +726,7 @@ function viewXir(ctx: Ctx, xir: 'HIR' | 'MIR'): Cmd {
     nvim.command(`edit +setl\\ buftype=nofile [${xir}]`, true);
     nvim.command('setl nobuflisted bufhidden=wipe', true);
     nvim.call('append', [0, ret.split('\n')], true);
-    nvim.command(`exe 1`, true);
+    nvim.command('exe 1', true);
     await nvim.resumeNotification(true);
   };
 }
@@ -748,10 +752,10 @@ export function interpretFunction(ctx: Ctx): Cmd {
     if (!ret) return;
     const nvim = workspace.nvim;
     nvim.pauseNotification();
-    nvim.command(`edit +setl\\ buftype=nofile [interpretFunction]`, true);
+    nvim.command('edit +setl\\ buftype=nofile [interpretFunction]', true);
     nvim.command('setl nobuflisted bufhidden=wipe', true);
     nvim.call('append', [0, ret.split('\n')], true);
-    nvim.command(`exe 1`, true);
+    nvim.command('exe 1', true);
     await nvim.resumeNotification(true);
   };
 }
@@ -766,10 +770,10 @@ export function viewFileText(ctx: Ctx): Cmd {
 
     const nvim = workspace.nvim;
     nvim.pauseNotification();
-    nvim.command(`edit +setl\\ buftype=nofile [TEXT]`, true);
+    nvim.command('edit +setl\\ buftype=nofile [TEXT]', true);
     nvim.command('setl nobuflisted bufhidden=wipe', true);
     nvim.call('append', [0, ret.split('\n')], true);
-    nvim.command(`exe 1`, true);
+    nvim.command('exe 1', true);
     await nvim.resumeNotification(true);
   };
 }
@@ -799,7 +803,9 @@ export function peekTests(ctx: Ctx): Cmd {
       textDocument: { uri: document.uri },
       position,
     });
-    const locations: Location[] = tests.map((it) => Location.create(it.runnable.location!.targetUri, it.runnable.location!.targetSelectionRange));
+    const locations: Location[] = tests.map((it) =>
+      Location.create(it.runnable.location!.targetUri, it.runnable.location!.targetSelectionRange),
+    );
     await commands.executeCommand('editor.action.showReferences', Uri.parse(document.uri), position, locations);
   };
 }
@@ -935,10 +941,10 @@ export function viewItemTree(ctx: Ctx): Cmd {
     if (!ret) return;
     const nvim = workspace.nvim;
     nvim.pauseNotification();
-    nvim.command(`edit +setl\\ buftype=nofile [ItemTree]`, true);
+    nvim.command('edit +setl\\ buftype=nofile [ItemTree]', true);
     nvim.command('setl nobuflisted bufhidden=wipe', true);
     nvim.call('append', [0, ret.split('\n')], true);
-    nvim.command(`exe 1`, true);
+    nvim.command('exe 1', true);
     await nvim.resumeNotification(true);
   };
 }

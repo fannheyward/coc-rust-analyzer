@@ -1,8 +1,21 @@
-import { CodeActionKind, Command, Executable, LanguageClient, LanguageClientOptions, Position, Range, ServerOptions, StaticFeature, Uri, window, workspace } from 'coc.nvim';
-import { existsSync } from 'fs';
-import { join } from 'path';
-import { CodeAction, CodeActionParams, CodeActionRequest } from 'vscode-languageserver-protocol';
-import { Config } from './config';
+import {
+  type CodeActionKind,
+  type Command,
+  type Executable,
+  LanguageClient,
+  type LanguageClientOptions,
+  type Position,
+  type Range,
+  type ServerOptions,
+  type StaticFeature,
+  Uri,
+  window,
+  workspace,
+} from 'coc.nvim';
+import { existsSync } from 'node:fs';
+import { join } from 'node:path';
+import { CodeAction, type CodeActionParams, CodeActionRequest } from 'vscode-languageserver-protocol';
+import type { Config } from './config';
 import { isRustDocument } from './ctx';
 import * as ra from './lsp_ext';
 
@@ -17,7 +30,8 @@ class ExperimentalFeatures implements StaticFeature {
         'rust-analyzer.debugSingle',
         'rust-analyzer.showReferences',
         'rust-analyzer.gotoLocation',
-        'editor.action.triggerParameterHints'],
+        'editor.action.triggerParameterHints',
+      ],
     };
     capabilities.experimental = caps;
   }
@@ -133,17 +147,17 @@ export function createClient(bin: string, config: Config): LanguageClient {
   // This also requires considering our settings strategy, which is work which needs doing
   // @ts-ignore The tracer is private to vscode-languageclient, but we need access to it to not log publishDecorations requests
   client._tracer = {
-    log: (messageOrDataObject: string | unknown, data?: string) => {
-      if (typeof messageOrDataObject === 'string') {
-        if (messageOrDataObject.includes('rust-analyzer/publishDecorations') || messageOrDataObject.includes('rust-analyzer/decorationsRequest')) {
+    log: (msg: string | unknown, data?: string) => {
+      if (typeof msg === 'string') {
+        if (msg.includes('rust-analyzer/publishDecorations') || msg.includes('rust-analyzer/decorationsRequest')) {
           // Don't log publish decorations requests
         } else {
           // @ts-ignore This is just a utility function
-          client.logTrace(messageOrDataObject, data);
+          client.logTrace(msg, data);
         }
       } else {
         // @ts-ignore
-        client.logObjectTrace(messageOrDataObject);
+        client.logObjectTrace(msg);
       }
     },
   };

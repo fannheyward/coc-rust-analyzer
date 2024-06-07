@@ -1,5 +1,5 @@
-import { ExtensionContext, window } from 'coc.nvim';
-import { existsSync, mkdirSync } from 'fs';
+import { type ExtensionContext, window } from 'coc.nvim';
+import { existsSync, mkdirSync } from 'node:fs';
 import * as cmds from './commands';
 import { Ctx } from './ctx';
 import { downloadServer, getLatestRelease } from './downloader';

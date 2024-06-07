@@ -19,21 +19,19 @@
     "onLanguage:rust"
   ],
   "scripts": {
-    "lint": "eslint src --ext ts",
+    "check": "biome check src",
     "schema": "node ./generate-config-schema.js",
     "build": "node esbuild.mjs",
     "watch": "node esbuild.mjs --watch",
     "prepare": "node esbuild.mjs"
   },
   "devDependencies": {
+    "@biomejs/biome": "^1.8.0",
     "@types/node": "16",
     "@types/node-fetch": "2.6.3",
     "@types/which": "^3.0.0",
-    "@typescript-eslint/eslint-plugin": "^7.1.0",
-    "@typescript-eslint/parser": "^7.1.0",
     "coc.nvim": "^0.0.83-next.18",
     "esbuild": "^0.21.4",
-    "eslint": "^8.2.0",
     "https-proxy-agent": "^7.0.0",
     "node-fetch": "2.6.7",
     "typescript": "^5.0.3",

@@ -1,4 +1,4 @@
-import { commands, ConfigurationChangeEvent, window, workspace, WorkspaceConfiguration } from 'coc.nvim';
+import { commands, type ConfigurationChangeEvent, window, workspace, type WorkspaceConfiguration } from 'coc.nvim';
 
 export type UpdatesChannel = 'stable' | 'nightly';
 
@@ -8,7 +8,9 @@ export interface Env {
 
 export class Config {
   private readonly rootSection = 'rust-analyzer';
-  private readonly requiresReloadOpts = ['server', 'cargo', 'procMacro', 'files', 'updates', 'lens', 'inlayHints'].map((opt) => `${this.rootSection}.${opt}`);
+  private readonly requiresReloadOpts = ['server', 'cargo', 'procMacro', 'files', 'updates', 'lens', 'inlayHints'].map(
+    (opt) => `${this.rootSection}.${opt}`,
+  );
   private cfg: WorkspaceConfiguration;
 
   constructor() {
@@ -22,13 +24,13 @@ export class Config {
     const requiresReloadOpt = this.requiresReloadOpts.find((opt) => event.affectsConfiguration(opt));
     if (!requiresReloadOpt) return;
 
-    let reload = this.restartServerOnConfigChange ? true : false;
+    let reload = !!this.restartServerOnConfigChange;
     if (!reload) {
       const msg = `Changing "${requiresReloadOpt}" requires a reload`;
       reload = await window.showPrompt(`${msg}. Reload now?`);
     }
     if (reload) {
-      await commands.executeCommand(`rust-analyzer.reload`);
+      await commands.executeCommand('rust-analyzer.reload');
     }
   }
 
