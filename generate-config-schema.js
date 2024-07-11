@@ -17,13 +17,14 @@ const not_supported = [
 
 let schema = execSync('rust-analyzer --print-config-schema', { encoding: 'utf8' });
 schema = JSON.parse(schema);
-
-Object.keys(schema).forEach((k) => {
-  if (!not_supported.includes(k)) {
-    coc_ra_config[k] = schema[k];
+for (const item of schema) {
+  const p = item.properties;
+  for (const key in p) {
+    if (!not_supported.includes(key)) {
+      coc_ra_config[key] = p[key];
+    }
   }
-});
-
+}
 packageJson.contributes.configuration.properties = coc_ra_config;
 fs.writeFileSync('./package.json', JSON.stringify(packageJson, null, 2) + '\n');
 

@@ -189,6 +189,17 @@
             "Fill missing expressions with reasonable defaults, `new` or `default` constructors."
           ]
         },
+        "rust-analyzer.assist.termSearch.borrowcheck": {
+          "markdownDescription": "Enable borrow checking for term search code assists. If set to false, also there will be more suggestions, but some of them may not borrow-check.",
+          "default": true,
+          "type": "boolean"
+        },
+        "rust-analyzer.assist.termSearch.fuel": {
+          "markdownDescription": "Term search fuel in \"units of work\" for assists (Defaults to 1800).",
+          "default": 1800,
+          "type": "integer",
+          "minimum": 0
+        },
         "rust-analyzer.cachePriming.enable": {
           "markdownDescription": "Warm up caches on project load.",
           "default": true,
@@ -196,10 +207,25 @@
         },
         "rust-analyzer.cachePriming.numThreads": {
           "markdownDescription": "How many worker threads to handle priming caches. The default `0` means to pick automatically.",
-          "default": 0,
-          "type": "number",
-          "minimum": 0,
-          "maximum": 255
+          "default": "physical",
+          "anyOf": [
+            {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 255
+            },
+            {
+              "type": "string",
+              "enum": [
+                "physical",
+                "logical"
+              ],
+              "enumDescriptions": [
+                "Use the number of physical cores",
+                "Use the number of logical cores"
+              ]
+            }
+          ]
         },
         "rust-analyzer.cargo.allTargets": {
           "markdownDescription": "Pass `--all-targets` to cargo invocation.",
@@ -559,12 +585,6 @@
               "description": "Put the expression into a pinned `Box`",
               "scope": "expr"
             },
-            "Ok": {
-              "postfix": "ok",
-              "body": "Ok(${receiver})",
-              "description": "Wrap the expression in a `Result::Ok`",
-              "scope": "expr"
-            },
             "Err": {
               "postfix": "err",
               "body": "Err(${receiver})",
@@ -576,6 +596,12 @@
               "body": "Some(${receiver})",
               "description": "Wrap the expression in an `Option::Some`",
               "scope": "expr"
+            },
+            "Ok": {
+              "postfix": "ok",
+              "body": "Ok(${receiver})",
+              "description": "Wrap the expression in a `Result::Ok`",
+              "scope": "expr"
             }
           },
           "type": "object"
@@ -584,6 +610,12 @@
           "markdownDescription": "Whether to enable term search based snippets like `Some(foo.bar().baz())`.",
           "default": false,
           "type": "boolean"
+        },
+        "rust-analyzer.completion.termSearch.fuel": {
+          "markdownDescription": "Term search fuel in \"units of work\" for autocompletion (Defaults to 1000).",
+          "default": 1000,
+          "type": "integer",
+          "minimum": 0
         },
         "rust-analyzer.diagnostics.disabled": {
           "markdownDescription": "List of rust-analyzer diagnostics to disable.",
@@ -855,6 +887,11 @@
             "Insert import paths relative to the current module, using up to one `super` prefix if the parent module contains the requested item. Prefixes `self` in front of the path if it starts with a module.",
             "Force import paths to be absolute by always starting them with `crate` or the extern crate name they come from."
           ]
+        },
+        "rust-analyzer.imports.prefixExternPrelude": {
+          "markdownDescription": "Whether to prefix external (including std, core) crate imports with `::`. e.g. \"use ::std::io::Read;\".",
+          "default": false,
+          "type": "boolean"
         },
         "rust-analyzer.inlayHints.bindingModeHints.enable": {
           "markdownDescription": "Whether to show inlay type hints for binding modes.",
@@ -1166,11 +1203,27 @@
         "rust-analyzer.numThreads": {
           "markdownDescription": "How many worker threads in the main loop. The default `null` means to pick automatically.",
           "default": null,
-          "type": [
-            "null",
-            "integer"
-          ],
-          "minimum": 0
+          "anyOf": [
+            {
+              "type": "null"
+            },
+            {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 255
+            },
+            {
+              "type": "string",
+              "enum": [
+                "physical",
+                "logical"
+              ],
+              "enumDescriptions": [
+                "Use the number of physical cores",
+                "Use the number of logical cores"
+              ]
+            }
+          ]
         },
         "rust-analyzer.procMacro.attributes.enable": {
           "markdownDescription": "Expand attribute macros. Requires `#rust-analyzer.procMacro.enable#` to be set.",
