@@ -2,7 +2,7 @@
  * This file mirrors `crates/rust-analyzer/src/lsp_ext.rs` declarations.
  */
 
-import * as lc from 'coc.nvim';
+import * as lc from "coc.nvim";
 
 // rust-analyzer overrides
 
@@ -30,45 +30,88 @@ export type CommandLinkGroup = {
 // rust-analyzer extensions
 
 export const analyzerStatus = new lc.RequestType<AnalyzerStatusParams, string, void>(
-  'rust-analyzer/analyzerStatus'
+  "rust-analyzer/analyzerStatus",
 );
-export const cancelFlycheck = new lc.NotificationType0('rust-analyzer/cancelFlycheck');
-export const clearFlycheck = new lc.NotificationType0('rust-analyzer/clearFlycheck');
+export const cancelFlycheck = new lc.NotificationType0("rust-analyzer/cancelFlycheck");
+export const clearFlycheck = new lc.NotificationType0("rust-analyzer/clearFlycheck");
 export const expandMacro = new lc.RequestType<ExpandMacroParams, ExpandedMacro | null, void>(
-  'rust-analyzer/expandMacro'
+  "rust-analyzer/expandMacro",
 );
-export const memoryUsage = new lc.RequestType0<string, void>('rust-analyzer/memoryUsage');
-export const openServerLogs = new lc.NotificationType0('rust-analyzer/openServerLogs');
+export const memoryUsage = new lc.RequestType0<string, void>("rust-analyzer/memoryUsage");
+export const openServerLogs = new lc.NotificationType0("rust-analyzer/openServerLogs");
 export const relatedTests = new lc.RequestType<lc.TextDocumentPositionParams, TestInfo[], void>(
-  'rust-analyzer/relatedTests'
+  "rust-analyzer/relatedTests",
 );
-export const reloadWorkspace = new lc.RequestType0<null, void>('rust-analyzer/reloadWorkspace');
-export const rebuildProcMacros = new lc.RequestType0<null, void>('rust-analyzer/rebuildProcMacros');
+export const reloadWorkspace = new lc.RequestType0<null, void>("rust-analyzer/reloadWorkspace");
+export const rebuildProcMacros = new lc.RequestType0<null, void>("rust-analyzer/rebuildProcMacros");
 
 export const runFlycheck = new lc.NotificationType<{
   textDocument: lc.TextDocumentIdentifier | null;
-}>('rust-analyzer/runFlycheck');
-export const shuffleCrateGraph = new lc.RequestType0<null, void>('rust-analyzer/shuffleCrateGraph');
+}>("rust-analyzer/runFlycheck");
+export const shuffleCrateGraph = new lc.RequestType0<null, void>("rust-analyzer/shuffleCrateGraph");
 export const syntaxTree = new lc.RequestType<SyntaxTreeParams, string, void>(
-  'rust-analyzer/syntaxTree'
+  "rust-analyzer/syntaxTree",
 );
 export const viewCrateGraph = new lc.RequestType<ViewCrateGraphParams, string, void>(
-  'rust-analyzer/viewCrateGraph'
+  "rust-analyzer/viewCrateGraph",
 );
 export const viewFileText = new lc.RequestType<lc.TextDocumentIdentifier, string, void>(
-  'rust-analyzer/viewFileText'
+  "rust-analyzer/viewFileText",
 );
 export const viewHir = new lc.RequestType<lc.TextDocumentPositionParams, string, void>(
-  'rust-analyzer/viewHir'
+  "rust-analyzer/viewHir",
 );
 export const viewMir = new lc.RequestType<lc.TextDocumentPositionParams, string, void>(
-  'rust-analyzer/viewMir'
+  "rust-analyzer/viewMir",
 );
 export const interpretFunction = new lc.RequestType<lc.TextDocumentPositionParams, string, void>(
-  'rust-analyzer/interpretFunction'
+  "rust-analyzer/interpretFunction",
 );
 export const viewItemTree = new lc.RequestType<ViewItemTreeParams, string, void>(
-  'rust-analyzer/viewItemTree'
+  "rust-analyzer/viewItemTree",
+);
+
+export type DiscoverTestParams = { testId?: string | undefined };
+export type RunTestParams = {
+  include?: string[] | undefined;
+  exclude?: string[] | undefined;
+};
+export type TestItem = {
+  id: string;
+  label: string;
+  kind: "package" | "module" | "test";
+  canResolveChildren: boolean;
+  parent?: string | undefined;
+  textDocument?: lc.TextDocumentIdentifier | undefined;
+  range?: lc.Range | undefined;
+  runnable?: Runnable | undefined;
+};
+export type DiscoverTestResults = {
+  tests: TestItem[];
+  scope: string[] | undefined;
+  scopeFile: lc.TextDocumentIdentifier[] | undefined;
+};
+export type TestState =
+  | { tag: "failed"; message: string }
+  | { tag: "passed" }
+  | { tag: "started" }
+  | { tag: "enqueued" }
+  | { tag: "skipped" };
+export type ChangeTestStateParams = { testId: string; state: TestState };
+export const discoverTest = new lc.RequestType<DiscoverTestParams, DiscoverTestResults, void>(
+  "experimental/discoverTest",
+);
+export const discoveredTests = new lc.NotificationType<DiscoverTestResults>(
+  "experimental/discoveredTests",
+);
+export const runTest = new lc.RequestType<RunTestParams, void, void>("experimental/runTest");
+export const abortRunTest = new lc.NotificationType0("experimental/abortRunTest");
+export const endRunTest = new lc.NotificationType0("experimental/endRunTest");
+export const appendOutputToRunTest = new lc.NotificationType<string>(
+  "experimental/appendOutputToRunTest",
+);
+export const changeTestState = new lc.NotificationType<ChangeTestStateParams>(
+  "experimental/changeTestState",
 );
 
 export type AnalyzerStatusParams = { textDocument?: lc.TextDocumentIdentifier };
@@ -87,7 +130,7 @@ export const fetchDependencyList = new lc.RequestType<
   FetchDependencyListParams,
   FetchDependencyListResult,
   void
->('rust-analyzer/fetchDependencyList');
+>("rust-analyzer/fetchDependencyList");
 
 export interface FetchDependencyGraphParams {}
 
@@ -103,7 +146,7 @@ export const fetchDependencyGraph = new lc.RequestType<
   FetchDependencyGraphParams,
   FetchDependencyGraphResult,
   void
->('rust-analyzer/fetchDependencyGraph');
+>("rust-analyzer/fetchDependencyGraph");
 
 export type ExpandMacroParams = {
   textDocument: lc.TextDocumentIdentifier;
@@ -124,40 +167,44 @@ export type ViewItemTreeParams = { textDocument: lc.TextDocumentIdentifier };
 // experimental extensions
 
 export const joinLines = new lc.RequestType<JoinLinesParams, lc.TextEdit[], void>(
-  'experimental/joinLines'
+  "experimental/joinLines",
 );
 export const matchingBrace = new lc.RequestType<MatchingBraceParams, lc.Position[], void>(
-  'experimental/matchingBrace'
+  "experimental/matchingBrace",
 );
 export const moveItem = new lc.RequestType<MoveItemParams, lc.TextEdit[], void>(
-  'experimental/moveItem'
+  "experimental/moveItem",
 );
 export const onEnter = new lc.RequestType<lc.TextDocumentPositionParams, lc.TextEdit[], void>(
-  'experimental/onEnter'
+  "experimental/onEnter",
 );
 export const openCargoToml = new lc.RequestType<OpenCargoTomlParams, lc.Location, void>(
-  'experimental/openCargoToml'
+  "experimental/openCargoToml",
 );
-export const openDocs = new lc.RequestType<lc.TextDocumentPositionParams, string | void, void>(
-  'experimental/externalDocs'
+export interface DocsUrls {
+  local?: string;
+  web?: string;
+}
+export const openDocs = new lc.RequestType<lc.TextDocumentPositionParams, DocsUrls, void>(
+  "experimental/externalDocs",
 );
 export const parentModule = new lc.RequestType<
   lc.TextDocumentPositionParams,
   lc.LocationLink[] | null,
   void
->('experimental/parentModule');
+>("experimental/parentModule");
 export const runnables = new lc.RequestType<RunnablesParams, Runnable[], void>(
-  'experimental/runnables'
+  "experimental/runnables",
 );
 export const serverStatus = new lc.NotificationType<ServerStatusParams>(
-  'experimental/serverStatus'
+  "experimental/serverStatus",
 );
-export const ssr = new lc.RequestType<SsrParams, lc.WorkspaceEdit, void>('experimental/ssr');
+export const ssr = new lc.RequestType<SsrParams, lc.WorkspaceEdit, void>("experimental/ssr");
 export const viewRecursiveMemoryLayout = new lc.RequestType<
   lc.TextDocumentPositionParams,
   RecursiveMemoryLayout | null,
   void
->('rust-analyzer/viewRecursiveMemoryLayout');
+>("rust-analyzer/viewRecursiveMemoryLayout");
 
 export type JoinLinesParams = {
   textDocument: lc.TextDocumentIdentifier;
@@ -172,29 +219,69 @@ export type MoveItemParams = {
   range: lc.Range;
   direction: Direction;
 };
-export type Direction = 'Up' | 'Down';
+export type Direction = "Up" | "Down";
 export type OpenCargoTomlParams = {
   textDocument: lc.TextDocumentIdentifier;
 };
 export type Runnable = {
   label: string;
   location?: lc.LocationLink;
-  kind: 'cargo';
-  args: {
-    workspaceRoot?: string;
-    cargoArgs: string[];
-    cargoExtraArgs: string[];
-    executableArgs: string[];
-    expectTest?: boolean;
-    overrideCargo?: string;
-  };
+} & (RunnableCargo | RunnableShell);
+
+type RunnableCargo = {
+  kind: "cargo";
+  args: CargoRunnableArgs;
 };
+
+type RunnableShell = {
+  kind: "shell";
+  args: ShellRunnableArgs;
+};
+
+export type CommonRunnableArgs = {
+  /**
+   * Environment variables to set before running the command.
+   */
+  environment?: Record<string, string>;
+  /**
+   * The working directory to run the command in.
+   */
+  cwd: string;
+};
+
+export type ShellRunnableArgs = {
+  kind: string;
+  program: string;
+  args: string[];
+} & CommonRunnableArgs;
+
+export type CargoRunnableArgs = {
+  /**
+   * The workspace root directory of the cargo project.
+   */
+  workspaceRoot?: string;
+  /**
+   * Arguments to pass to the executable, these will be passed to the command after a `--` argument.
+   */
+  executableArgs: string[];
+  /**
+   * Arguments to pass to cargo.
+   */
+  cargoArgs: string[];
+  /**
+   * Command to execute instead of `cargo`.
+   */
+  // This is supplied by the user via config. We could pull this through the client config in the
+  // extension directly, but that would prevent us from honoring the rust-analyzer.toml for it.
+  overrideCargo?: string;
+} & CommonRunnableArgs;
+
 export type RunnablesParams = {
   textDocument: lc.TextDocumentIdentifier;
   position: lc.Position | null;
 };
 export type ServerStatusParams = {
-  health: 'ok' | 'warning' | 'error';
+  health: "ok" | "warning" | "error";
   quiescent: boolean;
   message?: string;
 };
@@ -220,6 +307,8 @@ export type RecursiveMemoryLayout = {
   nodes: RecursiveMemoryLayoutNode[];
 };
 
-export const unindexedProject = new lc.NotificationType<UnindexedProjectParams>('rust-analyzer/unindexedProject');
+export const unindexedProject = new lc.NotificationType<UnindexedProjectParams>(
+  "rust-analyzer/unindexedProject",
+);
 
 export type UnindexedProjectParams = { textDocuments: lc.TextDocumentIdentifier[] };

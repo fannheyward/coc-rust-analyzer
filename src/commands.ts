@@ -275,9 +275,16 @@ export function debugSingle(ctx: Ctx): Cmd {
     const { document } = await workspace.getCurrentState();
     if (!runnable || !isRustDocument(document)) return;
 
-    const args = [...runnable.args.cargoArgs];
-    if (runnable.args.cargoExtraArgs.length > 0) {
-      args.push(...runnable.args.cargoExtraArgs);
+    let args: string[] = [];
+    if (runnable.kind === 'cargo') {
+      // TODO: runnable.args.overrideCargo?
+      args = [...runnable.args.cargoArgs];
+      if (runnable.args.executableArgs.length > 0) {
+        runnable.args['executableArgs'][0] = `'${runnable.args['executableArgs'][0]}'`;
+        args.push('--', ...runnable.args.executableArgs);
+      }
+    } else {
+      args = [...runnable.args.args];
     }
 
     // do not run tests, we will run through gdb
@@ -285,19 +292,14 @@ export function debugSingle(ctx: Ctx): Cmd {
       args.push('--no-run');
     }
 
-    // output as json
-    args.push('--message-format=json');
-
-    if (runnable.args.executableArgs.length > 0) {
-      args.push('--', ...runnable.args.executableArgs);
-    }
-
     if (args[0] === 'run') {
       args[0] = 'build';
     }
 
-    console.debug(`${runnable.kind} ${args}`);
+    // output as json
+    args.push('--message-format=json');
 
+    console.debug(`${runnable.kind} ${args}`);
     // We can extract a list of generated executables from the output of cargo,
     // but if multiple executables are generated we need a way to find out which
     // one should be used for debugging.
@@ -305,7 +307,8 @@ export function debugSingle(ctx: Ctx): Cmd {
     // and filter the list of executables accordingly.
     let expectedKind: string | undefined;
     let expectedName: string | undefined;
-    for (const arg of runnable.args.cargoArgs) {
+    const cargoArgs = runnable.kind === 'cargo' ? runnable.args.cargoArgs : [];
+    for (const arg of cargoArgs) {
       // Find the argument indicating the kind of the executable.
       if (expectedKind === undefined) {
         switch (arg) {
@@ -341,7 +344,7 @@ export function debugSingle(ctx: Ctx): Cmd {
     // --package argument we can get the name of the executable from it.
     if (expectedName === undefined) {
       let foundPackageArgument = false;
-      for (const arg of runnable.args.cargoArgs) {
+      for (const arg of cargoArgs) {
         if (foundPackageArgument) {
           expectedName = arg;
           break;
@@ -418,7 +421,7 @@ export function debugSingle(ctx: Ctx): Cmd {
       throw new Error('Could not find executable');
     }
 
-    const executableArgs = runnable.args.executableArgs.join(' ');
+    const executableArgs = runnable.kind === 'cargo' ? runnable.args.executableArgs.join(' ') : '';
 
     console.info(`Debugging executable: ${executable} ${executableArgs}`);
 
@@ -456,18 +459,22 @@ export function runSingle(ctx: Ctx): Cmd {
     const { document } = await workspace.getCurrentState();
     if (!runnable || !isRustDocument(document)) return;
 
-    const args = [...runnable.args.cargoArgs];
-    if (runnable.args.cargoExtraArgs.length > 0) {
-      args.push(...runnable.args.cargoExtraArgs);
+    let args: string[] = [];
+    if (runnable.kind === 'cargo') {
+      // TODO: runnable.args.overrideCargo?
+      args = [...runnable.args.cargoArgs];
+      if (runnable.args.executableArgs.length > 0) {
+        runnable.args['executableArgs'][0] = `'${runnable.args['executableArgs'][0]}'`;
+        args.push('--', ...runnable.args.executableArgs);
+      }
+    } else {
+      args = [...runnable.args.args];
     }
-    if (runnable.args.executableArgs.length > 0) {
-      runnable.args['executableArgs'][0] = `'${runnable.args['executableArgs'][0]}'`;
-      args.push('--', ...runnable.args.executableArgs);
-    }
+
     const cmd = `${runnable.kind} ${args.join(' ')}`;
     const opt: TerminalOptions = {
       name: runnable.label,
-      cwd: runnable.args.workspaceRoot,
+      cwd: runnable.args.cwd,
     };
     if (terminal) {
       terminal.dispose();
@@ -689,8 +696,8 @@ export function openDocs(ctx: Ctx): Cmd {
       position,
     };
     const doclink = await ctx.client.sendRequest(ra.openDocs, param);
-    if (doclink) {
-      await commands.executeCommand('vscode.open', Uri.parse(doclink));
+    if (doclink?.web) {
+      await commands.executeCommand('vscode.open', Uri.parse(doclink.web));
     }
   };
 }
@@ -782,12 +789,17 @@ export function echoRunCommandLine(ctx: Ctx) {
   return async () => {
     const runnable = await pickRunnable(ctx);
     if (!runnable) return;
-    const args = [...runnable.args.cargoArgs];
-    if (runnable.args.cargoExtraArgs) {
-      args.push(...runnable.args.cargoExtraArgs);
-    }
-    if (runnable.args.executableArgs.length > 0) {
-      args.push('--', ...runnable.args.executableArgs);
+
+    let args: string[] = [];
+    if (runnable.kind === 'cargo') {
+      // TODO: runnable.args.overrideCargo?
+      args = [...runnable.args.cargoArgs];
+      if (runnable.args.executableArgs.length > 0) {
+        runnable.args['executableArgs'][0] = `'${runnable.args['executableArgs'][0]}'`;
+        args.push('--', ...runnable.args.executableArgs);
+      }
+    } else {
+      args = [...runnable.args.args];
     }
     const commandLine = ['cargo', ...args].join(' ');
     window.echoLines([commandLine]);
