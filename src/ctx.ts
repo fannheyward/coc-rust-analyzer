@@ -9,7 +9,7 @@ import {
   window,
   workspace,
 } from 'coc.nvim';
-import { spawnSync } from "node:child_process";
+import { spawnSync } from 'node:child_process';
 import { existsSync } from 'node:fs';
 import { join } from 'node:path';
 import which from 'which';
@@ -112,7 +112,7 @@ export class Ctx {
     if (systemBin) {
       const { stderr } = spawnSync(systemBin, ['--version'], { encoding: 'utf8' });
       if (stderr.trim().length > 0) {
-        return
+        return;
       }
 
       this.usingSystemServer = true;
