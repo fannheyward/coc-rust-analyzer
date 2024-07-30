@@ -1132,11 +1132,6 @@
           "default": true,
           "type": "boolean"
         },
-        "rust-analyzer.lens.forceCustomCommands": {
-          "markdownDescription": "Internal config: use custom client-side commands even when the\nclient doesn't set the corresponding capability.",
-          "default": true,
-          "type": "boolean"
-        },
         "rust-analyzer.lens.implementations.enable": {
           "markdownDescription": "Whether to show `Implementations` lens. Only applies when\n`#rust-analyzer.lens.enable#` is set.",
           "default": true,
@@ -1209,11 +1204,6 @@
         "rust-analyzer.notifications.cargoTomlNotFound": {
           "markdownDescription": "Whether to show `can't find Cargo.toml` error message.",
           "default": true,
-          "type": "boolean"
-        },
-        "rust-analyzer.notifications.unindexedProject": {
-          "markdownDescription": "Whether to send an UnindexedProject notification to the client.",
-          "default": false,
           "type": "boolean"
         },
         "rust-analyzer.numThreads": {
