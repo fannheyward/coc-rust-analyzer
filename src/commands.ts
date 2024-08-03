@@ -14,9 +14,10 @@ import {
   window,
   workspace,
   type WorkspaceEdit,
+  nvim,
 } from 'coc.nvim';
 import { randomBytes } from 'node:crypto';
-import { writeFileSync } from 'node:fs';
+import { existsSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import readline from 'node:readline';
@@ -695,9 +696,21 @@ export function openDocs(ctx: Ctx): Cmd {
       textDocument: { uri: document.uri },
       position,
     };
+    // TODO: Should 'cargo doc' run at this point? Or 'cargo doc --no-deps'?
     const doclink = await ctx.client.sendRequest(ra.openDocs, param);
-    if (doclink?.web) {
-      await commands.executeCommand('vscode.open', Uri.parse(doclink.web));
+    if (doclink) {
+      if (doclink.local) {
+        // remove leading 'file://'
+        const absolutePath = doclink.local.substring(7);
+        const isReadable = existsSync(absolutePath);
+        if (isReadable) {
+          await nvim.call('coc#ui#open_url', doclink.local);
+          return;
+        }
+      }
+      if (doclink.web) {
+        await commands.executeCommand('vscode.open', Uri.parse(doclink.web));
+      }
     }
   };
 }
