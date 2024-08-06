@@ -696,14 +696,11 @@ export function openDocs(ctx: Ctx): Cmd {
       textDocument: { uri: document.uri },
       position,
     };
-    // TODO: Should 'cargo doc' run at this point? Or 'cargo doc --no-deps'?
     const doclink = await ctx.client.sendRequest(ra.openDocs, param);
     if (doclink) {
       if (doclink.local) {
-        // remove leading 'file://'
-        const absolutePath = doclink.local.substring(7);
-        const isReadable = existsSync(absolutePath);
-        if (isReadable) {
+        const exist = existsSync(Uri.parse(doclink.local).fsPath);
+        if (!exist) {
           await nvim.call('coc#ui#open_url', doclink.local);
           return;
         }
