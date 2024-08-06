@@ -24,6 +24,7 @@ class ExperimentalFeatures implements StaticFeature {
     const caps: any = capabilities.experimental ?? {};
     caps.snippetTextEdit = true;
     caps.serverStatusNotification = true;
+    caps.localDocs = true;
     caps.commands = {
       commands: [
         'rust-analyzer.runSingle',
