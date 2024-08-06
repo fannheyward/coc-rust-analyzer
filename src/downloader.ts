@@ -1,5 +1,5 @@
 import { exec, spawnSync } from 'node:child_process';
-import { type ExtensionContext, window } from 'coc.nvim';
+import { type ExtensionContext, window, workspace } from 'coc.nvim';
 import { randomBytes } from 'node:crypto';
 import { createWriteStream, type PathLike, promises as fs } from 'node:fs';
 import { HttpsProxyAgent } from 'https-proxy-agent';
@@ -11,7 +11,9 @@ import util from 'node:util';
 import type { UpdatesChannel } from './config';
 
 const pipeline = util.promisify(stream.pipeline);
-const agent = process.env.https_proxy ? new HttpsProxyAgent(process.env.https_proxy as string) : null;
+const rejectUnauthorized = workspace.getConfiguration('http').get('proxyStrictSSL', true);
+const proxy = process.env.https_proxy || process.env.HTTPS_PROXY;
+const agent = proxy ? new HttpsProxyAgent(proxy, { rejectUnauthorized }) : null;
 
 async function patchelf(dest: PathLike): Promise<void> {
   const expression = `
