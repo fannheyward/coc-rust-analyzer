@@ -700,7 +700,7 @@ export function openDocs(ctx: Ctx): Cmd {
     if (doclink) {
       if (doclink.local) {
         const exist = existsSync(Uri.parse(doclink.local).fsPath);
-        if (!exist) {
+        if (exist) {
           await nvim.call('coc#ui#open_url', doclink.local);
           return;
         }
