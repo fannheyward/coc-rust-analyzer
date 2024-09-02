@@ -511,6 +511,11 @@
           "default": false,
           "type": "boolean"
         },
+        "rust-analyzer.completion.hideDeprecated": {
+          "markdownDescription": "Whether to omit deprecated items from autocompletion. By default they are marked as deprecated but not hidden.",
+          "default": false,
+          "type": "boolean"
+        },
         "rust-analyzer.completion.limit": {
           "markdownDescription": "Maximum number of completions to return. If `None`, the limit is infinite.",
           "default": null,
