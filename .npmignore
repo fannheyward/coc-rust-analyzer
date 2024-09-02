@@ -7,6 +7,7 @@ tsconfig.json
 esbuild.js
 esbuild.mjs
 webpack.config.js
+biome.json
 coc-rust-analyzer-configurations.json
 generate-config-schema.js
 yarn.lock
