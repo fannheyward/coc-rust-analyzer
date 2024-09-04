@@ -57,6 +57,10 @@
       {
         "fileMatch": "rust-project.json",
         "url": "https://json.schemastore.org/rust-project.json"
+      },
+      {
+        "fileMatch": ".rust-project.json",
+        "url": "https://json.schemastore.org/rust-project.json"
       }
     ],
     "configuration": {

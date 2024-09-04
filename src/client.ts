@@ -67,6 +67,7 @@ export function createClient(bin: string, config: Config): LanguageClient {
     if (!root) return true;
     if (existsSync(join(Uri.parse(root).fsPath, 'Cargo.toml'))) return false;
     if (existsSync(join(Uri.parse(root).fsPath, 'rust-project.json'))) return false;
+    if (existsSync(join(Uri.parse(root).fsPath, '.rust-project.json'))) return false;
     return true;
   }
   let initializationOptions = workspace.getConfiguration('rust-analyzer');
