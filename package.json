@@ -31,7 +31,7 @@
     "@types/node-fetch": "2.6.11",
     "@types/which": "^3.0.4",
     "coc.nvim": "^0.0.83-next.18",
-    "esbuild": "^0.23.0",
+    "esbuild": "^0.24.0",
     "https-proxy-agent": "^7.0.5",
     "node-fetch": "2.6.7",
     "typescript": "^5.5.3",
