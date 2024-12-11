@@ -50,15 +50,6 @@ function codeFormat(expanded: ra.ExpandedMacro): string {
   return result;
 }
 
-function parseSnippet(snip: string): [string, [number, number]] | undefined {
-  const m = snip.match(/\$(0|\{0:([^}]*)\})/);
-  if (!m) return undefined;
-  const placeholder = m[2] ?? '';
-  const range: [number, number] = [m.index!, placeholder.length];
-  const insert = snip.replace(m[0], placeholder);
-  return [insert, range];
-}
-
 function countLines(text: string): number {
   return (text.match(/\n/g) || []).length;
 }
@@ -593,36 +584,25 @@ export async function applySnippetWorkspaceEdit(edit: WorkspaceEdit) {
     return;
   }
 
-  let selection: Range | undefined = undefined;
   let position: Position | undefined = undefined;
-  let lineDelta = 0;
   const change = edit.documentChanges[0];
   if (TextDocumentEdit.is(change)) {
     const newEdits: TextEdit[] = [];
 
     for (const indel of change.edits) {
       const { range } = indel;
-      let newText = indel.newText.replaceAll('\\}', '}');
-      const parsed = parseSnippet(newText);
-      if (parsed) {
-        const [insert, [snipStart, snipLength]] = parsed;
-        const prefix = insert.substring(0, snipStart);
+      const parsed = indel.newText.replaceAll('\\}', '}').replaceAll(/\$\{[1-9]+:([^\}]+)\}/g, '$1');
+      const index0 = parsed.indexOf('$0');
+      if (index0 !== -1) {
+        const prefix = parsed.substring(0, index0);
         const lastNewline = prefix.lastIndexOf('\n');
 
-        const startLine = range.start.line + lineDelta + countLines(prefix);
-        const startCol = lastNewline === -1 ? range.start.character + snipStart : prefix.length - lastNewline - 1;
-        if (snipLength) {
-          selection = Range.create(startLine, startCol, startLine, startCol + snipLength);
-        } else {
-          position = Position.create(startLine, startCol);
-        }
-
-        newText = insert;
-      } else {
-        lineDelta += countLines(indel.newText) - (indel.range.end.line - indel.range.start.line);
+        const line = range.start.line + countLines(prefix);
+        const col = lastNewline === -1 ? range.start.character + index0 : prefix.length - lastNewline - 1;
+        position = Position.create(line, col);
       }
 
-      newEdits.push(TextEdit.replace(range, newText));
+      newEdits.push(TextEdit.replace(range, parsed.replaceAll('$0', '')));
     }
 
     const current = await workspace.document;
@@ -631,16 +611,9 @@ export async function applySnippetWorkspaceEdit(edit: WorkspaceEdit) {
       await workspace.jumpTo(change.textDocument.uri);
     }
 
-    const wsEdit: WorkspaceEdit = {
-      changes: {
-        [change.textDocument.uri]: newEdits,
-      },
-    };
-    await workspace.applyEdit(wsEdit);
+    await workspace.applyEdit({ changes: { [change.textDocument.uri]: newEdits } });
 
-    if (selection) {
-      await window.selectRange(selection);
-    } else if (position) {
+    if (position) {
       await window.moveTo(position);
     }
   }
