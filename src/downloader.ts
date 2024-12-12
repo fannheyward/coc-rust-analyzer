@@ -158,6 +158,7 @@ export async function downloadServer(context: ExtensionContext, release: Release
     await fs.unlink(tempFile).catch((err) => {
       console.error(err);
     });
+    statusItem.hide();
     return;
   }
 
