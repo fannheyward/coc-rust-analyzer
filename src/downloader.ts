@@ -3,6 +3,7 @@ import { type ExtensionContext, window, workspace } from 'coc.nvim';
 import { randomBytes } from 'node:crypto';
 import { createWriteStream, type PathLike, promises as fs } from 'node:fs';
 import { HttpsProxyAgent } from 'https-proxy-agent';
+import AdmZip from 'adm-zip';
 import fetch from 'node-fetch';
 import * as zlib from 'node:zlib';
 import path from 'node:path';
@@ -109,9 +110,10 @@ export async function getLatestRelease(updatesChannel: UpdatesChannel): Promise<
     console.error(`Unfortunately we don't ship binaries for your platform yet.`);
     return;
   }
-  const asset = release.assets.find((val) => val.browser_download_url.endsWith(`${platform}.gz`));
+  const suffix = process.platform === 'win32' ? 'zip' : 'gz';
+  const asset = release.assets.find((val) => val.browser_download_url.endsWith(`${platform}.${suffix}`));
   if (!asset) {
-    console.error(`getLatestRelease failed: ${release}`);
+    console.error(`getLatestRelease failed: ${JSON.stringify(release)}`);
     return;
   }
 
@@ -145,9 +147,19 @@ export async function downloadServer(context: ExtensionContext, release: Release
     statusItem.text = `${p}% Downloading rust-analyzer ${release.tag}`;
   });
 
-  const _path = path.join(context.storagePath, release.name); // lgtm[js/shell-command-constructed-from-input]
+  const _path = path.join(context.storagePath, release.name);
   const randomHex = randomBytes(5).toString('hex');
   const tempFile = path.join(context.storagePath, `${release.name}${randomHex}`);
+
+  if (process.platform === 'win32') {
+    await fs.writeFile(tempFile, await resp.buffer());
+
+    new AdmZip(tempFile).extractAllTo(context.storagePath, true, true);
+    await fs.unlink(tempFile).catch((err) => {
+      console.error(err);
+    });
+    return;
+  }
 
   const destFileStream = createWriteStream(tempFile, { mode: 0o755 });
   await pipeline(resp.body.pipe(zlib.createGunzip()), destFileStream);
