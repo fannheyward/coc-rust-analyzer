@@ -591,7 +591,7 @@ export async function applySnippetWorkspaceEdit(edit: WorkspaceEdit) {
 
     for (const indel of change.edits) {
       const { range } = indel;
-      const parsed = indel.newText.replaceAll('\\}', '}').replaceAll(/\$\{[1-9]+:([^\}]+)\}/g, '$1');
+      const parsed = indel.newText.replaceAll('\\}', '}').replaceAll(/\$\{[0-9]+:([^\}]+)\}/g, '$1');
       const index0 = parsed.indexOf('$0');
       if (index0 !== -1) {
         const prefix = parsed.substring(0, index0);
