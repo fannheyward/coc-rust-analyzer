@@ -501,7 +501,7 @@
           ]
         },
         "rust-analyzer.check.workspace": {
-          "markdownDescription": "Whether `--workspace` should be passed to `cargo check`.\nIf false, `-p <package>` will be passed instead.",
+          "markdownDescription": "Whether `--workspace` should be passed to `cargo check`.\nIf false, `-p <package>` will be passed instead if applicable. In case it is not, no\ncheck will be performed.",
           "default": true,
           "type": "boolean"
         },
@@ -1385,7 +1385,7 @@
         },
         "rust-analyzer.typing.excludeChars": {
           "markdownDescription": "Specify the characters to exclude from triggering typing assists. The default trigger characters are `.`, `=`, `<`, `>`, `{`, and `(`.",
-          "default": "<",
+          "default": "|<",
           "type": [
             "null",
             "string"
