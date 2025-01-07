@@ -1,23 +1,23 @@
 import {
+  DocumentDiagnosticReportKind,
+  LanguageClient,
+  Uri,
+  diagnosticManager,
+  window,
+  workspace,
   type CodeActionKind,
   type Command,
-  diagnosticManager,
-  DocumentDiagnosticReportKind,
   type Executable,
-  LanguageClient,
   type LanguageClientOptions,
   type Position,
   type Range,
-  RelatedFullDocumentDiagnosticReport,
+  type RelatedFullDocumentDiagnosticReport,
   type ServerOptions,
   type StaticFeature,
-  Uri,
-  window,
-  workspace,
 } from 'coc.nvim';
 import { existsSync } from 'node:fs';
 import { join } from 'node:path';
-import { CodeAction, type CodeActionParams, CodeActionRequest } from 'vscode-languageserver-protocol';
+import { CodeAction, CodeActionRequest, type CodeActionParams } from 'vscode-languageserver-protocol';
 import type { Config } from './config';
 import { isRustDocument } from './ctx';
 import * as ra from './lsp_ext';
@@ -29,7 +29,13 @@ class ExperimentalFeatures implements StaticFeature {
     caps.serverStatusNotification = true;
     caps.localDocs = true;
     caps.commands = {
-      commands: ['rust-analyzer.runSingle', 'rust-analyzer.debugSingle', 'rust-analyzer.showReferences', 'rust-analyzer.gotoLocation', 'editor.action.triggerParameterHints'],
+      commands: [
+        'rust-analyzer.runSingle',
+        'rust-analyzer.debugSingle',
+        'rust-analyzer.showReferences',
+        'rust-analyzer.gotoLocation',
+        'editor.action.triggerParameterHints',
+      ],
     };
     capabilities.experimental = caps;
   }
