@@ -31,7 +31,7 @@
     "@types/node": "16",
     "@types/node-fetch": "2.6.11",
     "@types/which": "^3.0.4",
-    "adm-zip": "0.5.16",
+    "adm-zip": "0.5.12",
     "coc.nvim": "^0.0.83-next.18",
     "esbuild": "^0.24.0",
     "https-proxy-agent": "^7.0.5",
