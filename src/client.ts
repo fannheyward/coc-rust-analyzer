@@ -1,20 +1,23 @@
 import {
+  DocumentDiagnosticReportKind,
+  LanguageClient,
+  Uri,
+  diagnosticManager,
+  window,
+  workspace,
   type CodeActionKind,
   type Command,
   type Executable,
-  LanguageClient,
   type LanguageClientOptions,
   type Position,
   type Range,
+  type RelatedFullDocumentDiagnosticReport,
   type ServerOptions,
   type StaticFeature,
-  Uri,
-  window,
-  workspace,
 } from 'coc.nvim';
 import { existsSync } from 'node:fs';
 import { join } from 'node:path';
-import { CodeAction, type CodeActionParams, CodeActionRequest } from 'vscode-languageserver-protocol';
+import { CodeAction, CodeActionRequest, type CodeActionParams } from 'vscode-languageserver-protocol';
 import type { Config } from './config';
 import { isRustDocument } from './ctx';
 import * as ra from './lsp_ext';
@@ -137,6 +140,42 @@ export function createClient(bin: string, config: Config): LanguageClient {
           result.push(action);
         }
         return result;
+      },
+      async provideDiagnostics(document, previousResultId, token, next) {
+        // The diagnostics handling in Rust-Analyzer works in two ways:
+        //
+        // 1. Pull model: 'textDocument/diagnostics' requests, which don't include rustc diagnostics
+        // 2. Push model: 'textDocument/publishDiagnostics' notifications, which don't include native diagnostics
+        //
+        // Since each pull request clears the published diagnostics, we need to manually merge them
+        // to preserve the rustc diagnostics.
+        //
+        // See:
+        // - https://github.com/rust-lang/rust-analyzer/issues/18709
+        // - https://github.com/fannheyward/coc-rust-analyzer/issues/1276
+
+        const bufnr = workspace.getDocument(document.uri).bufnr;
+        // @ts-ignore Note: coc.nvim has incorrect type definition: getDiagnostics() requires a DiagnosticBuffer
+        // parameter. This can be obtained through the public getItem() method, though this isn't reflected in the type
+        // definitions yet.
+        const buf = diagnosticManager.getItem(bufnr);
+        const currentDiagnostics = diagnosticManager.getDiagnostics(buf)['rust-analyzer'] ?? [];
+
+        // Preserve rustc diagnostics
+        const rustcDiagnosticItems = currentDiagnostics.filter((d) => d.source === 'rustc');
+        const raDiagnostics = await next(document, previousResultId, token);
+
+        // Merge them
+        const diagnostics: RelatedFullDocumentDiagnosticReport =
+          raDiagnostics?.kind === DocumentDiagnosticReportKind.Full
+            ? raDiagnostics
+            : {
+                kind: DocumentDiagnosticReportKind.Full,
+                items: [],
+              };
+        diagnostics.items = [...diagnostics.items, ...rustcDiagnosticItems];
+
+        return diagnostics;
       },
     },
   };
