@@ -285,7 +285,7 @@
         "rust-analyzer.cargo.cfgs": {
           "markdownDescription": "List of cfg options to enable with the given values.",
           "default": [
-            "debug_assertion",
+            "debug_assertions",
             "miri"
           ],
           "type": "array",
@@ -1454,9 +1454,9 @@
           "default": true,
           "type": "boolean"
         },
-        "rust-analyzer.typing.excludeChars": {
-          "markdownDescription": "Specify the characters to exclude from triggering typing assists. The default trigger characters are `.`, `=`, `<`, `>`, `{`, and `(`.",
-          "default": "|<",
+        "rust-analyzer.typing.triggerChars": {
+          "markdownDescription": "Specify the characters allowed to invoke special on typing triggers.\n- typing `=` after `let` tries to smartly add `;` if `=` is followed by an existing expression\n- typing `=` between two expressions adds `;` when in statement position\n- typing `=` to turn an assignment into an equality comparison removes `;` when in expression position\n- typing `.` in a chain method call auto-indents\n- typing `{` or `(` in front of an expression inserts a closing `}` or `)` after the expression\n- typing `{` in a use item adds a closing `}` in the right place\n- typing `>` to complete a return type `->` will insert a whitespace after it\n- typing `<` in a path or type position inserts a closing `>` after the path or type.",
+          "default": "=.",
           "type": [
             "null",
             "string"
