@@ -500,6 +500,16 @@
           "default": true,
           "type": "boolean"
         },
+        "rust-analyzer.completion.autoAwait.enable": {
+          "markdownDescription": "Toggles the additional completions that automatically show method calls and field accesses with `await` prefixed to them when completing on a future.",
+          "default": true,
+          "type": "boolean"
+        },
+        "rust-analyzer.completion.autoIter.enable": {
+          "markdownDescription": "Toggles the additional completions that automatically show method calls with `iter()` or `into_iter()` prefixed to them when completing on a type that has them.",
+          "default": true,
+          "type": "boolean"
+        },
         "rust-analyzer.completion.autoimport.enable": {
           "markdownDescription": "Toggles the additional completions that automatically add imports when completed.\nNote that your client must specify the `additionalTextEdits` LSP client capability to truly have this feature enabled.",
           "default": true,
@@ -918,7 +928,7 @@
           ]
         },
         "rust-analyzer.imports.group.enable": {
-          "markdownDescription": "Group inserted imports by the https://rust-analyzer.github.io/manual.html#auto-import[following order]. Groups are separated by newlines.",
+          "markdownDescription": "Group inserted imports by the [following order](https://rust-analyzer.github.io/manual.html#auto-import). Groups are separated by newlines.",
           "default": true,
           "type": "boolean"
         },
