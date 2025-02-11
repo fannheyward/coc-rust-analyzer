@@ -62,8 +62,8 @@ export function createClient(bin: string, config: Config): LanguageClient {
 
   const env = Object.assign(Object.assign({}, process.env), config.serverExtraEnv);
   const run: Executable = {
-    command: bin,
-    options: { env, cwd: folder },
+    command: `${bin}`,
+    options: { env, cwd: folder, shell: process.platform === 'win32' },
   };
 
   function standalone(root?: string) {
