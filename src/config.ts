@@ -89,4 +89,8 @@ export class Config {
   get disableProgressNotifications() {
     return this.cfg.get<boolean>('disableProgressNotifications');
   }
+
+  get disablePullDiagnostic() {
+    return this.cfg.get<boolean>('disablePullDiagnostic');
+  }
 }

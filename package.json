@@ -79,6 +79,11 @@
           "default": false,
           "markdownDescription": "Disable initialization and workdone progress notifications"
         },
+        "rust-analyzer.disablePullDiagnostic": {
+          "type": "boolean",
+          "default": true,
+          "markdownDescription": "Disable pullDiagnostic feature"
+        },
         "rust-analyzer.terminal.startinsert": {
           "type": "boolean",
           "default": false,
