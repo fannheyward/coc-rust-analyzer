@@ -779,6 +779,11 @@
           "default": true,
           "type": "boolean"
         },
+        "rust-analyzer.hover.dropGlue.enable": {
+          "markdownDescription": "Whether to show drop glue information on hover.",
+          "default": true,
+          "type": "boolean"
+        },
         "rust-analyzer.hover.links.enable": {
           "markdownDescription": "Use markdown syntax for links on hover.",
           "default": true,
