@@ -480,7 +480,7 @@ export function runSingle(ctx: Ctx): Cmd {
   };
 }
 
-export function syntaxTree(ctx: Ctx): Cmd {
+export function viewSyntaxTree(ctx: Ctx): Cmd {
   return async () => {
     const doc = await workspace.document;
     if (!isRustDocument(doc.textDocument)) return;
