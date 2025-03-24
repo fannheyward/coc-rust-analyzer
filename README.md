@@ -55,7 +55,7 @@ You can use these commands by `:CocCommand XYZ`.
 | rust-analyzer.run | List available runnables of current file and run the selected one |
 | rust-analyzer.serverVersion | Show current Rust Analyzer server version |
 | rust-analyzer.ssr | Structural Search Replace |
-| rust-analyzer.syntaxTree | Show syntax tree |
+| rust-analyzer.viewSyntaxTree | Show syntax tree |
 | rust-analyzer.testCurrent | Test Current |
 | rust-analyzer.install | Install latest `rust-analyzer` from [GitHub release](https://github.com/rust-lang/rust-analyzer/releases) |
 | rust-analyzer.upgrade | Download latest `rust-analyzer` from [GitHub release](https://github.com/rust-lang/rust-analyzer/releases) |

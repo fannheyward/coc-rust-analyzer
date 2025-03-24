@@ -57,7 +57,7 @@ export async function activate(context: ExtensionContext): Promise<void> {
   ctx.registerCommand('openDocs', cmds.openDocs);
   ctx.registerCommand('joinLines', cmds.joinLines);
   ctx.registerCommand('peekTests', cmds.peekTests);
-  ctx.registerCommand('syntaxTree', cmds.syntaxTree);
+  ctx.registerCommand('viewSyntaxTree', cmds.viewSyntaxTree);
   ctx.registerCommand('moveItemUp', cmds.moveItemUp);
   ctx.registerCommand('testCurrent', cmds.testCurrent);
   ctx.registerCommand('memoryUsage', cmds.memoryUsage);
