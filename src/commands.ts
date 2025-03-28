@@ -493,7 +493,7 @@ export function viewSyntaxTree(ctx: Ctx): Cmd {
       range,
     };
 
-    const ret = await ctx.client.sendRequest(ra.syntaxTree, param);
+    const ret = await ctx.client.sendRequest(ra.viewSyntaxTree, param);
     if (!ret) return;
     const nvim = workspace.nvim;
     nvim.pauseNotification();
