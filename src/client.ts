@@ -63,21 +63,7 @@ export function createClient(bin: string, config: Config): LanguageClient {
     options: { env, cwd: folder, shell: process.platform === 'win32' },
   };
 
-  function standalone(root?: string) {
-    if (!root) return true;
-    if (existsSync(join(Uri.parse(root).fsPath, 'Cargo.toml'))) return false;
-    if (existsSync(join(Uri.parse(root).fsPath, 'rust-project.json'))) return false;
-    if (existsSync(join(Uri.parse(root).fsPath, '.rust-project.json'))) return false;
-    return true;
-  }
-  let initializationOptions = workspace.getConfiguration('rust-analyzer');
-  if (workspace.workspaceFolders.every((folder) => standalone(folder.uri))) {
-    const docs = workspace.documents.filter((doc) => isRustDocument(doc.textDocument));
-    if (docs.length) {
-      initializationOptions = { detachedFiles: docs.map((doc) => Uri.parse(doc.uri).fsPath), ...initializationOptions };
-    }
-  }
-
+  const initializationOptions = workspace.getConfiguration('rust-analyzer');
   const disabledFeatures: string[] = [];
   if (config.disableProgressNotifications) {
     disabledFeatures.push('progress');
