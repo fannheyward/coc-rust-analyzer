@@ -29,7 +29,8 @@ export async function activate(context: ExtensionContext): Promise<void> {
         await downloadServer(context, latest);
       } catch (e) {
         console.error(e);
-        msg = 'Download rust-analyzer failed, you can get it from https://github.com/rust-analyzer/rust-analyzer';
+        const errorMessage = e instanceof Error ? e.message : String(e);
+        msg = `Download rust-analyzer failed: ${errorMessage}. You can get it from https://github.com/rust-analyzer/rust-analyzer`;
         window.showErrorMessage(msg);
         return;
       }
