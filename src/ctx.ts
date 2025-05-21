@@ -169,6 +169,7 @@ export class Ctx {
       if (!auto) {
         window.showInformationMessage('Your Rust Analyzer release is updated');
       }
+      console.info(`Rust Analyzer is up to date: ${latest.tag}`);
       return;
     }
 
