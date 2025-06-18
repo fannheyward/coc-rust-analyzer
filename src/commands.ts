@@ -584,13 +584,14 @@ export async function applySnippetWorkspaceEdit(edit: WorkspaceEdit) {
     return;
   }
 
-  let position: Position | undefined = undefined;
+  let position: Position | undefined;
   const change = edit.documentChanges[0];
   if (TextDocumentEdit.is(change)) {
     const newEdits: TextEdit[] = [];
 
     for (const indel of change.edits) {
       const { range } = indel;
+      // biome-ignore lint/complexity/noUselessEscapeInRegex: x
       const parsed = indel.newText.replaceAll('\\}', '}').replaceAll(/\$\{[0-9]+:([^\}]+)\}/g, '$1');
       const index0 = parsed.indexOf('$0');
       if (index0 !== -1) {

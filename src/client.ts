@@ -12,11 +12,8 @@ import {
   type ServerOptions,
   type StaticFeature,
 } from 'coc.nvim';
-import { existsSync } from 'node:fs';
-import { join } from 'node:path';
 import { CodeAction, CodeActionRequest, type CodeActionParams } from 'vscode-languageserver-protocol';
 import type { Config } from './config';
-import { isRustDocument } from './ctx';
 import * as ra from './lsp_ext';
 
 class ExperimentalFeatures implements StaticFeature {
