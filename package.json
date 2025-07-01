@@ -200,6 +200,11 @@
             "Fill missing expressions with reasonable defaults, `new` or `default` constructors."
           ]
         },
+        "rust-analyzer.assist.preferSelf": {
+          "markdownDescription": "When inserting a type (e.g. in \"fill match arms\" assist), prefer to use `Self` over the type name where possible.",
+          "default": false,
+          "type": "boolean"
+        },
         "rust-analyzer.assist.termSearch.borrowcheck": {
           "markdownDescription": "Enable borrow checking for term search code assists. If set to false, also there will be more suggestions, but some of them may not borrow-check.",
           "default": true,
@@ -743,6 +748,11 @@
             "Use the client (editor) to watch files for changes",
             "Use server-side file watching"
           ]
+        },
+        "rust-analyzer.highlightRelated.branchExitPoints.enable": {
+          "markdownDescription": "Enables highlighting of related return values while the cursor is on any `match`, `if`, or match arm arrow (`=>`).",
+          "default": true,
+          "type": "boolean"
         },
         "rust-analyzer.highlightRelated.breakPoints.enable": {
           "markdownDescription": "Enables highlighting of related references while the cursor is on `break`, `loop`, `while`, or `for` keywords.",
@@ -1550,6 +1560,11 @@
               }
             }
           ]
+        },
+        "rust-analyzer.workspace.symbol.search.excludeImports": {
+          "markdownDescription": "Exclude all imports from workspace symbol search.\n\nIn addition to regular imports (which are always excluded),\nthis option removes public imports (better known as re-exports)\nand removes imports that rename the imported symbol.",
+          "default": false,
+          "type": "boolean"
         },
         "rust-analyzer.workspace.symbol.search.kind": {
           "markdownDescription": "Workspace symbol search kind.",
