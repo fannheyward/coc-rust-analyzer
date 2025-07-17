@@ -590,6 +590,12 @@ export async function applySnippetWorkspaceEdit(edit: WorkspaceEdit) {
     const newEdits: TextEdit[] = [];
 
     for (const indel of change.edits) {
+      if (!('insertTextFormat' in indel)) {
+        // plain text edit
+        newEdits.push(indel);
+        continue;
+      }
+
       const { range } = indel;
       // biome-ignore lint/complexity/noUselessEscapeInRegex: x
       const parsed = indel.newText.replaceAll('\\}', '}').replaceAll(/\$\{[0-9]+:([^\}]+)\}/g, '$1');
