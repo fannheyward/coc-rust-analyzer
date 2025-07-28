@@ -140,8 +140,7 @@ export function createClient(bin: string, config: Config): LanguageClient {
         if (msg.includes('rust-analyzer/publishDecorations') || msg.includes('rust-analyzer/decorationsRequest')) {
           // Don't log publish decorations requests
         } else {
-          // @ts-ignore This is just a utility function
-          client.logTrace(msg, data);
+          client.traceMessage(msg, data);
         }
       } else {
         // @ts-ignore
