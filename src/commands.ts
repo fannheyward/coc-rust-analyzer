@@ -1,21 +1,22 @@
-import { spawn, spawnSync } from 'node:child_process';
 import {
   type CodeAction,
   commands,
   type Documentation,
   Location,
-  Position,
+  nvim,
+  type Position,
   Range,
+  type SnippetTextEdit,
   type Terminal,
   type TerminalOptions,
   type TextDocumentPositionParams,
-  TextEdit,
+  type TextEdit,
   Uri,
   window,
   workspace,
   type WorkspaceEdit,
-  nvim,
 } from 'coc.nvim';
+import { spawn, spawnSync } from 'node:child_process';
 import { randomBytes } from 'node:crypto';
 import { existsSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
@@ -48,10 +49,6 @@ function codeFormat(expanded: ra.ExpandedMacro): string {
   result += expanded.expansion;
 
   return result;
-}
-
-function countLines(text: string): number {
-  return (text.match(/\n/g) || []).length;
 }
 
 export function reload(ctx: Ctx): Cmd {
@@ -166,7 +163,7 @@ export function ssr(ctx: Ctx): Cmd {
     const selections: Range[] = [];
     const mode = await workspace.nvim.call('visualmode');
     if (mode) {
-      const range = await window.getSelectedRange(mode);
+      const range = await window.getSelectedRange(mode.toString());
       if (range) selections.push(range);
     }
 
@@ -487,7 +484,7 @@ export function viewSyntaxTree(ctx: Ctx): Cmd {
 
     const mode = await workspace.nvim.call('visualmode');
     let range: Range | null = null;
-    if (mode) range = await window.getSelectedRange(mode);
+    if (mode) range = await window.getSelectedRange(mode.toString());
     const param: ra.SyntaxTreeParams = {
       textDocument: { uri: doc.uri },
       range,
@@ -584,10 +581,9 @@ export async function applySnippetWorkspaceEdit(edit: WorkspaceEdit) {
     return;
   }
 
-  let position: Position | undefined;
   const change = edit.documentChanges[0];
   if (TextDocumentEdit.is(change)) {
-    const newEdits: TextEdit[] = [];
+    const newEdits: (TextEdit | SnippetTextEdit)[] = [];
 
     for (const indel of change.edits) {
       if (!('insertTextFormat' in indel)) {
@@ -596,20 +592,16 @@ export async function applySnippetWorkspaceEdit(edit: WorkspaceEdit) {
         continue;
       }
 
-      const { range } = indel;
-      // biome-ignore lint/complexity/noUselessEscapeInRegex: x
-      const parsed = indel.newText.replaceAll('\\}', '}').replaceAll(/\$\{[0-9]+:([^\}]+)\}/g, '$1');
-      const index0 = parsed.indexOf('$0');
-      if (index0 !== -1) {
-        const prefix = parsed.substring(0, index0);
-        const lastNewline = prefix.lastIndexOf('\n');
-
-        const line = range.start.line + countLines(prefix);
-        const col = lastNewline === -1 ? range.start.character + index0 : prefix.length - lastNewline - 1;
-        position = Position.create(line, col);
+      console.error(`Applying snippet edit: ${JSON.stringify(indel, null, 2)}`);
+      const hasSnippet = indel.newText.match(/\$\d+|\{\d+:[^}]*\}/);
+      if (hasSnippet) {
+        newEdits.push({
+          range: indel.range,
+          snippet: { kind: 'snippet', value: indel.newText },
+        } as SnippetTextEdit);
+      } else {
+        newEdits.push(indel);
       }
-
-      newEdits.push(TextEdit.replace(range, parsed.replaceAll('$0', '')));
     }
 
     const current = await workspace.document;
@@ -618,11 +610,9 @@ export async function applySnippetWorkspaceEdit(edit: WorkspaceEdit) {
       await workspace.jumpTo(change.textDocument.uri);
     }
 
-    await workspace.applyEdit({ changes: { [change.textDocument.uri]: newEdits } });
-
-    if (position) {
-      await window.moveTo(position);
-    }
+    await workspace.applyEdit({
+      documentChanges: [{ textDocument: { uri: change.textDocument.uri, version: null }, edits: newEdits }],
+    });
   }
 }
 
