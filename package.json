@@ -112,7 +112,7 @@
         "rust-analyzer.debug.nvimdap.configuration.template": {
           "type": "string",
           "default": "",
-          "markdownDescription": "Configuration template used to invoked dap.run([conf](https://github.com/mfussenegger/nvim-dap/blob/0e6b7c47dd70e80793ed39271b2aa712d9366dbc/doc/dap.txt#L656C2-L656C2)). The template will be instantiate like thie: `$exe` will be replaced with executable path, `$args` will be replaced with arguments."
+          "markdownDescription": "Configuration template used to invoked dap.run([conf](https://github.com/mfussenegger/nvim-dap/blob/0e6b7c47dd70e80793ed39271b2aa712d9366dbc/doc/dap.txt#L656C2-L656C2)). The template will be instantiate like this: `$exe` will be replaced with executable path, `$args` will be replaced with arguments."
         },
         "rust-analyzer.server.path": {
           "type": [
