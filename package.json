@@ -1667,8 +1667,8 @@
         "category": "rust-analyzer"
       },
       {
-        "command": "rust-analyzer.syntaxTree",
-        "title": "Show Syntax Tree",
+        "command": "rust-analyzer.viewSyntaxTree",
+        "title": "View Syntax Tree",
         "category": "rust-analyzer"
       },
       {
