@@ -26,17 +26,17 @@
     "prepare": "node esbuild.mjs"
   },
   "devDependencies": {
-    "@biomejs/biome": "^2.0.0",
+    "@biomejs/biome": "^2.2.0",
     "@types/adm-zip": "^0.5.7",
     "@types/node": "16",
-    "@types/node-fetch": "2.6.12",
+    "@types/node-fetch": "2.6.13",
     "@types/which": "^3.0.4",
     "adm-zip": "0.5.12",
     "coc.nvim": "^0.0.83-next.18",
-    "esbuild": "^0.25.5",
+    "esbuild": "^0.25.9",
     "https-proxy-agent": "^7.0.6",
     "node-fetch": "2.6.7",
-    "typescript": "^5.8.3",
+    "typescript": "^5.9.2",
     "vscode-languageserver-protocol": "^3.17.5",
     "which": "^4.0.0"
   },

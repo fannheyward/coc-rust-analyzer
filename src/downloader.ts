@@ -98,7 +98,7 @@ export async function getLatestRelease(updatesChannel: UpdatesChannel): Promise<
   if (updatesChannel === 'nightly') {
     releaseURL = 'https://api.github.com/repos/rust-analyzer/rust-analyzer/releases/tags/nightly';
   }
-  // @ts-ignore
+  // @ts-expect-error
   const response = await fetch(releaseURL, { agent });
   if (!response.ok) {
     console.error(await response.text());
@@ -134,7 +134,7 @@ export async function downloadServer(context: ExtensionContext, release: Release
   statusItem.text = `Downloading rust-analyzer ${release.tag}`;
   statusItem.show();
 
-  // @ts-ignore
+  // @ts-expect-error
   const resp = await fetch(release.url, { agent });
   // const resp = await fetch('http://devd.io/rust-analyzer');
   if (!resp.ok) {

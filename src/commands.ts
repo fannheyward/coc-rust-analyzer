@@ -592,7 +592,6 @@ export async function applySnippetWorkspaceEdit(edit: WorkspaceEdit) {
         continue;
       }
 
-      console.error(`Applying snippet edit: ${JSON.stringify(indel, null, 2)}`);
       const hasSnippet = indel.newText.match(/\$\d+|\{\d+:[^}]*\}/);
       if (hasSnippet) {
         newEdits.push({

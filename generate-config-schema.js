@@ -1,6 +1,3 @@
-/* eslint-disable @typescript-eslint/no-var-requires */
-'use strict';
-
 const fs = require('fs');
 const { execSync } = require('child_process');
 const packageJson = require('./package.json');

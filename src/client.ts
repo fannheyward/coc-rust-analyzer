@@ -133,7 +133,7 @@ export function createClient(bin: string, config: Config): LanguageClient {
   // Proper support for this would entail a change to vscode-languageclient to allow not notifying on certain messages
   // Or the ability to disable the serverside component of highlighting (but this means that to do tracing we need to disable hihlighting)
   // This also requires considering our settings strategy, which is work which needs doing
-  // @ts-ignore The tracer is private to vscode-languageclient, but we need access to it to not log publishDecorations requests
+  // @ts-expect-error The tracer is private to vscode-languageclient, but we need access to it to not log publishDecorations requests
   client._tracer = {
     log: (msg: string | unknown, data?: string) => {
       if (typeof msg === 'string') {
@@ -143,7 +143,7 @@ export function createClient(bin: string, config: Config): LanguageClient {
           client.traceMessage(msg, data);
         }
       } else {
-        // @ts-ignore
+        // @ts-expect-error
         client.logObjectTrace(msg);
       }
     },

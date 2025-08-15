@@ -136,7 +136,7 @@ export class Ctx {
     } catch (e) {
       console.error(e);
       let msg = 'Install rust-analyzer failed, please try again';
-      // @ts-ignore
+      // @ts-expect-error
       if (e.code === 'EBUSY' || e.code === 'ETXTBSY' || e.code === 'EPERM') {
         msg =
           'Install rust-analyzer failed, other Vim instances might be using it, you should close them and try again';
@@ -190,7 +190,7 @@ export class Ctx {
       } catch (e) {
         console.error(e);
         let msg = 'Upgrade rust-analyzer failed, please try again';
-        // @ts-ignore
+        // @ts-expect-error
         if (e.code === 'EBUSY' || e.code === 'ETXTBSY' || e.code === 'EPERM') {
           msg =
             'Upgrade rust-analyzer failed, other Vim instances might be using it, you should close them and try again';
