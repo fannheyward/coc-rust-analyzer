@@ -728,6 +728,11 @@
             "type": "string"
           }
         },
+        "rust-analyzer.document.symbol.search.excludeLocals": {
+          "markdownDescription": "Exclude all locals from document symbol search.",
+          "default": true,
+          "type": "boolean"
+        },
         "rust-analyzer.files.exclude": {
           "markdownDescription": "List of files to ignore\n\nThese paths (file/directories) will be ignored by rust-analyzer. They are relative to\nthe workspace root, and globs are not supported. You may also need to add the folders to\nCode's `files.watcherExclude`.",
           "default": [],
