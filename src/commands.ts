@@ -581,8 +581,11 @@ export async function applySnippetWorkspaceEdit(edit: WorkspaceEdit) {
     return;
   }
 
-  const change = edit.documentChanges[0];
-  if (TextDocumentEdit.is(change)) {
+  for (const change of edit.documentChanges) {
+    if ('kind' in change || !TextDocumentEdit.is(change)) {
+      continue;
+    }
+
     const newEdits: (TextEdit | SnippetTextEdit)[] = [];
 
     for (const indel of change.edits) {
