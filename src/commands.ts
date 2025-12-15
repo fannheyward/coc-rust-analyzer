@@ -464,6 +464,7 @@ export function runSingle(ctx: Ctx): Cmd {
     const opt: TerminalOptions = {
       name: runnable.label,
       cwd: runnable.args.cwd,
+      env: runnable.args.environment
     };
     if (terminal) {
       terminal.dispose();
