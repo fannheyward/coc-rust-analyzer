@@ -1243,6 +1243,11 @@
           "default": false,
           "type": "boolean"
         },
+        "rust-analyzer.inlayHints.typeHints.hideInferredTypes": {
+          "markdownDescription": "Hide inlay type hints for inferred types.",
+          "default": false,
+          "type": "boolean"
+        },
         "rust-analyzer.inlayHints.typeHints.hideNamedConstructor": {
           "markdownDescription": "Hide inlay type hints for constructors.",
           "default": false,
