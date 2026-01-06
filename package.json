@@ -754,12 +754,6 @@
             "Use server-side file watching"
           ]
         },
-        "rust-analyzer.gc.frequency": {
-          "markdownDescription": "This config controls the frequency in which rust-analyzer will perform its internal Garbage\nCollection. It is specified in revisions, roughly equivalent to number of changes. The default\nis 1000.\n\nSetting a smaller value may help limit peak memory usage at the expense of speed.",
-          "default": 1000,
-          "type": "integer",
-          "minimum": 0
-        },
         "rust-analyzer.gotoImplementations.filterAdjacentDerives": {
           "markdownDescription": "If this is `true`, when \"Goto Implementations\" and in \"Implementations\" lens, are triggered on a `struct` or `enum` or `union`, we filter out trait implementations that originate from `derive`s above the type.",
           "default": false,
@@ -1444,6 +1438,27 @@
           "default": false,
           "type": "boolean"
         },
+        "rust-analyzer.rename.showConflicts": {
+          "markdownDescription": "Whether to warn when a rename will cause conflicts (change the meaning of the code).",
+          "default": true,
+          "type": "boolean"
+        },
+        "rust-analyzer.runnables.bench.command": {
+          "markdownDescription": "Subcommand used for bench runnables instead of `bench`.",
+          "default": "bench",
+          "type": "string"
+        },
+        "rust-analyzer.runnables.bench.overrideCommand": {
+          "markdownDescription": "Override the command used for bench runnables.\nThe first element of the array should be the program to execute (for example, `cargo`).\n\nUse the placeholders `${package}`, `${target_arg}`, `${target}`, `${test_name}` to dynamically\nreplace the package name, target option (such as `--bin` or `--example`), the target name and\nthe test name (name of test function or test mod path).",
+          "default": null,
+          "type": [
+            "null",
+            "array"
+          ],
+          "items": {
+            "type": "string"
+          }
+        },
         "rust-analyzer.runnables.command": {
           "markdownDescription": "Command to be executed instead of 'cargo' for runnables.",
           "default": null,
@@ -1451,6 +1466,17 @@
             "null",
             "string"
           ]
+        },
+        "rust-analyzer.runnables.doctest.overrideCommand": {
+          "markdownDescription": "Override the command used for bench runnables.\nThe first element of the array should be the program to execute (for example, `cargo`).\n\nUse the placeholders `${package}`, `${target_arg}`, `${target}`, `${test_name}` to dynamically\nreplace the package name, target option (such as `--bin` or `--example`), the target name and\nthe test name (name of test function or test mod path).",
+          "default": null,
+          "type": [
+            "null",
+            "array"
+          ],
+          "items": {
+            "type": "string"
+          }
         },
         "rust-analyzer.runnables.extraArgs": {
           "markdownDescription": "Additional arguments to be passed to cargo for runnables such as\ntests or binaries. For example, it may be `--release`.",
@@ -1466,6 +1492,22 @@
             "--nocapture"
           ],
           "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "rust-analyzer.runnables.test.command": {
+          "markdownDescription": "Subcommand used for test runnables instead of `test`.",
+          "default": "test",
+          "type": "string"
+        },
+        "rust-analyzer.runnables.test.overrideCommand": {
+          "markdownDescription": "Override the command used for test runnables.\nThe first element of the array should be the program to execute (for example, `cargo`).\n\nUse the placeholders `${package}`, `${target_arg}`, `${target}`, `${test_name}` to dynamically\nreplace the package name, target option (such as `--bin` or `--example`), the target name and\nthe test name (name of test function or test mod path).",
+          "default": null,
+          "type": [
+            "null",
+            "array"
+          ],
           "items": {
             "type": "string"
           }
