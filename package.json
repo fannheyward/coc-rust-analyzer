@@ -728,6 +728,11 @@
             "type": "string"
           }
         },
+        "rust-analyzer.disableFixtureSupport": {
+          "markdownDescription": "Disable support for `#[rust_analyzer::rust_fixture]` snippets.\n\nIf you are not working on rust-analyzer itself, you should ignore this config.",
+          "default": false,
+          "type": "boolean"
+        },
         "rust-analyzer.document.symbol.search.excludeLocals": {
           "markdownDescription": "Exclude all locals from document symbol search.",
           "default": true,
@@ -1258,6 +1263,19 @@
           "default": false,
           "type": "boolean"
         },
+        "rust-analyzer.inlayHints.typeHints.location": {
+          "markdownDescription": "Where to render type hints relative to their binding pattern.",
+          "default": "inline",
+          "type": "string",
+          "enum": [
+            "inline",
+            "end_of_line"
+          ],
+          "enumDescriptions": [
+            "Render type hints directly after the binding identifier.",
+            "Render type hints after the end of the containing `let` statement when possible."
+          ]
+        },
         "rust-analyzer.interpret.tests": {
           "markdownDescription": "Enable the experimental support for interpreting tests.",
           "default": false,
@@ -1469,7 +1487,7 @@
           "type": "string"
         },
         "rust-analyzer.runnables.bench.overrideCommand": {
-          "markdownDescription": "Override the command used for bench runnables.\nThe first element of the array should be the program to execute (for example, `cargo`).\n\nUse the placeholders `${package}`, `${target_arg}`, `${target}`, `${test_name}` to dynamically\nreplace the package name, target option (such as `--bin` or `--example`), the target name and\nthe test name (name of test function or test mod path).",
+          "markdownDescription": "Override the command used for bench runnables.\nThe first element of the array should be the program to execute (for example, `cargo`).\n\nUse the placeholders `${package}`, `${target_arg}`, `${target}`, `${executable_args}` to dynamically\nreplace the package name, target option (such as `--bin` or `--example`), the target name and\nthe arguments passed to test binary args (includes `rust-analyzer.runnables.extraTestBinaryArgs`).",
           "default": null,
           "type": [
             "null",
@@ -1488,7 +1506,7 @@
           ]
         },
         "rust-analyzer.runnables.doctest.overrideCommand": {
-          "markdownDescription": "Override the command used for bench runnables.\nThe first element of the array should be the program to execute (for example, `cargo`).\n\nUse the placeholders `${package}`, `${target_arg}`, `${target}`, `${test_name}` to dynamically\nreplace the package name, target option (such as `--bin` or `--example`), the target name and\nthe test name (name of test function or test mod path).",
+          "markdownDescription": "Override the command used for bench runnables.\nThe first element of the array should be the program to execute (for example, `cargo`).\n\nUse the placeholders `${package}`, `${target_arg}`, `${target}`, `${executable_args}` to dynamically\nreplace the package name, target option (such as `--bin` or `--example`), the target name and\nthe arguments passed to test binary args (includes `rust-analyzer.runnables.extraTestBinaryArgs`).",
           "default": null,
           "type": [
             "null",
@@ -1522,7 +1540,7 @@
           "type": "string"
         },
         "rust-analyzer.runnables.test.overrideCommand": {
-          "markdownDescription": "Override the command used for test runnables.\nThe first element of the array should be the program to execute (for example, `cargo`).\n\nUse the placeholders `${package}`, `${target_arg}`, `${target}`, `${test_name}` to dynamically\nreplace the package name, target option (such as `--bin` or `--example`), the target name and\nthe test name (name of test function or test mod path).",
+          "markdownDescription": "Override the command used for test runnables.\nThe first element of the array should be the program to execute (for example, `cargo`).\n\nUse the placeholders `${package}`, `${target_arg}`, `${target}`, `${executable_args}` to dynamically\nreplace the package name, target option (such as `--bin` or `--example`), the target name and\nthe arguments passed to test binary args (includes `rust-analyzer.runnables.extraTestBinaryArgs`).",
           "default": null,
           "type": [
             "null",
