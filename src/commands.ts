@@ -528,6 +528,43 @@ export function expandMacro(ctx: Ctx): Cmd {
   };
 }
 
+export function viewMemoryLayout(ctx: Ctx): Cmd {
+  return async () => {
+    const { document, position } = await workspace.getCurrentState();
+    if (!isRustDocument(document)) return;
+
+    const param: TextDocumentPositionParams = {
+      textDocument: { uri: document.uri },
+      position,
+    };
+
+    const res = await ctx.client.sendRequest(ra.viewRecursiveMemoryLayout, param);
+    if (!res) return;
+
+    const lines: string[] = [];
+    const process = (idx: number, depth: number) => {
+      const node = res.nodes[idx];
+      lines.push(
+        `${'\t'.repeat(depth)}${node.itemName}: ${node.typename} (size: ${node.size}, align: ${node.alignment}, field offset: ${node.offset})`,
+      );
+      if (node.childrenStart !== -1) {
+        for (let j = node.childrenStart; j < node.childrenStart + node.childrenLen; j++) {
+          process(j, depth + 1);
+        }
+      }
+    };
+    process(0, 0);
+
+    const nvim = workspace.nvim;
+    nvim.pauseNotification();
+    nvim.command('edit +setl\\ buftype=nofile [Layout]', true);
+    nvim.command('setl nobuflisted bufhidden=wipe', true);
+    nvim.call('append', [0, lines], true);
+    nvim.command('exe 1', true);
+    await nvim.resumeNotification(true);
+  };
+}
+
 export function explainError(ctx: Ctx): Cmd {
   return async () => {
     const { document, position } = await workspace.getCurrentState();

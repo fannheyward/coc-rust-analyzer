@@ -75,6 +75,7 @@ export async function activate(context: ExtensionContext): Promise<void> {
   ctx.registerCommand('clearFlycheck', cmds.clearFlycheck);
   ctx.registerCommand('analyzerStatus', cmds.analyzerStatus);
   ctx.registerCommand('viewCrateGraph', cmds.viewCrateGraph);
+  ctx.registerCommand('viewMemoryLayout', cmds.viewMemoryLayout);
   ctx.registerCommand('interpretFunction', cmds.interpretFunction);
   ctx.registerCommand('rebuildProcMacros', cmds.rebuildProcMacros);
   ctx.registerCommand('shuffleCrateGraph', cmds.shuffleCrateGraph);
