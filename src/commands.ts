@@ -539,7 +539,7 @@ export function viewMemoryLayout(ctx: Ctx): Cmd {
     };
 
     const res = await ctx.client.sendRequest(ra.viewRecursiveMemoryLayout, param);
-    if (!res) return;
+    if (!res || res.nodes.length === 0) return;
 
     const lines: string[] = [];
     const process = (idx: number, depth: number) => {
