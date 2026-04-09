@@ -15,3 +15,4 @@ yarn-error.log
 .editorconfig
 .eslintrc.js
 .github
+.claude
