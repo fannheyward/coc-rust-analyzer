@@ -68,9 +68,6 @@ export function createClient(bin: string, config: Config): LanguageClient {
   if (!config.inlayHint.enable) {
     disabledFeatures.push('inlayHint');
   }
-  if (config.disablePullDiagnostic) {
-    disabledFeatures.push('pullDiagnostic');
-  }
   const serverOptions: ServerOptions = run;
   const clientOptions: LanguageClientOptions = {
     documentSelector: [{ language: 'rust' }],
