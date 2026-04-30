@@ -11,7 +11,7 @@
   },
   "rust-analyzer.disablePullDiagnostic": {
     "type": "boolean",
-    "default": true,
+    "default": false,
     "markdownDescription": "Disable pullDiagnostic feature"
   },
   "rust-analyzer.terminal.startinsert": {
