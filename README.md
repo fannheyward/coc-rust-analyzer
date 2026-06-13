@@ -71,6 +71,36 @@ You can use these commands by `:CocCommand XYZ`.
 | rust-analyzer.rebuildProcMacros | Rebuild proc macros and build scripts |
 | rust-analyzer.interpretFunction | Interpret Function |
 
+## Debugging with Vimspector
+
+To debug Rust runnables with [Vimspector](https://github.com/puremourning/vimspector), set the debug runtime in `coc-settings.json`:
+
+```jsonc
+{
+  "rust-analyzer.debug.runtime": "vimspector"
+}
+```
+
+Install Vimspector and the CodeLLDB adapter with `:VimspectorInstall CodeLLDB`. Then add a Vimspector configuration, either in the project root as `.vimspector.json` or in a global Vimspector configuration file:
+
+```jsonc
+{
+  "$schema": "https://puremourning.github.io/vimspector/schema/vimspector.schema.json",
+  "configurations": {
+    "launch": {
+      "adapter": "CodeLLDB",
+      "configuration": {
+        "request": "launch",
+        "program": "${Executable}",
+        "args": ["*${Args}"]
+      }
+    }
+  }
+}
+```
+
+The `launch` key must match `rust-analyzer.debug.vimspector.configuration.name`, which defaults to `launch`. `:CocCommand rust-analyzer.debug` passes `Executable` and `Args` to Vimspector for the selected runnable.
+
 ## License
 
 MIT
