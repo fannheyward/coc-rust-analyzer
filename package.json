@@ -1922,5 +1922,8 @@
         "category": "rust-analyzer"
       }
     ]
+  },
+  "allowScripts": {
+    "esbuild@0.28.1": true
   }
 }
