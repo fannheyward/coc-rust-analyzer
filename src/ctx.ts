@@ -112,6 +112,9 @@ export class Ctx {
     if (systemBin) {
       const { stderr } = spawnSync(systemBin, ['--version'], { encoding: 'utf8' });
       if (stderr.trim().length > 0) {
+        const errMsg = `Failed to start rust-analyzer: ${stderr.trim()}`;
+        console.error(errMsg);
+        window.showWarningMessage(errMsg);
         return;
       }
 
