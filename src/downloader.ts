@@ -1,8 +1,7 @@
 import { exec, spawnSync } from 'node:child_process';
-import { type ExtensionContext, window, workspace } from 'coc.nvim';
+import { type ExtensionContext, window } from 'coc.nvim';
 import { randomBytes } from 'node:crypto';
 import { createWriteStream, type PathLike, promises as fs } from 'node:fs';
-import { HttpsProxyAgent } from 'https-proxy-agent';
 import AdmZip from 'adm-zip';
 import fetch from 'node-fetch';
 import * as zlib from 'node:zlib';
@@ -12,9 +11,6 @@ import util from 'node:util';
 import type { UpdatesChannel } from './config';
 
 const pipeline = util.promisify(stream.pipeline);
-const rejectUnauthorized = workspace.getConfiguration('http').get('proxyStrictSSL', true);
-const proxy = process.env.https_proxy || process.env.HTTPS_PROXY;
-const agent = proxy ? new HttpsProxyAgent(proxy, { rejectUnauthorized }) : null;
 
 async function patchelf(dest: PathLike): Promise<void> {
   const expression = `
@@ -98,8 +94,7 @@ export async function getLatestRelease(updatesChannel: UpdatesChannel): Promise<
   if (updatesChannel === 'nightly') {
     releaseURL = 'https://api.github.com/repos/rust-analyzer/rust-analyzer/releases/tags/nightly';
   }
-  // @ts-expect-error
-  const response = await fetch(releaseURL, { agent });
+  const response = await fetch(releaseURL);
   if (!response.ok) {
     console.error(await response.text());
     return;
@@ -134,8 +129,7 @@ export async function downloadServer(context: ExtensionContext, release: Release
   statusItem.text = `Downloading rust-analyzer ${release.tag}`;
   statusItem.show();
 
-  // @ts-expect-error
-  const resp = await fetch(release.url, { agent });
+  const resp = await fetch(release.url);
   // const resp = await fetch('http://devd.io/rust-analyzer');
   if (!resp.ok) {
     statusItem.hide();
