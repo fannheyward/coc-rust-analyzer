@@ -697,6 +697,11 @@
           "type": "integer",
           "minimum": 0
         },
+        "rust-analyzer.completion.turbofish.enable": {
+          "markdownDescription": "Complete turbofish (`::<>`) at the call site (if needed).",
+          "default": true,
+          "type": "boolean"
+        },
         "rust-analyzer.diagnostics.disabled": {
           "markdownDescription": "List of rust-analyzer diagnostics to disable.",
           "default": [],
