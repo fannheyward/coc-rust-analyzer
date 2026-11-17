@@ -529,6 +529,11 @@
           "default": true,
           "type": "boolean"
         },
+        "rust-analyzer.completion.autoDyn.enable": {
+          "markdownDescription": "Complete traits with `dyn` prefixed to them when completing in a type position.",
+          "default": true,
+          "type": "boolean"
+        },
         "rust-analyzer.completion.autoIter.enable": {
           "markdownDescription": "Show method call completions with `iter()` or `into_iter()` prefixed to them when\ncompleting on a type that has them.",
           "default": true,
@@ -1179,8 +1184,18 @@
         },
         "rust-analyzer.inlayHints.implicitDrops.enable": {
           "markdownDescription": "Show implicit drop hints.",
-          "default": false,
-          "type": "boolean"
+          "default": "never",
+          "type": "string",
+          "enum": [
+            "always",
+            "never",
+            "with_drop_glue"
+          ],
+          "enumDescriptions": [
+            "Always show drop hints.",
+            "Never show drop hints.",
+            "Only show drop hints for values with drop glue."
+          ]
         },
         "rust-analyzer.inlayHints.implicitSizedBoundHints.enable": {
           "markdownDescription": "Show inlay hints for the implied type parameter `Sized` bound.",
